@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ffm
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: admin
+    password: admin
+    url: jdbc:mysql://localhost:3306/ffm
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+logging:
+  level:
+    org:
+      hibernate: INFO
+      SQL: DEBUG
+      cache: DEBUG
+      stat: DEBUG

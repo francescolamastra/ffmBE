@@ -24,10 +24,10 @@ public class Bonus {
     private DettaglioBonus idDettBonus;
 
     @Column(name = "MASSIMALE", nullable = false)
-    private Byte massimale;
+    private Integer massimale;
 
     @Column(name = "IMPORTO_SINGOLO", nullable = false)
-    private Byte importoSingolo;
+    private Integer importoSingolo;
 
     @Column(name = "TIPO_BONUS", nullable = false, length = 1)
     private String tipoBonus;

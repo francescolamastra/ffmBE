@@ -20,6 +20,6 @@ public class Svincolo {
     private Operazione idOperazione;
 
     @Column(name = "PERCENTUALE", nullable = false)
-    private Byte percentuale;
+    private Integer percentuale;
 
 }

@@ -25,7 +25,7 @@ public class TransazioneTrattativa {
     private Squadra idSquadra;
 
     @Column(name = "IMPORTO", nullable = false)
-    private Byte importo;
+    private Integer importo;
 
     @Column(name = "TIPO_TRANSAZIONE", nullable = false, length = 1)
     private String tipoTransazione;

@@ -22,7 +22,7 @@ public class Gettoni {
     private Squadra idSquadra;
 
     @Column(name = "QUANTITA", nullable = false)
-    private Byte quantita;
+    private Integer quantita;
 
     @Column(name = "DATA_ACQUISTO")
     private Instant dataAcquisto;

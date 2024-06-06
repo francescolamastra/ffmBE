@@ -28,6 +28,6 @@ public class Giocatore {
     private String ruolo;
 
     @Column(name = "QUOTAZIONE", nullable = false)
-    private Byte quotazione;
+    private Integer quotazione;
 
 }

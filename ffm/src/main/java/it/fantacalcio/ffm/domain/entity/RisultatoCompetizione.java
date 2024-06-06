@@ -27,10 +27,10 @@ public class RisultatoCompetizione {
     private String risultato;
 
     @Column(name = "GIORNATA_SERIE_A", nullable = false)
-    private Byte giornataSerieA;
+    private Integer giornataSerieA;
 
     @Column(name = "GIORNATA_COMPETIZIONE", nullable = false)
-    private Byte giornataCompetizione;
+    private Integer giornataCompetizione;
 
     @Column(name = "LUOGO_RISULTATO", nullable = false, length = 1)
     private String luogoRisultato;

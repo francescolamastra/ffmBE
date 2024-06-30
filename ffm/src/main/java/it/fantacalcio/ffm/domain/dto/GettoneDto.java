@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.time.Instant;
 
 /**
- * DTO for {@link it.fantacalcio.ffm.domain.entity.Gettoni}
+ * DTO for {@link it.fantacalcio.ffm.domain.entity.Gettone}
  */
 @Value
-public class GettoniDto implements Serializable {
+public class GettoneDto implements Serializable {
     Integer id;
     SquadraDto idSquadra;
     Integer quantita;

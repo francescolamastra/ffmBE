@@ -20,6 +20,6 @@ public class Acquisto {
     private Operazione idOperazione;
 
     @Column(name = "ANNI_CONTRATTO", nullable = false)
-    private Boolean anniContratto = false;
+    private Integer anniContratto;
 
 }

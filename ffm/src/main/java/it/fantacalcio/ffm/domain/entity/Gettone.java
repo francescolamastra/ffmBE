@@ -11,8 +11,8 @@ import java.time.Instant;
 @Setter
 @ToString
 @Entity
-@Table(name = "gettoni")
-public class Gettoni {
+@Table(name = "gettone")
+public class Gettone {
     @Id
     @Column(name = "ID", nullable = false)
     private Integer id;

@@ -14,5 +14,5 @@ public class TransazioneTrattativaDto implements Serializable {
     SquadraDto idSquadra;
     Integer importo;
     String tipoTransazione;
-    Boolean gettoniSpesi;
+    Integer gettoniSpesi;
 }

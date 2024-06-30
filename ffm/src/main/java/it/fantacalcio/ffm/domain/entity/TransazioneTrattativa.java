@@ -32,6 +32,6 @@ public class TransazioneTrattativa {
 
     @ColumnDefault("0")
     @Column(name = "GETTONI_SPESI", nullable = false)
-    private Boolean gettoniSpesi = false;
+    private Integer gettoniSpesi;
 
 }

@@ -11,5 +11,5 @@ import java.io.Serializable;
 public class AcquistoDto implements Serializable {
     Integer id;
     OperazioneDto idOperazione;
-    Boolean anniContratto;
+    Integer anniContratto;
 }

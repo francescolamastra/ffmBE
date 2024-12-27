@@ -9,7 +9,7 @@ public class CompetizioneConverter {
     private CompetizioneConverter() {}
 
     public static CompetizioneDto toDto(Competizione competizione){
-        return new CompetizioneDto(competizione.getId(), competizione.getIdFantagazzetta(), competizione.getNome(),competizione.getRuolo(), competizione.getQuotazione());
+        return new CompetizioneDto(competizione.getId(), competizione.getSigla(), competizione.getDescrizione());
     }
 
 //    public static Competizione toEntity(CompetizioneDto competizione){

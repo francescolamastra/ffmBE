@@ -9,7 +9,7 @@ public class FaseCompetizioneConverter {
     private FaseCompetizioneConverter() {}
 
     public static FaseCompetizioneDto toDto(FaseCompetizione faseCompetizione){
-        return new FaseCompetizioneDto(faseCompetizione.getId(), faseCompetizione.getIdFantagazzetta(), faseCompetizione.getNome(),faseCompetizione.getRuolo(), faseCompetizione.getQuotazione());
+        return new FaseCompetizioneDto(faseCompetizione.getId(), faseCompetizione.getSigla(), faseCompetizione.getDescrizione());
     }
 
 //    public static FaseCompetizione toEntity(FaseCompetizioneDto faseCompetizione){

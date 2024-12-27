@@ -9,7 +9,7 @@ public class CredenzialiConverter {
     private CredenzialiConverter() {}
 
     public static CredenzialiDto toDto(Credenziali credenziali){
-        return new CredenzialiDto(credenziali.getId(), credenziali.getIdFantagazzetta(), credenziali.getNome(),credenziali.getRuolo(), credenziali.getQuotazione());
+        return new CredenzialiDto(credenziali.getId(), UtenteConverter.toDto(credenziali.getIdUtente()), credenziali.getUserName(),credenziali.getPassword());
     }
 
 //    public static Credenziali toEntity(CredenzialiDto credenziali){

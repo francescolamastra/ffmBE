@@ -9,7 +9,12 @@ public class OperazioneConverter {
     private OperazioneConverter() {}
 
     public static OperazioneDto toDto(Operazione operazione){
-        return new OperazioneDto(operazione.getId(),operazione.);
+        return new OperazioneDto(operazione.getId(),
+                SquadraConverter.toDto(operazione.getIdSquadra()),
+                GiocatoreConverter.toDto(operazione.getIdGiocatore()),
+                TipoOperazioneConverter.toDto(operazione.getIdTipoOperazione()),
+                StagioneConverter.toDto(operazione.getIdStagione()),
+                operazione.getData());
     }
 
 //    public static Operazione toEntity(OperazioneDto operazione){

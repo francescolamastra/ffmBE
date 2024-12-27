@@ -9,7 +9,7 @@ public class DettaglioTrattativaConverter {
     private DettaglioTrattativaConverter() {}
 
     public static DettaglioTrattativaDto toDto(DettaglioTrattativa dettaglioTrattativa){
-        return new DettaglioTrattativaDto(dettaglioTrattativa.getId(), dettaglioTrattativa.getIdFantagazzetta(), dettaglioTrattativa.getNome(),dettaglioTrattativa.getRuolo(), dettaglioTrattativa.getQuotazione());
+        return new DettaglioTrattativaDto(dettaglioTrattativa.getId(), TrattativaConverter.toDto(dettaglioTrattativa.getIdTrattativa()), TipoDettTrattativaConverter.toDto(dettaglioTrattativa.getIdTipoDettTrattativa()),SquadraConverter.toDto(dettaglioTrattativa.getIdSquadra()),GiocatoreConverter.toDto(dettaglioTrattativa.getIdGiocatore()), TipoOperazioneConverter.toDto(dettaglioTrattativa.getIdTipoOperazione()));
     }
 
 //    public static DettaglioTrattativa toEntity(DettaglioTrattativaDto dettaglioTrattativa){

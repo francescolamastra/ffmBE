@@ -9,7 +9,7 @@ public class TipoOperazioneConverter {
     private TipoOperazioneConverter() {}
 
     public static TipoOperazioneDto toDto(TipoOperazione tipoOperazione){
-        return new TipoOperazioneDto(tipoOperazione.getId(), tipoOperazione.getIdFantagazzetta(), tipoOperazione.getNome(),tipoOperazione.getRuolo(), tipoOperazione.getQuotazione());
+        return new TipoOperazioneDto(tipoOperazione.getId(), tipoOperazione.getSigla(), tipoOperazione.getDescrizione());
     }
 
 //    public static TipoOperazione toEntity(TipoOperazioneDto tipoOperazione){

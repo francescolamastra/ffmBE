@@ -9,7 +9,7 @@ public class StagioneConverter {
     private StagioneConverter() {}
 
     public static StagioneDto toDto(Stagione stagione){
-        return new StagioneDto(stagione.getId(), stagione.getIdFantagazzetta(), stagione.getNome(),stagione.getRuolo(), stagione.getQuotazione());
+        return new StagioneDto(stagione.getId(), stagione.getAnnoInizio(), stagione.getAnnoFine());
     }
 
 //    public static Stagione toEntity(StagioneDto stagione){

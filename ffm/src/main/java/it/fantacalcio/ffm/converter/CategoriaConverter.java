@@ -9,7 +9,7 @@ public class CategoriaConverter {
     private CategoriaConverter() {}
 
     public static CategoriaDto toDto(Categoria categoria){
-        return new CategoriaDto(categoria.getId(), categoria.getIdFantagazzetta(), categoria.getNome(),categoria.getRuolo(), categoria.getQuotazione());
+        return new CategoriaDto(categoria.getId(), categoria.getDescrizione(), categoria.getSigla());
     }
 
 //    public static Categoria toEntity(CategoriaDto categoria){

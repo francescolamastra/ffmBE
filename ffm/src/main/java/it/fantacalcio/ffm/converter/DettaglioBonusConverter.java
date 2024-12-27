@@ -9,7 +9,7 @@ public class DettaglioBonusConverter {
     private DettaglioBonusConverter() {}
 
     public static DettaglioBonusDto toDto(DettaglioBonus dettaglioBonus){
-        return new DettaglioBonusDto(dettaglioBonus.getId(), dettaglioBonus.getIdFantagazzetta(), dettaglioBonus.getNome(),dettaglioBonus.getRuolo(), dettaglioBonus.getQuotazione());
+        return new DettaglioBonusDto(dettaglioBonus.getId(), dettaglioBonus.getSigla(), dettaglioBonus.getDescrizione());
     }
 
 //    public static DettaglioBonus toEntity(DettaglioBonusDto dettaglioBonus){

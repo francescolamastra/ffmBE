@@ -1,11 +1,8 @@
 package it.fantacalcio.ffm.controller;
 
 import it.fantacalcio.ffm.domain.dto.GiocatoreDto;
-import it.fantacalcio.ffm.domain.entity.Giocatore;
 import it.fantacalcio.ffm.service.GiocatoreService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +16,14 @@ public class ApiGatewayController {
     }
 
     @GetMapping(value = "/giocatori")
+    @ResponseBody
     public List<GiocatoreDto> getGiocatori() {
         return giocatoreService.findAll();
+    }
+
+    @GetMapping(value = "/giocatore/{idFantagazzetta}")
+    @ResponseBody
+    public GiocatoreDto getGiocatore(@PathVariable Integer idFantagazzetta) {
+        return giocatoreService.findByIdFantagazzetta(idFantagazzetta).orElseThrow();
     }
 }

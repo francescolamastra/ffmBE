@@ -2,12 +2,12 @@ package it.fantacalcio.ffm.service;
 
 import it.fantacalcio.ffm.converter.GiocatoreConverter;
 import it.fantacalcio.ffm.domain.dto.GiocatoreDto;
-import it.fantacalcio.ffm.domain.entity.Giocatore;
 import it.fantacalcio.ffm.repository.GiocatoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GiocatoreService {
@@ -21,8 +21,8 @@ public class GiocatoreService {
         this.giocatoreConverter = giocatoreConverter;
     }
 
-    public Giocatore findById(Integer id){
-        return giocatoreRepository.findById(id).orElseThrow();
+    public Optional<GiocatoreDto> findByIdFantagazzetta(Integer idFantagazzetta){
+        return giocatoreRepository.findByIdFantagazzetta(idFantagazzetta).map(GiocatoreConverter::toDto);
     }
 
     public List<GiocatoreDto> findAll(){

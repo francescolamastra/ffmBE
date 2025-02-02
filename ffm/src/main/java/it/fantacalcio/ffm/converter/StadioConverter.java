@@ -9,7 +9,13 @@ public class StadioConverter {
     private StadioConverter() {}
 
     public static StadioDto toDto(Stadio stadio){
-        return new StadioDto(stadio.getId(), stadio.getIdFantagazzetta(), stadio.getNome(),stadio.getRuolo(), stadio.getQuotazione());
+        return new StadioDto(stadio.getId(),
+                stadio.getLivello(),
+                stadio.getCoefficiente(),
+                stadio.getCompensoVittoria(),
+                stadio.getCompensoPareggio(),
+                stadio.getBonus(),
+                stadio.getManutenzione());
     }
 
 //    public static Stadio toEntity(StadioDto stadio){

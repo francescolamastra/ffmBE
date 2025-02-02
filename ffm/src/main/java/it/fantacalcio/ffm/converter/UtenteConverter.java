@@ -9,7 +9,7 @@ public class UtenteConverter {
     private UtenteConverter() {}
 
     public static UtenteDto toDto(Utente utente){
-        return new UtenteDto(utente.getId(), utente.getIdFantagazzetta(), utente.getNome(),utente.getRuolo(), utente.getQuotazione());
+        return new UtenteDto(utente.getId(), utente.getNome(), utente.getCognome(),utente.getTelefono(), utente.getEmail());
     }
 
 //    public static Utente toEntity(UtenteDto utente){

@@ -9,7 +9,10 @@ public class TransazioneOperazioneConverter {
     private TransazioneOperazioneConverter() {}
 
     public static TransazioneOperazioneDto toDto(TransazioneOperazione transazioneOperazione){
-        return new TransazioneOperazioneDto(transazioneOperazione.getId(), transazioneOperazione.getIdFantagazzetta(), transazioneOperazione.getNome(),transazioneOperazione.getRuolo(), transazioneOperazione.getQuotazione());
+        return new TransazioneOperazioneDto(transazioneOperazione.getId(),
+                OperazioneConverter.toDto(transazioneOperazione.getIdOperazione()),
+                transazioneOperazione.getImporto(),
+                transazioneOperazione.getTipoTransazione());
     }
 
 //    public static TransazioneOperazione toEntity(TransazioneOperazioneDto transazioneOperazione){

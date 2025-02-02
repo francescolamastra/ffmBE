@@ -9,7 +9,7 @@ public class TipoDettTrattativaConverter {
     private TipoDettTrattativaConverter() {}
 
     public static TipoDettTrattativaDto toDto(TipoDettTrattativa tipoDettTrattativa){
-        return new TipoDettTrattativaDto(tipoDettTrattativa.getId(), tipoDettTrattativa.getIdFantagazzetta(), tipoDettTrattativa.getNome(),tipoDettTrattativa.getRuolo(), tipoDettTrattativa.getQuotazione());
+        return new TipoDettTrattativaDto(tipoDettTrattativa.getId(), tipoDettTrattativa.getSigla(), tipoDettTrattativa.getDescrizione());
     }
 
 //    public static TipoDettTrattativa toEntity(TipoDettTrattativaDto tipoDettTrattativa){

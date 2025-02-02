@@ -9,7 +9,7 @@ public class FidoConverter {
     private FidoConverter() {}
 
     public static FidoDto toDto(Fido fido){
-        return new FidoDto(fido.getId(), fido.getIdFantagazzetta(), fido.getNome(),fido.getRuolo(), fido.getQuotazione());
+        return new FidoDto(fido.getId(), TrattativaConverter.toDto(fido.getIdTrattativa()), SquadraConverter.toDto(fido.getIdSquadra()), fido.getImporto(), fido.getTipoFido());
     }
 
 //    public static Fido toEntity(FidoDto fido){

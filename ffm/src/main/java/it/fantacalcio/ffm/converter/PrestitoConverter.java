@@ -9,7 +9,13 @@ public class PrestitoConverter {
     private PrestitoConverter() {}
 
     public static PrestitoDto toDto(Prestito prestito){
-        return new PrestitoDto(prestito.getId(), prestito.getIdFantagazzetta(), prestito.getNome(),prestito.getRuolo(), prestito.getQuotazione());
+        return new PrestitoDto(prestito.getId(),
+                OperazioneConverter.toDto(prestito.getIdOperazione()),
+                SquadraConverter.toDto(prestito.getIdSquadraCedente()),
+                prestito.getCostoRiscatto(),
+                prestito.getObbligo(),
+                prestito.getRiscatto(),
+                prestito.getEsercitato());
     }
 
 //    public static Prestito toEntity(PrestitoDto prestito){

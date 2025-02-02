@@ -9,7 +9,7 @@ public class NazioneConverter {
     private NazioneConverter() {}
 
     public static NazioneDto toDto(Nazione nazione){
-        return new NazioneDto(nazione.getId(), nazione.getIdFantagazzetta(), nazione.getNome(),nazione.getRuolo(), nazione.getQuotazione());
+        return new NazioneDto(nazione.getId(), nazione.getDescrizione(), nazione.getSigla());
     }
 
 //    public static Nazione toEntity(NazioneDto nazione){

@@ -9,7 +9,7 @@ public class UtenteSquadraConverter {
     private UtenteSquadraConverter() {}
 
     public static UtenteSquadraDto toDto(UtenteSquadra utenteSquadra){
-        return new UtenteSquadraDto(utenteSquadra.getId(), utenteSquadra.getIdFantagazzetta(), utenteSquadra.getNome(),utenteSquadra.getRuolo(), utenteSquadra.getQuotazione());
+        return new UtenteSquadraDto(utenteSquadra.getId(), UtenteConverter.toDto(utenteSquadra.getIdUtente()), SquadraConverter.toDto(utenteSquadra.getIdSquadra()));
     }
 
 //    public static UtenteSquadra toEntity(UtenteSquadraDto utenteSquadra){

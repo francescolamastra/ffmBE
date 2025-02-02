@@ -9,7 +9,7 @@ public class GettoneConverter {
     private GettoneConverter() {}
 
     public static GettoneDto toDto(Gettone gettone){
-        return new GettoneDto(gettone.getId(), gettone.getIdFantagazzetta(), gettone.getNome(),gettone.getRuolo(), gettone.getQuotazione());
+        return new GettoneDto(gettone.getId(), SquadraConverter.toDto(gettone.getIdSquadra()), gettone.getQuantita(),gettone.getDataAcquisto());
     }
 
 //    public static Gettone toEntity(GettoneDto gettone){

@@ -9,7 +9,7 @@ public class StagioneCompetizioneConverter {
     private StagioneCompetizioneConverter() {}
 
     public static StagioneCompetizioneDto toDto(StagioneCompetizione stagioneCompetizione){
-        return new StagioneCompetizioneDto(stagioneCompetizione.getId(), stagioneCompetizione.getIdFantagazzetta(), stagioneCompetizione.getNome(),stagioneCompetizione.getRuolo(), stagioneCompetizione.getQuotazione());
+        return new StagioneCompetizioneDto(stagioneCompetizione.getId(), StagioneConverter.toDto(stagioneCompetizione.getIdStagione()), CompetizioneConverter.toDto(stagioneCompetizione.getIdCompetizione()));
     }
 
 //    public static StagioneCompetizione toEntity(StagioneCompetizioneDto stagioneCompetizione){

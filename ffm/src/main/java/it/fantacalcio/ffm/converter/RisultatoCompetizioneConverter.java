@@ -9,7 +9,10 @@ public class RisultatoCompetizioneConverter {
     private RisultatoCompetizioneConverter() {}
 
     public static RisultatoCompetizioneDto toDto(RisultatoCompetizione risultatoCompetizione){
-        return new RisultatoCompetizioneDto(risultatoCompetizione.getId(), risultatoCompetizione.getIdFantagazzetta(), risultatoCompetizione.getNome(),risultatoCompetizione.getRuolo(), risultatoCompetizione.getQuotazione());
+        return new RisultatoCompetizioneDto(risultatoCompetizione.getId(), StagioneCompetizioneConverter.toDto(risultatoCompetizione.getIdStagioneCompetizione()), SquadraConverter.toDto(risultatoCompetizione.getIdSquadra()),risultatoCompetizione.getRisultato(), risultatoCompetizione.getGiornataSerieA(),
+                risultatoCompetizione.getGiornataCompetizione(),
+                risultatoCompetizione.getLuogoRisultato(),
+                FaseCompetizioneConverter.toDto(risultatoCompetizione.getIdFaseCompetizione()));
     }
 
 //    public static RisultatoCompetizione toEntity(RisultatoCompetizioneDto risultatoCompetizione){

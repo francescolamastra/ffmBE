@@ -1,11 +1,13 @@
 package it.fantacalcio.ffm.service;
 
-import it.fantacalcio.ffm.domain.entity.Nazione;
+import it.fantacalcio.ffm.converter.NazioneConverter;
+import it.fantacalcio.ffm.domain.dto.NazioneDto;
 import it.fantacalcio.ffm.repository.NazioneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NazioneService {
@@ -17,11 +19,11 @@ public class NazioneService {
         this.nazioneRepository = nazioneRepository;
     }
 
-    public Nazione findById(Integer id){
-        return nazioneRepository.findById(id).orElseThrow();
-    }
+    public Optional<NazioneDto> findById(Integer id){
+        return nazioneRepository.findById(id).map(NazioneConverter::toDto);
+        }
 
-    public List<Nazione> findAll(Integer id){
-        return nazioneRepository.findAll();
+    public List<NazioneDto> findAll(){
+        return nazioneRepository.findAll().stream().map(NazioneConverter::toDto).toList();
     }
 }

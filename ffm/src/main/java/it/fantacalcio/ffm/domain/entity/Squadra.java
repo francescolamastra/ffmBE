@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -34,4 +36,11 @@ public class Squadra {
     @JoinColumn(name = "ID_STADIO")
     private Stadio idStadio;
 
+    @Column(name = "DATA_CREAZIONE", nullable = false, updatable = false)
+    private LocalDateTime dataCreazione;
+
+    @PrePersist
+    protected void onCreate() {
+        dataCreazione = LocalDateTime.now();
+    }
 }

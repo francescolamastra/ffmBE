@@ -3,6 +3,7 @@ package it.fantacalcio.ffm.domain.dto;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * DTO for {@link it.fantacalcio.ffm.domain.entity.Squadra}
@@ -14,4 +15,5 @@ public class SquadraDto implements Serializable {
     CategoriaDto idCategoria;
     String nome;
     StadioDto idStadio;
+    LocalDateTime dataCreazione;
 }

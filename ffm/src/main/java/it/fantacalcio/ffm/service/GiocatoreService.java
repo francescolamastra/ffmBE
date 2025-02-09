@@ -13,12 +13,10 @@ import java.util.Optional;
 public class GiocatoreService {
 
     GiocatoreRepository giocatoreRepository;
-    GiocatoreConverter giocatoreConverter;
 
     @Autowired
-    public GiocatoreService(GiocatoreRepository giocatoreRepository, GiocatoreConverter giocatoreConverter){
+    public GiocatoreService(GiocatoreRepository giocatoreRepository){
         this.giocatoreRepository = giocatoreRepository;
-        this.giocatoreConverter = giocatoreConverter;
     }
 
     public Optional<GiocatoreDto> findByIdFantagazzetta(Integer idFantagazzetta){

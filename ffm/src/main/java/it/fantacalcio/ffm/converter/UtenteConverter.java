@@ -9,7 +9,12 @@ public class UtenteConverter {
     private UtenteConverter() {}
 
     public static UtenteDto toDto(Utente utenteEntity){
-        return new UtenteDto(utenteEntity.getId(), utenteEntity.getNome(), utenteEntity.getCognome(),utenteEntity.getTelefono(), utenteEntity.getEmail());
+        return new UtenteDto(utenteEntity.getId(),
+                utenteEntity.getNome(),
+                utenteEntity.getCognome(),
+                utenteEntity.getTelefono(),
+                utenteEntity.getEmail(),
+                utenteEntity.getDataCreazione());
     }
 
     public static Utente toEntity(UtenteDto utenteDto){

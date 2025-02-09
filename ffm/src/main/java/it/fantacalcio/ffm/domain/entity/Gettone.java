@@ -14,6 +14,7 @@ import java.time.Instant;
 @Table(name = "gettone")
 public class Gettone {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     private Integer id;
 

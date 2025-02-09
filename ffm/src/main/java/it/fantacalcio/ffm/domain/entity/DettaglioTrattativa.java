@@ -12,6 +12,7 @@ import lombok.*;
 @Table(name = "dettaglio_trattativa")
 public class DettaglioTrattativa {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     private Integer id;
 

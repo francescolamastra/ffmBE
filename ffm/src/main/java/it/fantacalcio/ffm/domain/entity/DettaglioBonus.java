@@ -1,9 +1,6 @@
 package it.fantacalcio.ffm.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -15,6 +12,7 @@ import lombok.*;
 @Table(name = "dettaglio_bonus")
 public class DettaglioBonus {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     private Integer id;
 

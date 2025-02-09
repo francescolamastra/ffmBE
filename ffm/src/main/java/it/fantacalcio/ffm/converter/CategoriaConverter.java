@@ -12,7 +12,11 @@ public class CategoriaConverter {
         return new CategoriaDto(categoria.getId(), categoria.getDescrizione(), categoria.getSigla());
     }
 
-//    public static Categoria toEntity(CategoriaDto categoria){
-//        return new Categoria(categoria.getId(), categoria.getIdFantagazzetta(), categoria.getNome(),categoria.getRuolo(), categoria.getQuotazione());
-//    }
+    public static Categoria toEntity(CategoriaDto categoria) {
+        Categoria categoriaEntity = new Categoria();
+        categoriaEntity.setId(categoria.getId());
+        categoriaEntity.setDescrizione(categoria.getDescrizione());
+        categoriaEntity.setSigla(categoria.getSigla());
+        return categoriaEntity;
+    }
 }

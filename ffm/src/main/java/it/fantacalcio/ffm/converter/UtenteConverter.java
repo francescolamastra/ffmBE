@@ -8,11 +8,17 @@ import org.springframework.stereotype.Component;
 public class UtenteConverter {
     private UtenteConverter() {}
 
-    public static UtenteDto toDto(Utente utente){
-        return new UtenteDto(utente.getId(), utente.getNome(), utente.getCognome(),utente.getTelefono(), utente.getEmail());
+    public static UtenteDto toDto(Utente utenteEntity){
+        return new UtenteDto(utenteEntity.getId(), utenteEntity.getNome(), utenteEntity.getCognome(),utenteEntity.getTelefono(), utenteEntity.getEmail());
     }
 
-//    public static Utente toEntity(UtenteDto utente){
-//        return new Utente(utente.getId(), utente.getIdFantagazzetta(), utente.getNome(),utente.getRuolo(), utente.getQuotazione());
-//    }
+    public static Utente toEntity(UtenteDto utenteDto){
+        Utente utenteEntity = new Utente();
+        utenteEntity.setId(utenteDto.getId());
+        utenteEntity.setCognome(utenteDto.getCognome());
+        utenteEntity.setNome(utenteDto.getNome());
+        utenteEntity.setTelefono(utenteDto.getTelefono());
+        utenteEntity.setEmail(utenteDto.getEmail());
+        return utenteEntity;
+    }
 }

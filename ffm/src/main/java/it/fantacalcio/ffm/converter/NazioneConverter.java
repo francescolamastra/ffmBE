@@ -12,7 +12,11 @@ public class NazioneConverter {
         return new NazioneDto(nazione.getId(), nazione.getDescrizione(), nazione.getSigla());
     }
 
-//    public static Nazione toEntity(NazioneDto nazione){
-//        return new Nazione(nazione.getId(), nazione.getIdFantagazzetta(), nazione.getNome(),nazione.getRuolo(), nazione.getQuotazione());
-//    }
+    public static Nazione toEntity(NazioneDto nazione) {
+        Nazione nazioneEntity = new Nazione();
+        nazioneEntity.setId(nazione.getId());
+        nazioneEntity.setDescrizione(nazione.getDescrizione());
+        nazioneEntity.setSigla(nazione.getSigla());
+        return nazioneEntity;
+    }
 }

@@ -18,7 +18,15 @@ public class StadioConverter {
                 stadio.getManutenzione());
     }
 
-//    public static Stadio toEntity(StadioDto stadio){
-//        return new Stadio(stadio.getId(), stadio.getIdFantagazzetta(), stadio.getNome(),stadio.getRuolo(), stadio.getQuotazione());
-//    }
+    public static Stadio toEntity(StadioDto stadioDto){
+        Stadio stadioEntity = new Stadio();
+        stadioEntity.setId(stadioDto.getId());
+        stadioEntity.setLivello(stadioDto.getLivello());
+        stadioEntity.setBonus(stadioDto.getBonus());
+        stadioEntity.setCoefficiente(stadioDto.getCoefficiente());
+        stadioEntity.setManutenzione(stadioDto.getManutenzione());
+        stadioEntity.setCompensoPareggio(stadioDto.getCompensoPareggio());
+        stadioEntity.setCompensoVittoria(stadioDto.getCompensoVittoria());
+        return stadioEntity;
+    }
 }

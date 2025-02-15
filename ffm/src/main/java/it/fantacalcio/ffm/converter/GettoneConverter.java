@@ -9,10 +9,17 @@ public class GettoneConverter {
     private GettoneConverter() {}
 
     public static GettoneDto toDto(Gettone gettone){
-        return new GettoneDto(gettone.getId(), SquadraConverter.toDto(gettone.getIdSquadra()), gettone.getQuantita(),gettone.getDataAcquisto());
+        return new GettoneDto(gettone.getId(),
+                SquadraConverter.toDto(gettone.getIdSquadra()),
+                gettone.getQuantita(),gettone.getDataAcquisto());
     }
 
-//    public static Gettone toEntity(GettoneDto gettone){
-//        return new Gettone(gettone.getId(), gettone.getIdFantagazzetta(), gettone.getNome(),gettone.getRuolo(), gettone.getQuotazione());
-//    }
+    public static Gettone toEntity(GettoneDto gettone){
+        Gettone gettoneEntity = new Gettone();
+        gettoneEntity.setId(gettone.getId());
+        gettoneEntity.setQuantita(gettone.getQuantita());
+        gettoneEntity.setIdSquadra(SquadraConverter.toEntity(gettone.getIdSquadra()));
+        gettoneEntity.setDataAcquisto(gettone.getDataAcquisto());
+        return gettoneEntity;
+    }
 }

@@ -9,10 +9,16 @@ public class DettaglioBonusConverter {
     private DettaglioBonusConverter() {}
 
     public static DettaglioBonusDto toDto(DettaglioBonus dettaglioBonus){
-        return new DettaglioBonusDto(dettaglioBonus.getId(), dettaglioBonus.getSigla(), dettaglioBonus.getDescrizione());
+        return new DettaglioBonusDto(dettaglioBonus.getId(),
+                dettaglioBonus.getSigla(),
+                dettaglioBonus.getDescrizione());
     }
 
-//    public static DettaglioBonus toEntity(DettaglioBonusDto dettaglioBonus){
-//        return new DettaglioBonus(dettaglioBonus.getId(), dettaglioBonus.getIdFantagazzetta(), dettaglioBonus.getNome(),dettaglioBonus.getRuolo(), dettaglioBonus.getQuotazione());
-//    }
+    public static DettaglioBonus toEntity(DettaglioBonusDto dettaglioBonus){
+        DettaglioBonus dettaglioBonusEntity = new DettaglioBonus();
+        dettaglioBonusEntity.setId(dettaglioBonus.getId());
+        dettaglioBonusEntity.setSigla(dettaglioBonus.getSigla());
+        dettaglioBonusEntity.setDescrizione(dettaglioBonus.getDescrizione());
+        return dettaglioBonusEntity;
+    }
 }

@@ -9,10 +9,19 @@ public class FidoConverter {
     private FidoConverter() {}
 
     public static FidoDto toDto(Fido fido){
-        return new FidoDto(fido.getId(), TrattativaConverter.toDto(fido.getIdTrattativa()), SquadraConverter.toDto(fido.getIdSquadra()), fido.getImporto(), fido.getTipoFido());
+        return new FidoDto(fido.getId(),
+                TrattativaConverter.toDto(fido.getIdTrattativa()),
+                SquadraConverter.toDto(fido.getIdSquadra()),
+                fido.getImporto(), fido.getTipoFido());
     }
 
-//    public static Fido toEntity(FidoDto fido){
-//        return new Fido(fido.getId(), fido.getIdFantagazzetta(), fido.getNome(),fido.getRuolo(), fido.getQuotazione());
-//    }
+    public static Fido toEntity(FidoDto fido){
+        Fido fidoEntity = new Fido();
+        fidoEntity.setId(fido.getId());
+        fidoEntity.setTipoFido(fido.getTipoFido());
+        fidoEntity.setImporto(fido.getImporto());
+        fidoEntity.setIdSquadra(SquadraConverter.toEntity(fido.getIdSquadra()));
+        fidoEntity.setIdTrattativa(TrattativaConverter.toEntity(fido.getIdTrattativa()));
+        return fidoEntity;
+    }
 }

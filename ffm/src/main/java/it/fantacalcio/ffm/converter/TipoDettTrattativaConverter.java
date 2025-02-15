@@ -9,10 +9,16 @@ public class TipoDettTrattativaConverter {
     private TipoDettTrattativaConverter() {}
 
     public static TipoDettTrattativaDto toDto(TipoDettTrattativa tipoDettTrattativa){
-        return new TipoDettTrattativaDto(tipoDettTrattativa.getId(), tipoDettTrattativa.getSigla(), tipoDettTrattativa.getDescrizione());
+        return new TipoDettTrattativaDto(tipoDettTrattativa.getId(),
+                tipoDettTrattativa.getSigla(),
+                tipoDettTrattativa.getDescrizione());
     }
 
-//    public static TipoDettTrattativa toEntity(TipoDettTrattativaDto tipoDettTrattativa){
-//        return new TipoDettTrattativa(tipoDettTrattativa.getId(), tipoDettTrattativa.getIdFantagazzetta(), tipoDettTrattativa.getNome(),tipoDettTrattativa.getRuolo(), tipoDettTrattativa.getQuotazione());
-//    }
+    public static TipoDettTrattativa toEntity(TipoDettTrattativaDto tipoDettTrattativa){
+        TipoDettTrattativa tipoDettTrattativaEntity = new TipoDettTrattativa();
+        tipoDettTrattativaEntity.setId(tipoDettTrattativa.getId());
+        tipoDettTrattativaEntity.setSigla(tipoDettTrattativa.getSigla());
+        tipoDettTrattativaEntity.setDescrizione(tipoDettTrattativa.getDescrizione());
+        return tipoDettTrattativaEntity;
+    }
 }

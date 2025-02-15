@@ -9,10 +9,22 @@ public class BonusConverter {
     private BonusConverter() {}
 
     public static BonusDto toDto(Bonus bonus){
-        return new BonusDto(bonus.getId(),DettaglioTrattativaConverter.toDto(bonus.getIdDettTrattativa()), DettaglioBonusConverter.toDto(bonus.getIdDettBonus()), bonus.getMassimale(),bonus.getImportoSingolo(), bonus.getTipoBonus());
+        return new BonusDto(bonus.getId(),
+                DettaglioTrattativaConverter.toDto(bonus.getIdDettTrattativa()),
+                DettaglioBonusConverter.toDto(bonus.getIdDettBonus()),
+                bonus.getMassimale(),
+                bonus.getImportoSingolo(),
+                bonus.getTipoBonus());
     }
 
-//    public static Bonus toEntity(BonusDto bonus){
-//        return new Bonus(bonus.getId(), bonus.getIdFantagazzetta(), bonus.getNome(),bonus.getRuolo(), bonus.getQuotazione());
-//    }
+    public static Bonus toEntity(BonusDto bonus){
+        Bonus bonusEntity = new Bonus();
+        bonusEntity.setId(bonus.getId());
+        bonusEntity.setIdDettBonus(DettaglioBonusConverter.toEntity(bonus.getIdDettBonus()));
+        bonusEntity.setTipoBonus(bonus.getTipoBonus());
+        bonusEntity.setMassimale(bonus.getMassimale());
+        bonusEntity.setImportoSingolo(bonus.getImportoSingolo());
+        bonusEntity.setIdDettTrattativa(DettaglioTrattativaConverter.toEntity(bonus.getIdDettTrattativa()));
+        return bonusEntity;
+    }
 }

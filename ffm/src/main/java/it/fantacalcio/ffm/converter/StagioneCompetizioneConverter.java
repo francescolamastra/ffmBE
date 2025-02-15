@@ -9,10 +9,16 @@ public class StagioneCompetizioneConverter {
     private StagioneCompetizioneConverter() {}
 
     public static StagioneCompetizioneDto toDto(StagioneCompetizione stagioneCompetizione){
-        return new StagioneCompetizioneDto(stagioneCompetizione.getId(), StagioneConverter.toDto(stagioneCompetizione.getIdStagione()), CompetizioneConverter.toDto(stagioneCompetizione.getIdCompetizione()));
+        return new StagioneCompetizioneDto(stagioneCompetizione.getId(),
+                StagioneConverter.toDto(stagioneCompetizione.getIdStagione()),
+                CompetizioneConverter.toDto(stagioneCompetizione.getIdCompetizione()));
     }
 
-//    public static StagioneCompetizione toEntity(StagioneCompetizioneDto stagioneCompetizione){
-//        return new StagioneCompetizione(stagioneCompetizione.getId(), stagioneCompetizione.getIdFantagazzetta(), stagioneCompetizione.getNome(),stagioneCompetizione.getRuolo(), stagioneCompetizione.getQuotazione());
-//    }
+    public static StagioneCompetizione toEntity(StagioneCompetizioneDto stagioneCompetizione){
+        StagioneCompetizione stagioneCompetizioneEntity = new StagioneCompetizione();
+        stagioneCompetizioneEntity.setId(stagioneCompetizione.getId());
+        stagioneCompetizioneEntity.setIdStagione(StagioneConverter.toEntity(stagioneCompetizione.getIdStagione()));
+        stagioneCompetizioneEntity.setIdCompetizione(CompetizioneConverter.toEntity(stagioneCompetizione.getIdCompetizione()));
+        return stagioneCompetizioneEntity;
+    }
 }

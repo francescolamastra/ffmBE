@@ -9,10 +9,16 @@ public class TipoOperazioneConverter {
     private TipoOperazioneConverter() {}
 
     public static TipoOperazioneDto toDto(TipoOperazione tipoOperazione){
-        return new TipoOperazioneDto(tipoOperazione.getId(), tipoOperazione.getSigla(), tipoOperazione.getDescrizione());
+        return new TipoOperazioneDto(tipoOperazione.getId(),
+                tipoOperazione.getSigla(),
+                tipoOperazione.getDescrizione());
     }
 
-//    public static TipoOperazione toEntity(TipoOperazioneDto tipoOperazione){
-//        return new TipoOperazione(tipoOperazione.getId(), tipoOperazione.getIdFantagazzetta(), tipoOperazione.getNome(),tipoOperazione.getRuolo(), tipoOperazione.getQuotazione());
-//    }
+    public static TipoOperazione toEntity(TipoOperazioneDto tipoOperazione){
+        TipoOperazione tipoOperazioneEntity = new TipoOperazione();
+        tipoOperazioneEntity.setId(tipoOperazione.getId());
+        tipoOperazioneEntity.setSigla(tipoOperazione.getSigla());
+        tipoOperazioneEntity.setDescrizione(tipoOperazione.getDescrizione());
+        return tipoOperazioneEntity;
+    }
 }

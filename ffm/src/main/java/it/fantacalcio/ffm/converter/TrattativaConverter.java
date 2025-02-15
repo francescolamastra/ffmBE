@@ -9,10 +9,16 @@ public class TrattativaConverter {
     private TrattativaConverter() {}
 
     public static TrattativaDto toDto(Trattativa trattativa){
-        return new TrattativaDto(trattativa.getId(), StagioneConverter.toDto(trattativa.getIdStagione()), trattativa.getData());
+        return new TrattativaDto(trattativa.getId(),
+                StagioneConverter.toDto(trattativa.getIdStagione()),
+                trattativa.getData());
     }
 
-//    public static Trattativa toEntity(TrattativaDto trattativa){
-//        return new Trattativa(trattativa.getId(), trattativa.getIdFantagazzetta(), trattativa.getNome(),trattativa.getRuolo(), trattativa.getQuotazione());
-//    }
+    public static Trattativa toEntity(TrattativaDto trattativa){
+        Trattativa trattativaEntity = new Trattativa();
+        trattativaEntity.setId(trattativa.getId());
+        trattativaEntity.setIdStagione(StagioneConverter.toEntity(trattativa.getIdStagione()));
+        trattativaEntity.setData(trattativa.getData());
+        return trattativaEntity;
+    }
 }

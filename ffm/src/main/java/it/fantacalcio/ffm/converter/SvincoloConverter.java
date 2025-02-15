@@ -14,7 +14,11 @@ public class SvincoloConverter {
                 svincolo.getPercentuale());
     }
 
-//    public static Svincolo toEntity(SvincoloDto svincolo){
-//        return new Svincolo(svincolo.getId(), svincolo.getIdFantagazzetta(), svincolo.getNome(),svincolo.getRuolo(), svincolo.getQuotazione());
-//    }
+    public static Svincolo toEntity(SvincoloDto svincolo){
+        Svincolo svincoloEntity = new Svincolo();
+        svincoloEntity.setId(svincolo.getId());
+        svincoloEntity.setIdOperazione(OperazioneConverter.toEntity(svincolo.getIdOperazione()));
+        svincoloEntity.setPercentuale(svincolo.getPercentuale());
+        return svincoloEntity;
+    }
 }

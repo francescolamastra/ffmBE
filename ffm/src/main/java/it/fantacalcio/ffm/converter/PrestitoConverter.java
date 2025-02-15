@@ -18,7 +18,15 @@ public class PrestitoConverter {
                 prestito.getEsercitato());
     }
 
-//    public static Prestito toEntity(PrestitoDto prestito){
-//        return new Prestito(prestito.getId(), prestito.getIdFantagazzetta(), prestito.getNome(),prestito.getRuolo(), prestito.getQuotazione());
-//    }
+    public static Prestito toEntity(PrestitoDto prestito){
+        Prestito prestitoEntity = new Prestito();
+        prestitoEntity.setId(prestito.getId());
+        prestitoEntity.setIdOperazione(OperazioneConverter.toEntity(prestito.getIdOperazione()));
+        prestitoEntity.setObbligo(prestito.getObbligo());
+        prestitoEntity.setEsercitato(prestito.getEsercitato());
+        prestitoEntity.setRiscatto(prestito.getRiscatto());
+        prestitoEntity.setCostoRiscatto(prestito.getCostoRiscatto());
+        prestitoEntity.setIdSquadraCedente(SquadraConverter.toEntity(prestito.getIdSquadraCedente()));
+        return prestitoEntity;
+    }
 }

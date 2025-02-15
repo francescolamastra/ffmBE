@@ -15,7 +15,12 @@ public class TransazioneOperazioneConverter {
                 transazioneOperazione.getTipoTransazione());
     }
 
-//    public static TransazioneOperazione toEntity(TransazioneOperazioneDto transazioneOperazione){
-//        return new TransazioneOperazione(transazioneOperazione.getId(), transazioneOperazione.getIdFantagazzetta(), transazioneOperazione.getNome(),transazioneOperazione.getRuolo(), transazioneOperazione.getQuotazione());
-//    }
+    public static TransazioneOperazione toEntity(TransazioneOperazioneDto transazioneOperazione){
+        TransazioneOperazione transazioneOperazioneEntity = new TransazioneOperazione();
+        transazioneOperazioneEntity.setId(transazioneOperazione.getId());
+        transazioneOperazioneEntity.setIdOperazione(OperazioneConverter.toEntity(transazioneOperazione.getIdOperazione()));
+        transazioneOperazioneEntity.setTipoTransazione(transazioneOperazione.getTipoTransazione());
+        transazioneOperazioneEntity.setImporto(transazioneOperazione.getImporto());
+        return transazioneOperazioneEntity;
+    }
 }

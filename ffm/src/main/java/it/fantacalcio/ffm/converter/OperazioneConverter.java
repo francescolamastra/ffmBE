@@ -17,7 +17,14 @@ public class OperazioneConverter {
                 operazione.getData());
     }
 
-//    public static Operazione toEntity(OperazioneDto operazione){
-//        return new Operazione(operazione.getId(), operazione.getIdFantagazzetta(), operazione.getNome(),operazione.getRuolo(), operazione.getQuotazione());
-//    }
+    public static Operazione toEntity(OperazioneDto operazione){
+        Operazione operazioneEntity = new Operazione();
+        operazioneEntity.setId(operazione.getId());
+        operazioneEntity.setIdTipoOperazione(TipoOperazioneConverter.toEntity(operazione.getIdTipoOperazione()));
+        operazioneEntity.setIdSquadra(SquadraConverter.toEntity(operazione.getIdSquadra()));
+        operazioneEntity.setIdStagione(StagioneConverter.toEntity(operazione.getIdStagione()));
+        operazioneEntity.setIdGiocatore(GiocatoreConverter.toEntity(operazione.getIdGiocatore()));
+        operazioneEntity.setData(operazione.getData());
+        return operazioneEntity;
+    }
 }

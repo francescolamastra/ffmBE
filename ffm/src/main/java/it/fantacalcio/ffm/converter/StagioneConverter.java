@@ -9,10 +9,16 @@ public class StagioneConverter {
     private StagioneConverter() {}
 
     public static StagioneDto toDto(Stagione stagione){
-        return new StagioneDto(stagione.getId(), stagione.getAnnoInizio(), stagione.getAnnoFine());
+        return new StagioneDto(stagione.getId(),
+                stagione.getAnnoInizio(),
+                stagione.getAnnoFine());
     }
 
-//    public static Stagione toEntity(StagioneDto stagione){
-//        return new Stagione(stagione.getId(), stagione.getIdFantagazzetta(), stagione.getNome(),stagione.getRuolo(), stagione.getQuotazione());
-//    }
+    public static Stagione toEntity(StagioneDto stagione){
+        Stagione stagioneEntity = new Stagione();
+        stagioneEntity.setId(stagione.getId());
+        stagioneEntity.setAnnoInizio(stagione.getAnnoInizio());
+        stagioneEntity.setAnnoFine(stagione.getAnnoFine());
+        return stagioneEntity;
+    }
 }

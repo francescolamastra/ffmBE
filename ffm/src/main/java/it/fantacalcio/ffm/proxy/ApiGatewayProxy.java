@@ -16,6 +16,7 @@ public class ApiGatewayProxy {
         private SquadraService squadraService;
         private StagioneService stagioneService;
         private OperazioneService operazioneService;
+        private CategoriaService categoriaService;
 
         /* INIZIO METODI SETTER PER INJECTION */
         @Autowired
@@ -44,9 +45,10 @@ public class ApiGatewayProxy {
         }
 
         @Autowired
-        public void setStagioneService(OperazioneService operazioneService) {
-                this.operazioneService = operazioneService;
-        }
+        public void setStagioneService(OperazioneService operazioneService) { this.operazioneService = operazioneService; }
+
+        @Autowired
+        public void setCategoriaService(CategoriaService categoriaService) { this.categoriaService = categoriaService; }
         /* FINE METODI SETTER PER INJECTION */
 
         /* METODI DI DOMINIO */
@@ -56,6 +58,34 @@ public class ApiGatewayProxy {
 
         public GiocatoreDto getGiocatore(Integer idFantagazzetta) {
                 return giocatoreService.findByIdFantagazzetta(idFantagazzetta).orElseThrow();
+        }
+
+        public List<SquadraDto> getSquadre() {
+                return squadraService.findAll();
+        }
+
+        public List<StagioneDto> getStagioni() {
+                return stagioneService.findAll();
+        }
+
+        public List<NazioneDto> getNazioni() {
+                return nazioneService.findAll();
+        }
+
+        public List<UtenteDto> getUtenti() {
+                return utenteService.findAll();
+        }
+
+        public List<CategoriaDto> getCategorie() {
+                return categoriaService.findAll();
+        }
+
+        public StagioneDto createStagione(StagioneDto stagioneDto) {
+                return stagioneService.save(stagioneDto);
+        }
+
+        public OperazioneDto createOperazione(OperazioneDto operazioneDto) {
+                return operazioneService.save(operazioneDto);
         }
 
         public UtenteDto createUtente(UtenteDto utenteDto) {
@@ -68,21 +98,5 @@ public class ApiGatewayProxy {
                 } else {
                         return squadraService.save(squadraDto);
                 }
-        }
-
-        public List<StagioneDto> getStagioni() {
-                return stagioneService.findAll();
-        }
-
-        public StagioneDto createStagione(StagioneDto stagioneDto) {
-                return stagioneService.save(stagioneDto);
-        }
-
-        public OperazioneDto createOperazione(OperazioneDto operazioneDto) {
-                return operazioneService.save(operazioneDto);
-        }
-
-        public List<UtenteDto> getUtenti() {
-                return utenteService.findAll();
         }
 }

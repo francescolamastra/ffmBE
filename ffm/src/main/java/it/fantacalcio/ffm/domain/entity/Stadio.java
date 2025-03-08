@@ -16,7 +16,7 @@ public class Stadio {
     @Column(name = "ID", nullable = false)
     private Integer id;
 
-    @Column(name = "Livello", nullable = false)
+    @Column(name = "LIVELLO", nullable = false)
     private Integer livello;
 
     @Column(name = "COEFFICIENTE", nullable = false)

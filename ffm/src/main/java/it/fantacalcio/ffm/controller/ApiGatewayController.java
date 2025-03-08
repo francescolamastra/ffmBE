@@ -25,6 +25,13 @@ public class ApiGatewayController {
         return apiGatewayProxy.getGiocatori();
     }
 
+    @GetMapping(value = "/giocatore/{idFantagazzetta}")
+    @ResponseBody
+    @Operation(summary = "Recupera un giocatore per ID Fantagazzetta")
+    public GiocatoreDto getGiocatore(@PathVariable Integer idFantagazzetta) {
+        return apiGatewayProxy.getGiocatore(idFantagazzetta);
+    }
+
     @GetMapping(value = "/utenti")
     @ResponseBody
     @Operation(summary = "Recupera tutti gli utenti")
@@ -32,11 +39,25 @@ public class ApiGatewayController {
         return apiGatewayProxy.getUtenti();
     }
 
-    @GetMapping(value = "/giocatore/{idFantagazzetta}")
+    @GetMapping(value = "/squadre")
     @ResponseBody
-    @Operation(summary = "Recupera un giocatore per ID Fantagazzetta")
-    public GiocatoreDto getGiocatore(@PathVariable Integer idFantagazzetta) {
-        return apiGatewayProxy.getGiocatore(idFantagazzetta);
+    @Operation(summary = "Recupera tutte le squadre")
+    public List<SquadraDto> getSquadre() {
+        return apiGatewayProxy.getSquadre();
+    }
+
+    @GetMapping(value = "/nazioni")
+    @ResponseBody
+    @Operation(summary = "Recupera tutte le nazioni")
+    public List<NazioneDto> getNazioni() {
+        return apiGatewayProxy.getNazioni();
+    }
+
+    @GetMapping(value = "/stagioni")
+    @ResponseBody
+    @Operation(summary = "Recupera tutte le stagioni")
+    public List<StagioneDto> getStagioni() {
+        return apiGatewayProxy.getStagioni();
     }
 
     @PostMapping(value = "/utente")

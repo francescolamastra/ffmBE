@@ -11,6 +11,8 @@ import it.fantacalcio.ffm.repository.UtenteSquadraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SquadraService {
 
@@ -37,5 +39,9 @@ public class SquadraService {
     public SquadraDto save(SquadraDto squadraDto){
         Squadra squadraInsertita = squadraRepository.save(SquadraConverter.toEntity(squadraDto));
         return SquadraConverter.toDto(squadraInsertita);
+    }
+
+    public List<SquadraDto> findAll(){
+        return squadraRepository.findAll().stream().map(SquadraConverter::toDto).toList();
     }
 }

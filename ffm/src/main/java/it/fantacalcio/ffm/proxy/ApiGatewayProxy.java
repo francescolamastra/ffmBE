@@ -81,4 +81,8 @@ public class ApiGatewayProxy {
         public OperazioneDto createOperazione(OperazioneDto operazioneDto) {
                 return operazioneService.save(operazioneDto);
         }
+
+        public List<UtenteDto> getUtenti() {
+                return utenteService.findAll();
+        }
 }

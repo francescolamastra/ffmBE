@@ -25,6 +25,13 @@ public class ApiGatewayController {
         return apiGatewayProxy.getGiocatori();
     }
 
+    @GetMapping(value = "/utenti")
+    @ResponseBody
+    @Operation(summary = "Recupera tutti gli utenti")
+    public List<UtenteDto> getUtenti() {
+        return apiGatewayProxy.getUtenti();
+    }
+
     @GetMapping(value = "/giocatore/{idFantagazzetta}")
     @ResponseBody
     @Operation(summary = "Recupera un giocatore per ID Fantagazzetta")

@@ -2,6 +2,7 @@ package it.fantacalcio.ffm.service;
 
 import it.fantacalcio.ffm.converter.NazioneConverter;
 import it.fantacalcio.ffm.domain.dto.NazioneDto;
+import it.fantacalcio.ffm.domain.entity.Nazione;
 import it.fantacalcio.ffm.repository.NazioneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,10 @@ public class NazioneService {
 
     public List<NazioneDto> findAll(){
         return nazioneRepository.findAll().stream().map(NazioneConverter::toDto).toList();
+    }
+
+    public NazioneDto save(NazioneDto nazioneDto){
+        Nazione nazioneInserita = nazioneRepository.save(NazioneConverter.toEntity(nazioneDto));
+        return NazioneConverter.toDto(nazioneInserita);
     }
 }

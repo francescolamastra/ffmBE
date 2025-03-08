@@ -2,6 +2,7 @@ package it.fantacalcio.ffm.service;
 
 import it.fantacalcio.ffm.converter.CategoriaConverter;
 import it.fantacalcio.ffm.domain.dto.CategoriaDto;
+import it.fantacalcio.ffm.domain.entity.Categoria;
 import it.fantacalcio.ffm.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,10 @@ public class CategoriaService {
 
     public List<CategoriaDto> findAll(){
         return categoriaRepository.findAll().stream().map(CategoriaConverter::toDto).toList();
+    }
+
+    public CategoriaDto save(CategoriaDto categoriaDto){
+        Categoria categoriaInserita = categoriaRepository.save(CategoriaConverter.toEntity(categoriaDto));
+        return CategoriaConverter.toDto(categoriaInserita);
     }
 }

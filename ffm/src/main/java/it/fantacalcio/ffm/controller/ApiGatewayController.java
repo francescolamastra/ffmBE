@@ -2,12 +2,8 @@ package it.fantacalcio.ffm.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import it.fantacalcio.ffm.domain.dto.GiocatoreDto;
-import it.fantacalcio.ffm.domain.dto.SquadraDto;
-import it.fantacalcio.ffm.domain.dto.UtenteDto;
-import it.fantacalcio.ffm.service.GiocatoreService;
-import it.fantacalcio.ffm.service.SquadraService;
-import it.fantacalcio.ffm.service.UtenteService;
+import it.fantacalcio.ffm.domain.dto.*;
+import it.fantacalcio.ffm.proxy.ApiGatewayProxy;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,45 +12,51 @@ import java.util.List;
 @RequestMapping(value = "/ffm/api")
 @Tag(name = "ApiGatewayController", description = "Gestione delle API di FFM")
 public class ApiGatewayController {
-    private GiocatoreService giocatoreService;
-    private UtenteService utenteService;
-    private SquadraService squadraService;
+    private ApiGatewayProxy apiGatewayProxy;
 
-    public ApiGatewayController(GiocatoreService giocatoreService, UtenteService utenteService, SquadraService squadraService) {
-        this.giocatoreService = giocatoreService;
-        this.utenteService = utenteService;
-        this.squadraService = squadraService;
+    public ApiGatewayController(ApiGatewayProxy apiGatewayProxy) {
+        this.apiGatewayProxy = apiGatewayProxy;
     }
 
     @GetMapping(value = "/giocatori")
     @ResponseBody
     @Operation(summary = "Recupera tutti i giocatori")
     public List<GiocatoreDto> getGiocatori() {
-        return giocatoreService.findAll();
+        return apiGatewayProxy.getGiocatori();
     }
 
     @GetMapping(value = "/giocatore/{idFantagazzetta}")
     @ResponseBody
     @Operation(summary = "Recupera un giocatore per ID Fantagazzetta")
     public GiocatoreDto getGiocatore(@PathVariable Integer idFantagazzetta) {
-        return giocatoreService.findByIdFantagazzetta(idFantagazzetta).orElseThrow();
+        return apiGatewayProxy.getGiocatore(idFantagazzetta);
     }
 
     @PostMapping(value = "/utente")
     @ResponseBody
     @Operation(summary = "Crea un nuovo utente")
     public UtenteDto createUtente(@RequestBody UtenteDto utenteDto) {
-        return utenteService.save(utenteDto);
+        return apiGatewayProxy.createUtente(utenteDto);
     }
 
     @PostMapping(value = "/squadra")
     @ResponseBody
     @Operation(summary = "Crea una nuova squadra associandola ad un utente se passato il relativo ID")
     public SquadraDto createSquadra(@RequestBody SquadraDto squadraDto, @RequestParam(required = false) Integer utenteId) {
-        if (utenteId != null) {
-            return squadraService.save(squadraDto, utenteId);
-        } else {
-            return squadraService.save(squadraDto);
-        }
+        return apiGatewayProxy.createSquadra(squadraDto,utenteId);
+    }
+
+    @PostMapping(value = "/stagione")
+    @ResponseBody
+    @Operation(summary = "Crea una nuova Stagione")
+    public StagioneDto createStagione(@RequestBody StagioneDto stagioneDto) {
+        return apiGatewayProxy.createStagione(stagioneDto);
+    }
+
+    @PostMapping(value = "/operazione")
+    @ResponseBody
+    @Operation(summary = "Crea una nuova Operazione per una specifica squadra e stagione")
+    public OperazioneDto createOperazione(@RequestBody OperazioneDto operazioneDto) {
+        return apiGatewayProxy.createOperazione(operazioneDto);
     }
 }

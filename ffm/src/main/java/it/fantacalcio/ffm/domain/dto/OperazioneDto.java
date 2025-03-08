@@ -1,5 +1,7 @@
 package it.fantacalcio.ffm.domain.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import it.fantacalcio.ffm.utility.CustomInstantDeserializer;
 import lombok.Value;
 
 import java.io.Serializable;
@@ -15,5 +17,6 @@ public class OperazioneDto implements Serializable {
     GiocatoreDto idGiocatore;
     TipoOperazioneDto idTipoOperazione;
     StagioneDto idStagione;
+    @JsonDeserialize(using = CustomInstantDeserializer.class)
     Instant data;
 }

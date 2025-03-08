@@ -2,6 +2,7 @@ package it.fantacalcio.ffm.service;
 
 import it.fantacalcio.ffm.converter.GiocatoreConverter;
 import it.fantacalcio.ffm.domain.dto.GiocatoreDto;
+import it.fantacalcio.ffm.domain.entity.Giocatore;
 import it.fantacalcio.ffm.repository.GiocatoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,10 @@ public class GiocatoreService {
 
     public List<GiocatoreDto> findAll(){
         return giocatoreRepository.findAll().stream().map(GiocatoreConverter::toDto).toList();
+    }
+
+    public GiocatoreDto save(GiocatoreDto giocatoreDto){
+        Giocatore giocatoreInserito = giocatoreRepository.save(GiocatoreConverter.toEntity(giocatoreDto));
+        return GiocatoreConverter.toDto(giocatoreInserito);
     }
 }

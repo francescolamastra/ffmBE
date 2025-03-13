@@ -8,9 +8,9 @@ INSERT INTO categoria (ID, DESCRIZIONE, SIGLA) VALUES
 (2, 'Categoria 2', 'B');
 
 --Giocatore
-INSERT INTO giocatore (ID_FANTAGAZZETTA, NOME, RUOLO, QUOTAZIONE) VALUES
-(1, 'Giocatore 1', 'P', 100),
-(2, 'Giocatore 2', 'A', 200);
+INSERT INTO giocatore (ID_FANTAGAZZETTA, NOME, RUOLO) VALUES
+(1, 'Giocatore 1', 'P'),
+(2, 'Giocatore 2', 'A');
 
 -- Nazione
 INSERT INTO nazione (ID, DESCRIZIONE, SIGLA) VALUES

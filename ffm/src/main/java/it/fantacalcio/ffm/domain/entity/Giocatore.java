@@ -25,7 +25,4 @@ public class Giocatore {
     @Column(name = "RUOLO", nullable = false, length = 1)
     private String ruolo;
 
-    @Column(name = "QUOTAZIONE", nullable = false)
-    private Integer quotazione;
-
 }

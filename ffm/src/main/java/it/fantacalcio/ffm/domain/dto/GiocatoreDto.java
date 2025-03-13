@@ -8,6 +8,5 @@ import java.io.Serializable;
 public record GiocatoreDto(Integer id,
                            Integer idFantagazzetta,
                            String nome,
-                           String ruolo,
-                           Integer quotazione) implements Serializable {
+                           String ruolo) implements Serializable {
 }

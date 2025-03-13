@@ -9,9 +9,15 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+  batch:
+    jdbc:
+      initialize-schema: never
+    job:
+      enabled: false
   sql:
     init:
       mode: never
+      schema-locations: classpath:schema-h2.sql
   h2:
     console:
       enabled: true

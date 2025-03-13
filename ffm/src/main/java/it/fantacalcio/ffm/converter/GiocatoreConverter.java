@@ -12,8 +12,7 @@ public class GiocatoreConverter {
         return new GiocatoreDto(giocatore.getId(),
                 giocatore.getIdFantagazzetta(),
                 giocatore.getNome(),
-                giocatore.getRuolo(),
-                giocatore.getQuotazione());
+                giocatore.getRuolo());
     }
 
     public static Giocatore toEntity(GiocatoreDto giocatore){
@@ -21,7 +20,6 @@ public class GiocatoreConverter {
         giocatoreEntity.setId(giocatore.id());
         giocatoreEntity.setNome(giocatore.nome());
         giocatoreEntity.setRuolo(giocatore.ruolo());
-        giocatoreEntity.setQuotazione(giocatore.quotazione());
         giocatoreEntity.setIdFantagazzetta(giocatore.idFantagazzetta());
         return giocatoreEntity;
     }

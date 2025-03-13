@@ -23,3 +23,9 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui/index.html
+
+ffm:
+  batch:
+    excel-giocatori:
+      skip-rows: 2
+      sheet-name: 'Tutti'

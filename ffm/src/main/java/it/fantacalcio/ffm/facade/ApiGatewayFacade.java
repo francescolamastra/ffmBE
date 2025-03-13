@@ -1,4 +1,4 @@
-package it.fantacalcio.ffm.proxy;
+package it.fantacalcio.ffm.facade;
 
 import it.fantacalcio.ffm.domain.dto.*;
 import it.fantacalcio.ffm.service.*;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ApiGatewayProxy {
+public class ApiGatewayFacade {
 
         private GiocatoreService giocatoreService;
         private NazioneService nazioneService;

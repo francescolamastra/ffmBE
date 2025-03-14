@@ -9,12 +9,12 @@ import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
 
-public class CustomListoneBatchRecordJpaItemWriter implements ItemWriter<ListoneGiocatoreDtoWrapper> {
+public class ImportListoneJpaItemWriter implements ItemWriter<ListoneGiocatoreDtoWrapper> {
 
     private final JpaItemWriter<Giocatore> giocatoreItemWriter;
     private final JpaItemWriter<Listone> listoneItemWriter;
 
-    public CustomListoneBatchRecordJpaItemWriter(JpaItemWriter<Giocatore> giocatoreItemWriter, JpaItemWriter<Listone> listoneItemWriter){
+    public ImportListoneJpaItemWriter(JpaItemWriter<Giocatore> giocatoreItemWriter, JpaItemWriter<Listone> listoneItemWriter){
         this.giocatoreItemWriter = giocatoreItemWriter;
         this.listoneItemWriter = listoneItemWriter;
     }

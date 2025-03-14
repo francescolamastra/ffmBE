@@ -29,3 +29,5 @@ ffm:
     excel-giocatori:
       skip-rows: 2
       sheet-name: 'Tutti'
+    csv-rose:
+      skip-rows: 1

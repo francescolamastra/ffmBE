@@ -2,8 +2,8 @@ package it.fantacalcio.ffm.batch.config;
 
 import it.fantacalcio.ffm.batch.model.ListoneBatchRecord;
 import it.fantacalcio.ffm.batch.model.ListoneGiocatoreDtoWrapper;
-import it.fantacalcio.ffm.batch.reader.ExcelItemReader;
-import it.fantacalcio.ffm.batch.writer.CustomListoneBatchRecordJpaItemWriter;
+import it.fantacalcio.ffm.batch.reader.ImportListoneItemReader;
+import it.fantacalcio.ffm.batch.writer.ImportListoneJpaItemWriter;
 import it.fantacalcio.ffm.domain.entity.Giocatore;
 import it.fantacalcio.ffm.domain.entity.Listone;
 import jakarta.persistence.EntityManagerFactory;
@@ -26,23 +26,23 @@ import org.springframework.core.io.Resource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class ImportGiocatoriBatchConfig {
+public class ImportListoneBatchConfig {
 
     @Bean
-    public Job importGiocatoriJob(JobRepository jobRepository, Step importGiocatoriStep) {
-        return new JobBuilder("importGiocatoriJob", jobRepository)
+    public Job importListoneJob(JobRepository jobRepository, Step importListoneStep) {
+        return new JobBuilder("importListoneJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .start(importGiocatoriStep)
+                .start(importListoneStep)
                 .build();
     }
 
     @Bean
-    public Step importGiocatoriStep(JobRepository jobRepository,
+    public Step importListoneStep(JobRepository jobRepository,
                                     PlatformTransactionManager transactionManager,
                                     ItemReader<ListoneBatchRecord> itemReader,
                                     ItemProcessor<ListoneBatchRecord, ListoneGiocatoreDtoWrapper> itemProcessor,
                                     ItemWriter<ListoneGiocatoreDtoWrapper> customBatchRecordJpaItemWriter) {
-        return new StepBuilder("importGiocatoriStep", jobRepository)
+        return new StepBuilder("importListoneStep", jobRepository)
                 .<ListoneBatchRecord, ListoneGiocatoreDtoWrapper>chunk(10, transactionManager)
                 .reader(itemReader)
                 .processor(itemProcessor)
@@ -66,7 +66,7 @@ public class ImportGiocatoriBatchConfig {
 
     @Bean
     public ItemWriter<ListoneGiocatoreDtoWrapper> customBatchRecordJpaItemWriter(JpaItemWriter<Giocatore> giocatoreItemWriter, JpaItemWriter<Listone> listoneItemWriter) {
-        return new CustomListoneBatchRecordJpaItemWriter(giocatoreItemWriter,listoneItemWriter);
+        return new ImportListoneJpaItemWriter(giocatoreItemWriter,listoneItemWriter);
     }
 
     @Bean
@@ -75,7 +75,7 @@ public class ImportGiocatoriBatchConfig {
                                                      @Value("#{jobParameters['skipRows']}") Long skipRows,
                                                      @Value("#{jobParameters['sheetName']}") String sheetName) throws Exception {
         Resource resource = new FileSystemResource(filePath);
-        return new ExcelItemReader(resource, skipRows, sheetName);
+        return new ImportListoneItemReader(resource, skipRows, sheetName);
     }
 
 }

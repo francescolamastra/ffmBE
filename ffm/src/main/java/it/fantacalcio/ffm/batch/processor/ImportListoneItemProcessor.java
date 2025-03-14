@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class ExcelItemProcessor implements ItemProcessor<ListoneBatchRecord, ListoneGiocatoreDtoWrapper> {
+public class ImportListoneItemProcessor implements ItemProcessor<ListoneBatchRecord, ListoneGiocatoreDtoWrapper> {
     private final ApiGatewayFacade apiGatewayFacade;
 
-    public ExcelItemProcessor(ApiGatewayFacade apiGatewayFacade){
+    public ImportListoneItemProcessor(ApiGatewayFacade apiGatewayFacade){
         this.apiGatewayFacade = apiGatewayFacade;
     }
 

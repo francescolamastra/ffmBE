@@ -14,18 +14,34 @@ public class JobService {
     private JobLauncher jobLauncher;
 
     @Autowired
-    private Job importGiocatoriJob;
+    private Job importListoneJob;
+
+    @Autowired
+    private Job importRoseJob;
 
     @Autowired
     private TaskExecutor taskExecutor;
 
-    public void runImportGiocatoriJob(String filePath, Long skipRows, String sheetName) {
+    public void runImportListoneJob(String filePath, Long skipRows, String sheetName) {
         taskExecutor.execute(() -> {
             try {
-                jobLauncher.run(importGiocatoriJob, new JobParametersBuilder()
+                jobLauncher.run(importListoneJob, new JobParametersBuilder()
                         .addString("filePath", filePath)
                         .addLong("skipRows", skipRows)
                         .addString("sheetName", sheetName)
+                        .toJobParameters());
+            } catch (Exception e) {
+                // Gestisci l'eccezione
+            }
+        });
+    }
+
+    public void runImportRoseJob(String filePath, Long skipRows) {
+        taskExecutor.execute(() -> {
+            try {
+                jobLauncher.run(importRoseJob, new JobParametersBuilder()
+                        .addString("filePath", filePath)
+                        .addLong("skipRows", skipRows)
                         .toJobParameters());
             } catch (Exception e) {
                 // Gestisci l'eccezione

@@ -9,11 +9,11 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Objects;
 
-public class ExcelItemReader implements ItemReader<ListoneBatchRecord> {
+public class ImportListoneItemReader implements ItemReader<ListoneBatchRecord> {
 
     private final Iterator<Row> rowIterator;
 
-    public ExcelItemReader(Resource resource, Long skipRows, String sheetName) throws Exception {
+    public ImportListoneItemReader(Resource resource, Long skipRows, String sheetName) throws Exception {
         try (InputStream inputStream = resource.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheet(sheetName);

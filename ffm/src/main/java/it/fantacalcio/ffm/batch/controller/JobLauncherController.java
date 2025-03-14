@@ -29,9 +29,9 @@ public class JobLauncherController{
         this.env = env;
     }
 
-    @PostMapping(value = "/importGiocatori",  consumes = "multipart/form-data")
-    @Operation(summary = "Import dei giocatori tramite excel fantagazzetta")
-    public String importExcel(@RequestParam("file") MultipartFile file,
+    @PostMapping(value = "/importListone",  consumes = "multipart/form-data")
+    @Operation(summary = "Import del listone tramite excel fantagazzetta")
+    public String importListone(@RequestParam("file") MultipartFile file,
                               @RequestParam(value = "skipRows", required = false) Integer skipRows,
                               @RequestParam(value = "sheetName", required = false) String sheetName) {
         try {
@@ -50,8 +50,32 @@ public class JobLauncherController{
             Files.write(filePath, file.getBytes());
 
             // Esegui il job in modo asyncrono
-            jobService.runImportGiocatoriJob(filePath.toString(), skipRows.longValue(), sheetName);
-            return "Job started";
+            jobService.runImportListoneJob(filePath.toString(), skipRows.longValue(), sheetName);
+            return "Job importListone started";
+        } catch (Exception e) {
+            return "Job failed:"+e;
+        }
+    }
+
+    @PostMapping(value = "/importRose",  consumes = "multipart/form-data")
+    @Operation(summary = "Import delle rose tramite csv fantagazzetta")
+    public String importRose(@RequestParam("file") MultipartFile file,
+                              @RequestParam(value = "skipRows", required = false) Integer skipRows) {
+        try {
+            // Recupera i valori predefiniti da application.yml se i parametri non sono forniti o sono vuoti
+            if (skipRows == null || skipRows.toString().isEmpty()) {
+                skipRows = Integer.parseInt(Objects.requireNonNull(env.getProperty("ffm.batch.csv-rose.skip-rows")));
+            }
+
+            // Salva il file in una directory specifica interna all'applicazione
+            String fileName = Objects.requireNonNull(file.getOriginalFilename());
+            Path filePath = Paths.get("uploads", fileName);
+            Files.createDirectories(filePath.getParent());
+            Files.write(filePath, file.getBytes());
+
+            // Esegui il job in modo asyncrono
+            jobService.runImportRoseJob(filePath.toString(), skipRows.longValue());
+            return "Job importRose started!";
         } catch (Exception e) {
             return "Job failed:"+e;
         }

@@ -5,7 +5,9 @@ INSERT INTO stadio (ID, LIVELLO, COEFFICIENTE, COMPENSO_VITTORIA, COMPENSO_PAREG
 -- Categoria
 INSERT INTO categoria (ID, DESCRIZIONE, SIGLA) VALUES
 (1, 'Categoria 1', 'A'),
-(2, 'Categoria 2', 'B');
+(2, 'Categoria 2', 'B'),
+(3, 'Categoria 3', 'C')
+;
 
 --Giocatore
 INSERT INTO giocatore (ID_FANTAGAZZETTA, NOME, RUOLO) VALUES
@@ -15,7 +17,8 @@ INSERT INTO giocatore (ID_FANTAGAZZETTA, NOME, RUOLO) VALUES
 -- Nazione
 INSERT INTO nazione (ID, DESCRIZIONE, SIGLA) VALUES
 (1, 'Italia', 'ITA'),
-(2, 'Francia', 'FRA');
+(2, 'Euro Nord', 'EN'),
+(3, 'Francia', 'FRA');
 
 -- Squadra
 INSERT INTO squadra (ID, ID_NAZIONE, ID_CATEGORIA, NOME, ID_STADIO, DATA_CREAZIONE) VALUES

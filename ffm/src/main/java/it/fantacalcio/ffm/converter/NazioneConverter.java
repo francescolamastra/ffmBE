@@ -4,7 +4,6 @@ import it.fantacalcio.ffm.domain.dto.NazioneDto;
 import it.fantacalcio.ffm.domain.entity.Nazione;
 import org.springframework.stereotype.Component;
 
-@Component
 public class NazioneConverter {
     private NazioneConverter() {}
 

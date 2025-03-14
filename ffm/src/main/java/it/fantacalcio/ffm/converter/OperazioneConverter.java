@@ -4,7 +4,6 @@ import it.fantacalcio.ffm.domain.dto.OperazioneDto;
 import it.fantacalcio.ffm.domain.entity.Operazione;
 import org.springframework.stereotype.Component;
 
-@Component
 public class OperazioneConverter {
     private OperazioneConverter() {}
 

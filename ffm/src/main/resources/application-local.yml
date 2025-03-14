@@ -16,8 +16,10 @@ spring:
       enabled: false
   sql:
     init:
-      mode: never
-      schema-locations: classpath:schema-h2.sql
+      #mode: never
+      #schema-locations: classpath:schema-h2.sql
+      mode: always
+      data-locations: classpath:clear-batch-tables.sql
   h2:
     console:
       enabled: true

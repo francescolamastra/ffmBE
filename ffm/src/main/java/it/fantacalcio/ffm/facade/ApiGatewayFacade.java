@@ -1,11 +1,14 @@
 package it.fantacalcio.ffm.facade;
 
+import it.fantacalcio.ffm.converter.StagioneConverter;
 import it.fantacalcio.ffm.domain.dto.*;
+import it.fantacalcio.ffm.domain.entity.Stagione;
 import it.fantacalcio.ffm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ApiGatewayFacade {
@@ -79,6 +82,8 @@ public class ApiGatewayFacade {
         public List<CategoriaDto> getCategorie() {
                 return categoriaService.findAll();
         }
+
+        public StagioneDto getLastStagione() { return stagioneService.findFirstByOrderByAnnoFineDesc().orElseThrow(); }
 
         public StagioneDto createStagione(StagioneDto stagioneDto) {
                 return stagioneService.save(stagioneDto);

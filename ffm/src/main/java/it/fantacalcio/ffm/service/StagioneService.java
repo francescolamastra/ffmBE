@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StagioneService {
 
     private final StagioneRepository stagioneRepository;
 
-    @Autowired
     public StagioneService(StagioneRepository stagioneRepository){
         this.stagioneRepository = stagioneRepository;
     }
@@ -26,5 +26,9 @@ public class StagioneService {
 
     public List<StagioneDto> findAll(){
         return stagioneRepository.findAll().stream().map(StagioneConverter::toDto).toList();
+    }
+
+    public Optional<StagioneDto> findFirstByOrderByAnnoFineDesc(){
+        return stagioneRepository.findFirstByOrderByAnnoFineDesc().map(StagioneConverter::toDto);
     }
 }

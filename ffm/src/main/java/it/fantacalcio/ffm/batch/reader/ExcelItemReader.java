@@ -1,18 +1,19 @@
 package it.fantacalcio.ffm.batch.reader;
 
-import it.fantacalcio.ffm.domain.dto.GiocatoreDto;
+import it.fantacalcio.ffm.batch.model.ListoneBatchRecord;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.core.io.Resource;
 
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.Objects;
 
-public class ExcelItemReader implements ItemReader<GiocatoreDto> {
+public class ExcelItemReader implements ItemReader<ListoneBatchRecord> {
 
     private final Iterator<Row> rowIterator;
 
-    public ExcelItemReader(Resource resource, int skipRows, String sheetName) throws Exception {
+    public ExcelItemReader(Resource resource, Long skipRows, String sheetName) throws Exception {
         try (InputStream inputStream = resource.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheet(sheetName);
@@ -28,14 +29,16 @@ public class ExcelItemReader implements ItemReader<GiocatoreDto> {
     }
 
     @Override
-    public GiocatoreDto read() {
+    public ListoneBatchRecord read() {
         if (rowIterator.hasNext()) {
             Row row = rowIterator.next();
 
-            return new GiocatoreDto(0,
-                    Integer.parseInt(getCellValue(row.getCell(0))),
+            return new ListoneBatchRecord(
+                    Integer.parseInt(Objects.requireNonNull(getCellValue(row.getCell(0)))),
                     getCellValue(row.getCell(3)),
-                    getCellValue(row.getCell(1)));
+                    getCellValue(row.getCell(1)),
+                    Integer.parseInt(Objects.requireNonNull(getCellValue(row.getCell(11))))
+            );
         }
         return null;
     }

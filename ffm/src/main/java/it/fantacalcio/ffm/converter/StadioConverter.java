@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.StadioDto;
 import it.fantacalcio.ffm.domain.entity.Stadio;
-import org.springframework.stereotype.Component;
 
-@Component
 public class StadioConverter {
     private StadioConverter() {}
 

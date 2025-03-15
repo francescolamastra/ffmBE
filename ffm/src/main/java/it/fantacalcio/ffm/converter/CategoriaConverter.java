@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.CategoriaDto;
 import it.fantacalcio.ffm.domain.entity.Categoria;
-import org.springframework.stereotype.Component;
 
-@Component
 public class CategoriaConverter {
     private CategoriaConverter() {}
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SquadraService {
@@ -28,20 +29,24 @@ public class SquadraService {
     }
     public SquadraDto save(SquadraDto squadraDto, Integer utenteId){
         Utente utente = utenteRepository.findById(utenteId).orElseThrow();
-        Squadra squadraInsertita = squadraRepository.save(SquadraConverter.toEntity(squadraDto));
+        Squadra squadraInserita = squadraRepository.save(SquadraConverter.toEntity(squadraDto));
         UtenteSquadra utenteSquadra = new UtenteSquadra();
         utenteSquadra.setIdUtente(utente);
-        utenteSquadra.setIdSquadra(squadraInsertita);
+        utenteSquadra.setIdSquadra(squadraInserita);
         utenteSquadraRepository.save(utenteSquadra);
-        return SquadraConverter.toDto(squadraInsertita);
+        return SquadraConverter.toDto(squadraInserita);
     }
 
     public SquadraDto save(SquadraDto squadraDto){
-        Squadra squadraInsertita = squadraRepository.save(SquadraConverter.toEntity(squadraDto));
-        return SquadraConverter.toDto(squadraInsertita);
+        Squadra squadraInserita = squadraRepository.save(SquadraConverter.toEntity(squadraDto));
+        return SquadraConverter.toDto(squadraInserita);
     }
 
     public List<SquadraDto> findAll(){
         return squadraRepository.findAll().stream().map(SquadraConverter::toDto).toList();
+    }
+
+    public Optional<SquadraDto> findByNome(String nome){
+        return squadraRepository.findByNome(nome).map(SquadraConverter::toDto);
     }
 }

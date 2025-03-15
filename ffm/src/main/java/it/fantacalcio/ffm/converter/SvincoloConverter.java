@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.SvincoloDto;
 import it.fantacalcio.ffm.domain.entity.Svincolo;
-import org.springframework.stereotype.Component;
 
-@Component
 public class SvincoloConverter {
     private SvincoloConverter() {}
 

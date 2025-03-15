@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.BonusDto;
 import it.fantacalcio.ffm.domain.entity.Bonus;
-import org.springframework.stereotype.Component;
 
-@Component
 public class BonusConverter {
     private BonusConverter() {}
 

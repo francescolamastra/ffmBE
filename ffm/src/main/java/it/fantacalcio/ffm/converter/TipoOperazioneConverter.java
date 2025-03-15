@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.TipoOperazioneDto;
 import it.fantacalcio.ffm.domain.entity.TipoOperazione;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TipoOperazioneConverter {
     private TipoOperazioneConverter() {}
 

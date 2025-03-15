@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.FidoDto;
 import it.fantacalcio.ffm.domain.entity.Fido;
-import org.springframework.stereotype.Component;
 
-@Component
 public class FidoConverter {
     private FidoConverter() {}
 

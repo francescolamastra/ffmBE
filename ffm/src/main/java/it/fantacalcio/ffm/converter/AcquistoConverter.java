@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.AcquistoDto;
 import it.fantacalcio.ffm.domain.entity.Acquisto;
-import org.springframework.stereotype.Component;
 
-@Component
 public class AcquistoConverter {
     private AcquistoConverter() {}
 

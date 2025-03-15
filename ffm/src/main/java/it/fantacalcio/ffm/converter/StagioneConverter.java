@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.StagioneDto;
 import it.fantacalcio.ffm.domain.entity.Stagione;
-import org.springframework.stereotype.Component;
 
-@Component
 public class StagioneConverter {
     private StagioneConverter() {}
 

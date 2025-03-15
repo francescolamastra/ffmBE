@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.FaseCompetizioneDto;
 import it.fantacalcio.ffm.domain.entity.FaseCompetizione;
-import org.springframework.stereotype.Component;
 
-@Component
 public class FaseCompetizioneConverter {
     private FaseCompetizioneConverter() {}
 

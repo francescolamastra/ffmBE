@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.GettoneDto;
 import it.fantacalcio.ffm.domain.entity.Gettone;
-import org.springframework.stereotype.Component;
 
-@Component
 public class GettoneConverter {
     private GettoneConverter() {}
 

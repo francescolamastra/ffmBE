@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.CredenzialiDto;
 import it.fantacalcio.ffm.domain.entity.Credenziali;
-import org.springframework.stereotype.Component;
 
-@Component
 public class CredenzialiConverter {
     private CredenzialiConverter() {}
 

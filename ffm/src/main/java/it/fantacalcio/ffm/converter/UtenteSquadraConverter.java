@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.UtenteSquadraDto;
 import it.fantacalcio.ffm.domain.entity.UtenteSquadra;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UtenteSquadraConverter {
     private UtenteSquadraConverter() {}
 

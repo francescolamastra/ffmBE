@@ -2,9 +2,7 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.TrattativaDto;
 import it.fantacalcio.ffm.domain.entity.Trattativa;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TrattativaConverter {
     private TrattativaConverter() {}
 

@@ -67,6 +67,8 @@ public class ApiGatewayFacade {
                 return squadraService.findAll();
         }
 
+        public Optional<SquadraDto> getSquadraByNome(String nome) { return squadraService.findByNome(nome); }
+
         public List<StagioneDto> getStagioni() {
                 return stagioneService.findAll();
         }
@@ -74,6 +76,8 @@ public class ApiGatewayFacade {
         public List<NazioneDto> getNazioni() {
                 return nazioneService.findAll();
         }
+
+        public NazioneDto getNazioneBySigla(String sigla) { return nazioneService.findBySigla(sigla).orElseThrow(); }
 
         public List<UtenteDto> getUtenti() {
                 return utenteService.findAll();
@@ -83,7 +87,9 @@ public class ApiGatewayFacade {
                 return categoriaService.findAll();
         }
 
-        public StagioneDto getLastStagione() { return stagioneService.findFirstByOrderByAnnoFineDesc().orElseThrow(); }
+        public CategoriaDto getCategoriaBySigla(String sigla) { return categoriaService.findBySigla(sigla).orElseThrow(); }
+
+        public StagioneDto getLastStagione() { return stagioneService.getLastStagione().orElseThrow(); }
 
         public StagioneDto createStagione(StagioneDto stagioneDto) {
                 return stagioneService.save(stagioneDto);

@@ -26,10 +26,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class ImportRoseBatchConfig {
 
     @Bean
-    public Job importRoseJob(JobRepository jobRepository, Step importRoseStep) {
+    public Job importRoseJob(JobRepository jobRepository,
+                             Step importRoseStep,
+                             Step deleteInputFileStep) {
         return new JobBuilder("importRoseJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(importRoseStep)
+                .next(deleteInputFileStep)
                 .build();
     }
 

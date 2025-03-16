@@ -29,10 +29,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class ImportListoneBatchConfig {
 
     @Bean
-    public Job importListoneJob(JobRepository jobRepository, Step importListoneStep) {
+    public Job importListoneJob(JobRepository jobRepository,
+                                Step importListoneStep,
+                                Step deleteInputFileStep) {
         return new JobBuilder("importListoneJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(importListoneStep)
+                .next(deleteInputFileStep)
                 .build();
     }
 

@@ -6,19 +6,16 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class CustomInstantDeserializer extends JsonDeserializer<Instant> {
+public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     @Override
-    public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         String dateString = p.getText();
-        LocalDateTime localDateTime = LocalDateTime.parse(dateString, formatter);
-        return localDateTime.atZone(ZoneId.systemDefault()).toInstant();
+        return LocalDateTime.parse(dateString, formatter);
     }
 }

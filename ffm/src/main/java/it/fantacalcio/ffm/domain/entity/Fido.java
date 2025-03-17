@@ -27,7 +27,7 @@ public class Fido {
     @Column(name = "IMPORTO", nullable = false)
     private Integer importo;
 
-    @Column(name = "TIPO_FIDO", nullable = false, length = 1)
-    private String tipoFido;
+    @Column(name = "SEGNO_FIDO", nullable = false, length = 1)
+    private String segnoFido;
 
 }

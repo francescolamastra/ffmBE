@@ -1,11 +1,11 @@
 package it.fantacalcio.ffm.domain.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import it.fantacalcio.ffm.utility.CustomInstantDeserializer;
+import it.fantacalcio.ffm.utility.CustomLocalDateTimeDeserializer;
 import lombok.Value;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * DTO for {@link it.fantacalcio.ffm.domain.entity.Operazione}
@@ -17,6 +17,6 @@ public class OperazioneDto implements Serializable {
     GiocatoreDto idGiocatore;
     TipoOperazioneDto idTipoOperazione;
     StagioneDto idStagione;
-    @JsonDeserialize(using = CustomInstantDeserializer.class)
-    Instant data;
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    LocalDateTime dataCreazione;
 }

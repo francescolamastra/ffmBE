@@ -30,7 +30,7 @@ public class ApiGatewayController {
     @ResponseBody
     @Operation(summary = "Recupera un giocatore per ID Fantagazzetta")
     public GiocatoreDto getGiocatore(@PathVariable Integer idFantagazzetta) {
-        return apiGatewayFacade.getGiocatore(idFantagazzetta);
+        return apiGatewayFacade.getGiocatoreByIdFantagazzetta(idFantagazzetta);
     }
 
     @GetMapping(value = "/utenti")

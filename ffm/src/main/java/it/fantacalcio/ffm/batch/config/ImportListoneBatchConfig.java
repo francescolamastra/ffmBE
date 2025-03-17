@@ -35,7 +35,8 @@ public class ImportListoneBatchConfig {
         return new JobBuilder("importListoneJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(importListoneStep)
-                .next(deleteInputFileStep)
+                .on("*").to(deleteInputFileStep) // Esegui deleteInputFileStep indipendentemente dal risultato di importListoneStep
+                .from(deleteInputFileStep).end()
                 .build();
     }
 

@@ -3,7 +3,7 @@ package it.fantacalcio.ffm.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,7 +34,12 @@ public class Operazione {
     @JoinColumn(name = "ID_STAGIONE", nullable = false)
     private Stagione idStagione;
 
-    @Column(name = "DATA", nullable = false)
-    private Instant data;
+    @Column(name = "DATA_CREAZIONE", nullable = false)
+    private LocalDateTime dataCreazione;
+
+    @PrePersist
+    protected void onCreate() {
+        dataCreazione = LocalDateTime.now();
+    }
 
 }

@@ -3,7 +3,7 @@ package it.fantacalcio.ffm.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +26,6 @@ public class Gettone {
     private Integer quantita;
 
     @Column(name = "DATA_ACQUISTO")
-    private Instant dataAcquisto;
+    private LocalDateTime dataAcquisto;
 
 }

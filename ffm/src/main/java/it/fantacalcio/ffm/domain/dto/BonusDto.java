@@ -15,5 +15,5 @@ public class BonusDto implements Serializable {
     DettaglioBonusDto idDettBonus;
     Integer massimale;
     Integer importoSingolo;
-    String tipoBonus;
+    String segnoBonus;
 }

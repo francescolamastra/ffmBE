@@ -28,8 +28,8 @@ public class TransazioneTrattativa {
     @Column(name = "IMPORTO", nullable = false)
     private Integer importo;
 
-    @Column(name = "TIPO_TRANSAZIONE", nullable = false, length = 1)
-    private String tipoTransazione;
+    @Column(name = "SEGNO_TRANSAZIONE", nullable = false, length = 1)
+    private String segnoTransazione;
 
     @ColumnDefault("0")
     @Column(name = "GETTONI_SPESI", nullable = false)

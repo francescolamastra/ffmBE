@@ -2,7 +2,6 @@ package it.fantacalcio.ffm.converter;
 
 import it.fantacalcio.ffm.domain.dto.OperazioneDto;
 import it.fantacalcio.ffm.domain.entity.Operazione;
-import org.springframework.stereotype.Component;
 
 public class OperazioneConverter {
     private OperazioneConverter() {}
@@ -13,7 +12,7 @@ public class OperazioneConverter {
                 GiocatoreConverter.toDto(operazione.getIdGiocatore()),
                 TipoOperazioneConverter.toDto(operazione.getIdTipoOperazione()),
                 StagioneConverter.toDto(operazione.getIdStagione()),
-                operazione.getData());
+                operazione.getDataCreazione());
     }
 
     public static Operazione toEntity(OperazioneDto operazione){
@@ -23,7 +22,7 @@ public class OperazioneConverter {
         operazioneEntity.setIdSquadra(SquadraConverter.toEntity(operazione.getIdSquadra()));
         operazioneEntity.setIdStagione(StagioneConverter.toEntity(operazione.getIdStagione()));
         operazioneEntity.setIdGiocatore(GiocatoreConverter.toEntity(operazione.getIdGiocatore()));
-        operazioneEntity.setData(operazione.getData());
+        operazioneEntity.setDataCreazione(operazione.getDataCreazione());
         return operazioneEntity;
     }
 }

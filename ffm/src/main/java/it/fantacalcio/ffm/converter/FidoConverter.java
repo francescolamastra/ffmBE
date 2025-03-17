@@ -10,13 +10,13 @@ public class FidoConverter {
         return new FidoDto(fido.getId(),
                 TrattativaConverter.toDto(fido.getIdTrattativa()),
                 SquadraConverter.toDto(fido.getIdSquadra()),
-                fido.getImporto(), fido.getTipoFido());
+                fido.getImporto(), fido.getSegnoFido());
     }
 
     public static Fido toEntity(FidoDto fido){
         Fido fidoEntity = new Fido();
         fidoEntity.setId(fido.getId());
-        fidoEntity.setTipoFido(fido.getTipoFido());
+        fidoEntity.setSegnoFido(fido.getSegnoFido());
         fidoEntity.setImporto(fido.getImporto());
         fidoEntity.setIdSquadra(SquadraConverter.toEntity(fido.getIdSquadra()));
         fidoEntity.setIdTrattativa(TrattativaConverter.toEntity(fido.getIdTrattativa()));

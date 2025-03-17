@@ -1,5 +1,6 @@
 package it.fantacalcio.ffm.service;
 
+import it.fantacalcio.ffm.cache.SquadraCache;
 import it.fantacalcio.ffm.converter.SquadraConverter;
 import it.fantacalcio.ffm.domain.dto.SquadraDto;
 import it.fantacalcio.ffm.domain.entity.Squadra;
@@ -18,12 +19,14 @@ import java.util.Optional;
 public class SquadraService {
 
     private final SquadraRepository squadraRepository;
+    private final SquadraCache squadraCache;
     private final UtenteRepository utenteRepository;
     private final UtenteSquadraRepository utenteSquadraRepository;
 
     @Autowired
-    public SquadraService(SquadraRepository squadraRepository, UtenteRepository utenteRepository, UtenteSquadraRepository utenteSquadraRepository){
+    public SquadraService(SquadraRepository squadraRepository, SquadraCache squadraCache, UtenteRepository utenteRepository, UtenteSquadraRepository utenteSquadraRepository){
         this.squadraRepository = squadraRepository;
+        this.squadraCache = squadraCache;
         this.utenteRepository = utenteRepository;
         this.utenteSquadraRepository = utenteSquadraRepository;
     }
@@ -46,7 +49,19 @@ public class SquadraService {
         return squadraRepository.findAll().stream().map(SquadraConverter::toDto).toList();
     }
 
-    public Optional<SquadraDto> findByNome(String nome){
-        return squadraRepository.findByNome(nome).map(SquadraConverter::toDto);
+    public SquadraDto findByNome(SquadraDto squadraDto) {
+        return squadraCache.getSquadraList().stream()
+                .filter(c -> c.getNome().equalsIgnoreCase(squadraDto.getNome()))
+                .findFirst()
+                .orElseGet(() -> {
+                    Optional<Squadra> optionalSquadraFromDB = squadraRepository.findByNome(squadraDto.getNome());
+                    if (optionalSquadraFromDB.isPresent()) {
+                        SquadraDto squadraDtoDB = SquadraConverter.toDto(optionalSquadraFromDB.get());
+                        squadraCache.addSquadra(squadraDtoDB);
+                        return squadraDtoDB;
+                    } else {
+                        return save(squadraDto);
+                    }
+                });
     }
 }

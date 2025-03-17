@@ -1,14 +1,11 @@
 package it.fantacalcio.ffm.facade;
 
-import it.fantacalcio.ffm.converter.StagioneConverter;
 import it.fantacalcio.ffm.domain.dto.*;
-import it.fantacalcio.ffm.domain.entity.Stagione;
 import it.fantacalcio.ffm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class ApiGatewayFacade {
@@ -20,6 +17,7 @@ public class ApiGatewayFacade {
         private StagioneService stagioneService;
         private OperazioneService operazioneService;
         private CategoriaService categoriaService;
+        private TipoOperazioneService tipoOperazioneService;
 
         /* INIZIO METODI SETTER PER INJECTION */
         @Autowired
@@ -52,6 +50,9 @@ public class ApiGatewayFacade {
 
         @Autowired
         public void setCategoriaService(CategoriaService categoriaService) { this.categoriaService = categoriaService; }
+
+        @Autowired
+        public void setTipoOperazioneService(TipoOperazioneService tipoOperazioneService) { this.tipoOperazioneService = tipoOperazioneService; }
         /* FINE METODI SETTER PER INJECTION */
 
         /* METODI DI DOMINIO */
@@ -59,7 +60,7 @@ public class ApiGatewayFacade {
                 return giocatoreService.findAll();
         }
 
-        public GiocatoreDto getGiocatore(Integer idFantagazzetta) {
+        public GiocatoreDto getGiocatoreByIdFantagazzetta(Integer idFantagazzetta) {
                 return giocatoreService.findByIdFantagazzetta(idFantagazzetta).orElseThrow();
         }
 
@@ -67,7 +68,7 @@ public class ApiGatewayFacade {
                 return squadraService.findAll();
         }
 
-        public Optional<SquadraDto> getSquadraByNome(String nome) { return squadraService.findByNome(nome); }
+        public SquadraDto getSquadraByNome(SquadraDto squadraDto) { return squadraService.findByNome(squadraDto); }
 
         public List<StagioneDto> getStagioni() {
                 return stagioneService.findAll();
@@ -88,6 +89,8 @@ public class ApiGatewayFacade {
         }
 
         public CategoriaDto getCategoriaBySigla(String sigla) { return categoriaService.findBySigla(sigla).orElseThrow(); }
+
+        public TipoOperazioneDto getTipoOperazioneBySigla(String sigla) { return tipoOperazioneService.findBySigla(sigla).orElseThrow(); }
 
         public StagioneDto getLastStagione() { return stagioneService.getLastStagione().orElseThrow(); }
 

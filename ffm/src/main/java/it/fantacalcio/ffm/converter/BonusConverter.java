@@ -12,14 +12,14 @@ public class BonusConverter {
                 DettaglioBonusConverter.toDto(bonus.getIdDettBonus()),
                 bonus.getMassimale(),
                 bonus.getImportoSingolo(),
-                bonus.getTipoBonus());
+                bonus.getSegnoBonus());
     }
 
     public static Bonus toEntity(BonusDto bonus){
         Bonus bonusEntity = new Bonus();
         bonusEntity.setId(bonus.getId());
         bonusEntity.setIdDettBonus(DettaglioBonusConverter.toEntity(bonus.getIdDettBonus()));
-        bonusEntity.setTipoBonus(bonus.getTipoBonus());
+        bonusEntity.setSegnoBonus(bonus.getSegnoBonus());
         bonusEntity.setMassimale(bonus.getMassimale());
         bonusEntity.setImportoSingolo(bonus.getImportoSingolo());
         bonusEntity.setIdDettTrattativa(DettaglioTrattativaConverter.toEntity(bonus.getIdDettTrattativa()));

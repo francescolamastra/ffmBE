@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,12 +47,19 @@ public class JobLauncherController{
             // Salva il file in una directory specifica interna all'applicazione
             String fileName = Objects.requireNonNull(file.getOriginalFilename());
             Path filePath = Paths.get("uploads", fileName);
+
+            if (Files.exists(filePath)) {
+                throw new FileAlreadyExistsException("File " + fileName + " already exists");
+            }
+
             Files.createDirectories(filePath.getParent());
             Files.write(filePath, file.getBytes());
 
             // Esegui il job in modo asyncrono
             jobService.runImportListoneJob(filePath.toString(), skipRows.longValue(), sheetName);
             return "Job importListone started";
+        } catch (FileAlreadyExistsException e) {
+            return "Job failed: " + e.getMessage();
         } catch (Exception e) {
             return "Job failed:"+e;
         }
@@ -70,12 +78,19 @@ public class JobLauncherController{
             // Salva il file in una directory specifica interna all'applicazione
             String fileName = Objects.requireNonNull(file.getOriginalFilename());
             Path filePath = Paths.get("uploads", fileName);
+
+            if (Files.exists(filePath)) {
+                throw new FileAlreadyExistsException("File " + fileName + " already exists");
+            }
+
             Files.createDirectories(filePath.getParent());
             Files.write(filePath, file.getBytes());
 
             // Esegui il job in modo asyncrono
             jobService.runImportRoseJob(filePath.toString(), skipRows.longValue());
             return "Job importRose started!";
+        } catch (FileAlreadyExistsException e) {
+            return "Job failed: " + e.getMessage();
         } catch (Exception e) {
             return "Job failed:"+e;
         }

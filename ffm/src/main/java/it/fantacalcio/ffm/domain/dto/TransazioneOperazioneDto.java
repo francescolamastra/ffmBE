@@ -12,5 +12,5 @@ public class TransazioneOperazioneDto implements Serializable {
     Integer id;
     OperazioneDto idOperazione;
     Integer importo;
-    String tipoTransazione;
+    String segnoTransazione;
 }

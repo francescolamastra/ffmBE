@@ -13,5 +13,5 @@ public class FidoDto implements Serializable {
     TrattativaDto idTrattativa;
     SquadraDto idSquadra;
     Integer importo;
-    String tipoFido;
+    String segnoFido;
 }

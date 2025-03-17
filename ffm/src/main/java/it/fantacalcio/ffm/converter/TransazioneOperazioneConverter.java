@@ -10,14 +10,14 @@ public class TransazioneOperazioneConverter {
         return new TransazioneOperazioneDto(transazioneOperazione.getId(),
                 OperazioneConverter.toDto(transazioneOperazione.getIdOperazione()),
                 transazioneOperazione.getImporto(),
-                transazioneOperazione.getTipoTransazione());
+                transazioneOperazione.getSegnoTransazione());
     }
 
     public static TransazioneOperazione toEntity(TransazioneOperazioneDto transazioneOperazione){
         TransazioneOperazione transazioneOperazioneEntity = new TransazioneOperazione();
         transazioneOperazioneEntity.setId(transazioneOperazione.getId());
         transazioneOperazioneEntity.setIdOperazione(OperazioneConverter.toEntity(transazioneOperazione.getIdOperazione()));
-        transazioneOperazioneEntity.setTipoTransazione(transazioneOperazione.getTipoTransazione());
+        transazioneOperazioneEntity.setSegnoTransazione(transazioneOperazione.getSegnoTransazione());
         transazioneOperazioneEntity.setImporto(transazioneOperazione.getImporto());
         return transazioneOperazioneEntity;
     }

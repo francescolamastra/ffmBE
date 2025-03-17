@@ -11,7 +11,7 @@ public class TransazioneTrattativaConverter {
                 TrattativaConverter.toDto(transazioneTrattativa.getIdTrattativa()),
                 SquadraConverter.toDto(transazioneTrattativa.getIdSquadra()),
                 transazioneTrattativa.getImporto(),
-                transazioneTrattativa.getTipoTransazione(),
+                transazioneTrattativa.getSegnoTransazione(),
                 transazioneTrattativa.getGettoniSpesi());
     }
 
@@ -19,7 +19,7 @@ public class TransazioneTrattativaConverter {
         TransazioneTrattativa transazioneTrattativaEntity = new TransazioneTrattativa();
         transazioneTrattativaEntity.setId(transazioneTrattativa.getId());
         transazioneTrattativaEntity.setIdTrattativa(TrattativaConverter.toEntity(transazioneTrattativa.getIdTrattativa()));
-        transazioneTrattativaEntity.setTipoTransazione(transazioneTrattativa.getTipoTransazione());
+        transazioneTrattativaEntity.setSegnoTransazione(transazioneTrattativa.getSegnoTransazione());
         transazioneTrattativaEntity.setImporto(transazioneTrattativa.getImporto());
         transazioneTrattativaEntity.setGettoniSpesi(transazioneTrattativa.getGettoniSpesi());
         transazioneTrattativaEntity.setIdSquadra(SquadraConverter.toEntity(transazioneTrattativa.getIdSquadra()));

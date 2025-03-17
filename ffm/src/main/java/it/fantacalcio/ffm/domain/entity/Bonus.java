@@ -30,7 +30,7 @@ public class Bonus {
     @Column(name = "IMPORTO_SINGOLO", nullable = false)
     private Integer importoSingolo;
 
-    @Column(name = "TIPO_BONUS", nullable = false, length = 1)
-    private String tipoBonus;
+    @Column(name = "SEGNO_BONUS", nullable = false, length = 1)
+    private String segnoBonus;
 
 }

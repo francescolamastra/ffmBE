@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 public class RosaBatchRecord implements Serializable {
-    String squadra;
+    String squadraNazioneCategoria;
     String idFantagazzetta;
     String costoAcquisto;
 }

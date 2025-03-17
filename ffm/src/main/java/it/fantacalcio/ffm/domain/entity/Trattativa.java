@@ -3,7 +3,7 @@ package it.fantacalcio.ffm.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +23,6 @@ public class Trattativa {
     private Stagione idStagione;
 
     @Column(name = "DATA", nullable = false)
-    private Instant data;
+    private LocalDateTime data;
 
 }

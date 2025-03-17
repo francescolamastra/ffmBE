@@ -13,6 +13,6 @@ public class TransazioneTrattativaDto implements Serializable {
     TrattativaDto idTrattativa;
     SquadraDto idSquadra;
     Integer importo;
-    String tipoTransazione;
+    String segnoTransazione;
     Integer gettoniSpesi;
 }

@@ -1,6 +1,10 @@
 package it.fantacalcio.ffm.batch.config;
 
 import it.fantacalcio.ffm.batch.model.RosaBatchRecord;
+import it.fantacalcio.ffm.domain.dto.OperazioneDto;
+import it.fantacalcio.ffm.domain.entity.Listone;
+import it.fantacalcio.ffm.domain.entity.Operazione;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -11,6 +15,7 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -32,7 +37,8 @@ public class ImportRoseBatchConfig {
         return new JobBuilder("importRoseJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(importRoseStep)
-                .next(deleteInputFileStep)
+                .on("*").to(deleteInputFileStep) // Esegui deleteInputFileStep indipendentemente dal risultato di importRoseStep
+                .from(deleteInputFileStep).end()
                 .build();
     }
 
@@ -40,13 +46,13 @@ public class ImportRoseBatchConfig {
     public Step importRoseStep(JobRepository jobRepository,
                                     PlatformTransactionManager transactionManager,
                                     ItemReader<RosaBatchRecord> readerRosaBatchRecord,
-                                    ItemProcessor<RosaBatchRecord, RosaBatchRecord> processorRosaBatchRecord,
-                                    ItemWriter<RosaBatchRecord> writerRosaBatchRecord) {
+                                    ItemProcessor<RosaBatchRecord, Operazione> processorRosaBatchRecord,
+                                    ItemWriter<Operazione> operazioneItemWriter) {
         return new StepBuilder("importRoseStep", jobRepository)
-                .<RosaBatchRecord, RosaBatchRecord>chunk(10, transactionManager)
+                .<RosaBatchRecord, Operazione>chunk(10, transactionManager)
                 .reader(readerRosaBatchRecord)
                 .processor(processorRosaBatchRecord)
-                .writer(writerRosaBatchRecord)
+                .writer(operazioneItemWriter)
                 .build();
     }
 
@@ -67,7 +73,7 @@ public class ImportRoseBatchConfig {
 
         DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
         tokenizer.setDelimiter(",");
-        tokenizer.setNames("squadra", "idFantagazzetta", "costoAcquisto");
+        tokenizer.setNames("squadraNazioneCategoria", "idFantagazzetta", "costoAcquisto");
 
         BeanWrapperFieldSetMapper<RosaBatchRecord> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(RosaBatchRecord.class);
@@ -76,6 +82,13 @@ public class ImportRoseBatchConfig {
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
         return lineMapper;
+    }
+
+    @Bean
+    public JpaItemWriter<Operazione> operazioneItemWriter(EntityManagerFactory entityManagerFactory) {
+        JpaItemWriter<Operazione> writer = new JpaItemWriter<>();
+        writer.setEntityManagerFactory(entityManagerFactory);
+        return writer;
     }
 
 }

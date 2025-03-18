@@ -7,7 +7,7 @@ public class Constants {
 
     // Esempio di costanti
     public static final String APP_NAME = "Fantacalcio";
-    public static final int MAX_PLAYERS = 25;
+    public static final int ANNI_CONTRATTO_DEFAULT = 3;
 
     // Enumerazione per TipoOperazione
     @Getter

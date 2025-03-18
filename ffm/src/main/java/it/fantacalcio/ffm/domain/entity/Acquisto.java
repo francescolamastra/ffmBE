@@ -16,7 +16,7 @@ public class Acquisto {
     @Column(name = "ID", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ID_OPERAZIONE", nullable = false)
     private Operazione idOperazione;
 

@@ -2,15 +2,11 @@ package it.fantacalcio.ffm.batch.processor;
 
 import it.fantacalcio.ffm.batch.model.RosaBatchRecord;
 import it.fantacalcio.ffm.builder.SquadraDtoBuilder;
-import it.fantacalcio.ffm.cache.TipoOperazioneCache;
-import it.fantacalcio.ffm.converter.GiocatoreConverter;
-import it.fantacalcio.ffm.converter.SquadraConverter;
-import it.fantacalcio.ffm.converter.StagioneConverter;
-import it.fantacalcio.ffm.converter.TipoOperazioneConverter;
+import it.fantacalcio.ffm.converter.*;
 import it.fantacalcio.ffm.domain.dto.*;
-import it.fantacalcio.ffm.domain.entity.Giocatore;
 import it.fantacalcio.ffm.domain.entity.Operazione;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
+import it.fantacalcio.ffm.utility.Constants;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static it.fantacalcio.ffm.utility.Constants.ANNI_CONTRATTO_DEFAULT;
 import static it.fantacalcio.ffm.utility.Constants.TipoOperazione.ACQUISTO;
 
 @Component
@@ -40,12 +37,24 @@ public class ImportRoseItemProcessor implements ItemProcessor<RosaBatchRecord, O
             GiocatoreDto giocatoreDto = apiGatewayFacade.getGiocatoreByIdFantagazzetta(Integer.valueOf(item.getIdFantagazzetta()));
             TipoOperazioneDto tipoOperazioneDto = apiGatewayFacade.getTipoOperazioneBySigla(ACQUISTO.getSigla());
             StagioneDto stagioneDto = apiGatewayFacade.getLastStagione();
-            return new Operazione(null,
-                    SquadraConverter.toEntity(squadraDto),
-                    GiocatoreConverter.toEntity(giocatoreDto),
-                    TipoOperazioneConverter.toEntity(tipoOperazioneDto),
-                    StagioneConverter.toEntity(stagioneDto),
-                    LocalDateTime.now());
+            OperazioneDto operazioneDto = new OperazioneDto();
+            operazioneDto.setIdSquadra(squadraDto);
+            operazioneDto.setIdGiocatore(giocatoreDto);
+            operazioneDto.setIdStagione(stagioneDto);
+            operazioneDto.setIdTipoOperazione(tipoOperazioneDto);
+            operazioneDto.setDataCreazione(LocalDateTime.now());
+            TransazioneOperazioneDto transazioneOperazioneDto = new TransazioneOperazioneDto(
+                    null,
+                    operazioneDto,
+                    Integer.valueOf(item.getCostoAcquisto()),
+                    Constants.Segno.DEBITO.getSigla()
+            );
+            AcquistoDto acquistoDto = new AcquistoDto(null,
+                    operazioneDto,
+                    ANNI_CONTRATTO_DEFAULT);
+            operazioneDto.setTransazione(transazioneOperazioneDto);
+            operazioneDto.setAcquisto(acquistoDto);
+            return OperazioneConverter.toEntity(operazioneDto);
         }else{
             return null;
         }

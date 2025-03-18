@@ -34,6 +34,15 @@ public class Operazione {
     @JoinColumn(name = "ID_STAGIONE", nullable = false)
     private Stagione idStagione;
 
+    @OneToOne(mappedBy = "idOperazione", cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
+    private TransazioneOperazione transazione;
+
+    @OneToOne(mappedBy = "idOperazione", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Acquisto acquisto;
+
+    @OneToOne(mappedBy = "idOperazione", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Svincolo svincolo;
+
     @Column(name = "DATA_CREAZIONE", nullable = false)
     private LocalDateTime dataCreazione;
 

@@ -1,10 +1,14 @@
 package it.fantacalcio.ffm.facade;
 
 import it.fantacalcio.ffm.domain.dto.*;
+import it.fantacalcio.ffm.domain.model.TrattativaScambio;
 import it.fantacalcio.ffm.service.*;
+import it.fantacalcio.ffm.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -18,6 +22,8 @@ public class ApiGatewayFacade {
         private OperazioneService operazioneService;
         private CategoriaService categoriaService;
         private TipoOperazioneService tipoOperazioneService;
+        private TrattativaService trattativaService;
+        private TransazioneTrattativaService transazioneTrattativaService;
 
         /* INIZIO METODI SETTER PER INJECTION */
         @Autowired
@@ -53,6 +59,12 @@ public class ApiGatewayFacade {
 
         @Autowired
         public void setTipoOperazioneService(TipoOperazioneService tipoOperazioneService) { this.tipoOperazioneService = tipoOperazioneService; }
+
+        @Autowired
+        public void setTrattativaService(TrattativaService trattativaService) { this.trattativaService = trattativaService; }
+
+        @Autowired
+        public void setTransazioneTrattativaService(TransazioneTrattativaService transazioneTrattativaService) { this.transazioneTrattativaService = transazioneTrattativaService; }
         /* FINE METODI SETTER PER INJECTION */
 
         /* METODI DI DOMINIO */
@@ -112,5 +124,31 @@ public class ApiGatewayFacade {
                 } else {
                         return squadraService.save(squadraDto);
                 }
+        }
+
+        @Transactional
+        public TrattativaDto createTrattativa(TrattativaScambio trattativaScambio) {
+                StagioneDto stagioneDto = getLastStagione();
+                TrattativaDto trattativaDto = new TrattativaDto(null, stagioneDto, LocalDateTime.now());
+                trattativaDto = trattativaService.save(trattativaDto);
+
+                SquadraDto squadraDtoA = squadraService.findById(trattativaScambio.getIdSquadraA()).orElseThrow();
+                SquadraDto squadraDtoB = squadraService.findById(trattativaScambio.getIdSquadraB()).orElseThrow();
+
+                int creditiPagati = trattativaScambio.getCreditiPagatiSquadraA() > 0 ? trattativaScambio.getCreditiPagatiSquadraA() : trattativaScambio.getCreditiPagatiSquadraB();
+                String segnoSquadraA = Constants.Segno.DEBITO.getSigla();
+                String segnoSquadraB = Constants.Segno.CREDITO.getSigla();
+                if(trattativaScambio.getCreditiPagatiSquadraB() > 0){
+                        segnoSquadraA = Constants.Segno.CREDITO.getSigla();
+                        segnoSquadraB = Constants.Segno.DEBITO.getSigla();
+                }
+
+                TransazioneTrattativaDto transazioneTrattativaDtoSquadraA = new TransazioneTrattativaDto(null, trattativaDto, squadraDtoA, creditiPagati, segnoSquadraA, trattativaScambio.getGettoniSquadraA());
+                TransazioneTrattativaDto transazioneTrattativaDtoSquadraB = new TransazioneTrattativaDto(null, trattativaDto, squadraDtoB, creditiPagati, segnoSquadraB, trattativaScambio.getGettoniSquadraB());
+
+                transazioneTrattativaDtoSquadraA = transazioneTrattativaService.save(transazioneTrattativaDtoSquadraA);
+                transazioneTrattativaDtoSquadraB = transazioneTrattativaService.save(transazioneTrattativaDtoSquadraB);
+
+                return trattativaDto;
         }
 }

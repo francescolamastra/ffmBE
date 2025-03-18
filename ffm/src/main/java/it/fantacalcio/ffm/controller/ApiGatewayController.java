@@ -3,6 +3,7 @@ package it.fantacalcio.ffm.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.domain.dto.*;
+import it.fantacalcio.ffm.domain.model.TrattativaScambio;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
 import org.springframework.web.bind.annotation.*;
 
@@ -95,5 +96,12 @@ public class ApiGatewayController {
     @Operation(summary = "Crea una nuova Operazione per una specifica squadra e stagione")
     public OperazioneDto createOperazione(@RequestBody OperazioneDto operazioneDto) {
         return apiGatewayFacade.createOperazione(operazioneDto);
+    }
+
+    @PostMapping(value = "/scambio")
+    @ResponseBody
+    @Operation(summary = "Crea una nuova trattativa di scambio tra 2 squadre")
+    public TrattativaDto createTrattativa(@RequestBody TrattativaScambio trattativaScambio) {
+        return apiGatewayFacade.createTrattativa(trattativaScambio);
     }
 }

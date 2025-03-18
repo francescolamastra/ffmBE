@@ -49,6 +49,10 @@ public class SquadraService {
         return squadraRepository.findAll().stream().map(SquadraConverter::toDto).toList();
     }
 
+    public Optional<SquadraDto> findById(Integer id){
+        return squadraRepository.findById(id).map(SquadraConverter::toDto);
+    }
+
     public SquadraDto findByNome(SquadraDto squadraDto) {
         return squadraCache.getSquadraList().stream()
                 .filter(c -> c.getNome().equalsIgnoreCase(squadraDto.getNome()))

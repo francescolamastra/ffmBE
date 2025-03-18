@@ -24,6 +24,8 @@ public class ApiGatewayFacade {
         private TipoOperazioneService tipoOperazioneService;
         private TrattativaService trattativaService;
         private TransazioneTrattativaService transazioneTrattativaService;
+        private FidoTrattativaService fidoTrattativaService;
+        private TipoDettTrattativaService tipoDettTrattativaService;
 
         /* INIZIO METODI SETTER PER INJECTION */
         @Autowired
@@ -65,6 +67,12 @@ public class ApiGatewayFacade {
 
         @Autowired
         public void setTransazioneTrattativaService(TransazioneTrattativaService transazioneTrattativaService) { this.transazioneTrattativaService = transazioneTrattativaService; }
+
+        @Autowired
+        public void setFidoTrattativaService(FidoTrattativaService fidoTrattativaService) { this.fidoTrattativaService = fidoTrattativaService; }
+
+        @Autowired
+        public void setTipoDettTrattativaService(TipoDettTrattativaService tipoDettTrattativaService) { this.tipoDettTrattativaService = tipoDettTrattativaService; }
         /* FINE METODI SETTER PER INJECTION */
 
         /* METODI DI DOMINIO */
@@ -81,6 +89,8 @@ public class ApiGatewayFacade {
         }
 
         public SquadraDto getSquadraByNome(SquadraDto squadraDto) { return squadraService.findByNome(squadraDto); }
+
+        public SquadraDto getSquadraById(Integer id) { return squadraService.findById(id).orElseThrow(); }
 
         public List<StagioneDto> getStagioni() {
                 return stagioneService.findAll();
@@ -104,6 +114,8 @@ public class ApiGatewayFacade {
 
         public TipoOperazioneDto getTipoOperazioneBySigla(String sigla) { return tipoOperazioneService.findBySigla(sigla).orElseThrow(); }
 
+        public TipoDettTrattativaDto getTipoDettTrattativaBySigla(String sigla) { return tipoDettTrattativaService.findBySigla(sigla).orElseThrow(); }
+
         public StagioneDto getLastStagione() { return stagioneService.getLastStagione().orElseThrow(); }
 
         public StagioneDto createStagione(StagioneDto stagioneDto) {
@@ -118,6 +130,18 @@ public class ApiGatewayFacade {
                 return utenteService.save(utenteDto);
         }
 
+        public TrattativaDto createTrattativa(TrattativaDto TrattativaDto) {
+                return trattativaService.save(TrattativaDto);
+        }
+
+        public FidoDto createFido(FidoDto fidoDto) {
+                return fidoTrattativaService.save(fidoDto);
+        }
+
+        public TransazioneTrattativaDto createTransazioneTrattativa(TransazioneTrattativaDto transazioneTrattativaDto) {
+                return transazioneTrattativaService.save(transazioneTrattativaDto);
+        }
+
         public SquadraDto createSquadra(SquadraDto squadraDto, Integer utenteId) {
                 if (utenteId != null) {
                         return squadraService.save(squadraDto, utenteId);
@@ -127,13 +151,13 @@ public class ApiGatewayFacade {
         }
 
         @Transactional
-        public TrattativaDto createTrattativa(TrattativaScambio trattativaScambio) {
+        public TrattativaDto createTrattativaScambio(TrattativaScambio trattativaScambio) {
                 StagioneDto stagioneDto = getLastStagione();
                 TrattativaDto trattativaDto = new TrattativaDto(null, stagioneDto, LocalDateTime.now());
-                trattativaDto = trattativaService.save(trattativaDto);
+                trattativaDto = createTrattativa(trattativaDto);
 
-                SquadraDto squadraDtoA = squadraService.findById(trattativaScambio.getIdSquadraA()).orElseThrow();
-                SquadraDto squadraDtoB = squadraService.findById(trattativaScambio.getIdSquadraB()).orElseThrow();
+                SquadraDto squadraDtoA = getSquadraById(trattativaScambio.getIdSquadraA());
+                SquadraDto squadraDtoB = getSquadraById(trattativaScambio.getIdSquadraB());
 
                 int creditiPagati = trattativaScambio.getCreditiPagatiSquadraA() > 0 ? trattativaScambio.getCreditiPagatiSquadraA() : trattativaScambio.getCreditiPagatiSquadraB();
                 String segnoSquadraA = Constants.Segno.DEBITO.getSigla();
@@ -146,9 +170,25 @@ public class ApiGatewayFacade {
                 TransazioneTrattativaDto transazioneTrattativaDtoSquadraA = new TransazioneTrattativaDto(null, trattativaDto, squadraDtoA, creditiPagati, segnoSquadraA, trattativaScambio.getGettoniSquadraA());
                 TransazioneTrattativaDto transazioneTrattativaDtoSquadraB = new TransazioneTrattativaDto(null, trattativaDto, squadraDtoB, creditiPagati, segnoSquadraB, trattativaScambio.getGettoniSquadraB());
 
-                transazioneTrattativaDtoSquadraA = transazioneTrattativaService.save(transazioneTrattativaDtoSquadraA);
-                transazioneTrattativaDtoSquadraB = transazioneTrattativaService.save(transazioneTrattativaDtoSquadraB);
+                createTransazioneTrattativa(transazioneTrattativaDtoSquadraA);
+                createTransazioneTrattativa(transazioneTrattativaDtoSquadraB);
 
+                int creditiFido = trattativaScambio.getCreditiPostSquadraA() > 0 ? trattativaScambio.getCreditiPostSquadraA() : trattativaScambio.getCreditiPostSquadraB();
+                String segnoFidoSquadraA = Constants.Segno.DEBITO.getSigla();
+                String segnoFidoSquadraB = Constants.Segno.CREDITO.getSigla();
+                if(trattativaScambio.getCreditiPostSquadraB() > 0){
+                        segnoFidoSquadraA = Constants.Segno.CREDITO.getSigla();
+                        segnoFidoSquadraB = Constants.Segno.DEBITO.getSigla();
+                }
+
+                FidoDto fidoDtoSquadraA = new FidoDto(null, trattativaDto, squadraDtoA, creditiFido, segnoFidoSquadraA);
+                FidoDto fidoDtoSquadraB = new FidoDto(null, trattativaDto, squadraDtoB, creditiFido, segnoFidoSquadraB);
+                createFido(fidoDtoSquadraA);
+                createFido(fidoDtoSquadraB);
+                trattativaScambio.getListGiocatoriCedutiSquadraA()
+                        .forEach(giocatoreTrattativa -> {
+                             TipoDettTrattativaDto tipoDettTrattativaDto = getTipoDettTrattativaBySigla(giocatoreTrattativa.getTipoCessione());
+                        });
                 return trattativaDto;
         }
 }

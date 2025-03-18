@@ -98,10 +98,10 @@ public class ApiGatewayController {
         return apiGatewayFacade.createOperazione(operazioneDto);
     }
 
-    @PostMapping(value = "/scambio")
+    @PostMapping(value = "/trattativaScambio")
     @ResponseBody
     @Operation(summary = "Crea una nuova trattativa di scambio tra 2 squadre")
-    public TrattativaDto createTrattativa(@RequestBody TrattativaScambio trattativaScambio) {
-        return apiGatewayFacade.createTrattativa(trattativaScambio);
+    public TrattativaDto createTrattativaScambio(@RequestBody TrattativaScambio trattativaScambio) {
+        return apiGatewayFacade.createTrattativaScambio(trattativaScambio);
     }
 }

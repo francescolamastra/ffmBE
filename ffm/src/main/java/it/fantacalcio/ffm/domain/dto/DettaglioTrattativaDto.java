@@ -1,14 +1,20 @@
 package it.fantacalcio.ffm.domain.dto;
 
 import it.fantacalcio.ffm.domain.entity.DettaglioTrattativa;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 /**
  * DTO for {@link DettaglioTrattativa}
  */
-@Value
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DettaglioTrattativaDto implements Serializable {
     Integer id;
     TrattativaDto idTrattativa;
@@ -16,4 +22,5 @@ public class DettaglioTrattativaDto implements Serializable {
     SquadraDto idSquadra;
     GiocatoreDto idGiocatore;
     TipoOperazioneDto idTipoOperazione;
+    PrestitoDto idPrestito;
 }

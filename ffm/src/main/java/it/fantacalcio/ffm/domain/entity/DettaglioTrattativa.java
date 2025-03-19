@@ -36,4 +36,7 @@ public class DettaglioTrattativa {
     @JoinColumn(name = "ID_TIPO_OPERAZIONE", nullable = false)
     private TipoOperazione idTipoOperazione;
 
+    @OneToOne(mappedBy = "idDettTrattativa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Prestito prestito;
+
 }

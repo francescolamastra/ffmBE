@@ -17,27 +17,20 @@ public class Prestito {
     @Column(name = "ID", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_OPERAZIONE", nullable = false)
-    private Operazione idOperazione;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_SQUADRA_CEDENTE", nullable = false)
-    private Squadra idSquadraCedente;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ID_DETT_TRATTATIVA", nullable = false)
+    private DettaglioTrattativa idDettTrattativa;
 
     @ColumnDefault("0")
     @Column(name = "COSTO_RISCATTO", nullable = false)
     private Integer costoRiscatto;
 
-    @ColumnDefault("0")
     @Column(name = "OBBLIGO", nullable = false)
     private Boolean obbligo = false;
 
-    @ColumnDefault("0")
     @Column(name = "RISCATTO", nullable = false)
     private Boolean riscatto = false;
 
-    @ColumnDefault("0")
     @Column(name = "ESERCITATO", nullable = false)
     private Boolean esercitato = false;
 

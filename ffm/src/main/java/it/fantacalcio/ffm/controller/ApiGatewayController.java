@@ -74,28 +74,28 @@ public class ApiGatewayController {
     @ResponseBody
     @Operation(summary = "Crea un nuovo utente")
     public UtenteDto createUtente(@RequestBody UtenteDto utenteDto) {
-        return apiGatewayFacade.createUtente(utenteDto);
+        return apiGatewayFacade.saveUtente(utenteDto);
     }
 
     @PostMapping(value = "/squadra")
     @ResponseBody
     @Operation(summary = "Crea una nuova squadra associandola ad un utente se passato il relativo ID")
     public SquadraDto createSquadra(@RequestBody SquadraDto squadraDto, @RequestParam(required = false) Integer utenteId) {
-        return apiGatewayFacade.createSquadra(squadraDto,utenteId);
+        return apiGatewayFacade.saveSquadra(squadraDto,utenteId);
     }
 
     @PostMapping(value = "/stagione")
     @ResponseBody
     @Operation(summary = "Crea una nuova Stagione")
     public StagioneDto createStagione(@RequestBody StagioneDto stagioneDto) {
-        return apiGatewayFacade.createStagione(stagioneDto);
+        return apiGatewayFacade.saveStagione(stagioneDto);
     }
 
     @PostMapping(value = "/operazione")
     @ResponseBody
     @Operation(summary = "Crea una nuova Operazione per una specifica squadra e stagione")
     public OperazioneDto createOperazione(@RequestBody OperazioneDto operazioneDto) {
-        return apiGatewayFacade.createOperazione(operazioneDto);
+        return apiGatewayFacade.saveOperazione(operazioneDto);
     }
 
     @PostMapping(value = "/trattativaScambio")

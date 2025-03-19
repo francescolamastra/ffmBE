@@ -9,14 +9,14 @@ public class TrattativaConverter {
     public static TrattativaDto toDto(Trattativa trattativa){
         return new TrattativaDto(trattativa.getId(),
                 StagioneConverter.toDto(trattativa.getIdStagione()),
-                trattativa.getData());
+                trattativa.getDataCreazione());
     }
 
     public static Trattativa toEntity(TrattativaDto trattativa){
         Trattativa trattativaEntity = new Trattativa();
         trattativaEntity.setId(trattativa.getId());
         trattativaEntity.setIdStagione(StagioneConverter.toEntity(trattativa.getIdStagione()));
-        trattativaEntity.setData(trattativa.getData());
+        trattativaEntity.setDataCreazione(trattativa.getDataCreazione());
         return trattativaEntity;
     }
 }

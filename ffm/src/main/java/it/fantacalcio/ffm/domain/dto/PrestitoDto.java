@@ -1,17 +1,22 @@
 package it.fantacalcio.ffm.domain.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 /**
  * DTO for {@link it.fantacalcio.ffm.domain.entity.Prestito}
  */
-@Value
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PrestitoDto implements Serializable {
     Integer id;
-    OperazioneDto idOperazione;
-    SquadraDto idSquadraCedente;
+    DettaglioTrattativaDto idDettTrattativa;
     Integer costoRiscatto;
     Boolean obbligo;
     Boolean riscatto;

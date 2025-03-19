@@ -22,7 +22,11 @@ public class Trattativa {
     @JoinColumn(name = "ID_STAGIONE", nullable = false)
     private Stagione idStagione;
 
-    @Column(name = "DATA", nullable = false)
-    private LocalDateTime data;
+    @Column(name = "DATA_CREAZIONE", nullable = false)
+    private LocalDateTime dataCreazione;
 
+    @PrePersist
+    protected void onCreate() {
+        dataCreazione = LocalDateTime.now();
+    }
 }

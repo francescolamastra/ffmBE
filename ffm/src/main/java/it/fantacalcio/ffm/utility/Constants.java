@@ -13,21 +13,37 @@ public class Constants {
     @Getter
     @RequiredArgsConstructor
     public enum TipoOperazione {
-        ACQUISTO("A", "Acquisto"),
-        CESSIONE("C", "Cessione"),
-        SVINCOLO("S", "Svincolo");
+        ACQUISTO("A"),
+        CESSIONE("C"),
+        SVINCOLO("S");
 
         private final String sigla;
-        private final String descrizione;
     }
 
     @Getter
     @RequiredArgsConstructor
     public enum Segno {
-        CREDITO("C", "Credito"),
-        DEBITO("D", "Debito");
+        CREDITO("C"),
+        DEBITO("D");
 
         private final String sigla;
-        private final String descrizione;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum SquadraCedente {
+        SQUADRA_A("A"),
+        SQUADRA_B("B");
+
+        private final String sigla;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum TipoDettTrattativa {
+        PRESTITO("P"),
+        DEFINITIVO("D");
+
+        private final String sigla;
     }
 }

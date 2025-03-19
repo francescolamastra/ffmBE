@@ -31,6 +31,7 @@ public class CommonBatchConfig {
                                DeleteFileTasklet deleteFileTasklet) {
         return new StepBuilder("deleteInputFileStep", jobRepository)
                 .tasklet(deleteFileTasklet, transactionManager)
+                .allowStartIfComplete(true)
                 .build();
     }
 }

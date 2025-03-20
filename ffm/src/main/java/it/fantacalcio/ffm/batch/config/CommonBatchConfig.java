@@ -1,8 +1,9 @@
 package it.fantacalcio.ffm.batch.config;
 
+import it.fantacalcio.ffm.batch.decider.ImportDecider;
 import it.fantacalcio.ffm.batch.tasklet.DeleteFileTasklet;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +13,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-@EnableBatchProcessing
 public class CommonBatchConfig {
 
     @Bean
@@ -33,5 +33,10 @@ public class CommonBatchConfig {
                 .tasklet(deleteFileTasklet, transactionManager)
                 .allowStartIfComplete(true)
                 .build();
+    }
+
+    @Bean
+    public JobExecutionDecider importListoneDecider() {
+        return new ImportDecider();
     }
 }

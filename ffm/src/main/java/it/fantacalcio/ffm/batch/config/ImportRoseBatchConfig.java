@@ -1,14 +1,14 @@
 package it.fantacalcio.ffm.batch.config;
 
 import it.fantacalcio.ffm.batch.model.RosaBatchRecord;
-import it.fantacalcio.ffm.domain.dto.OperazioneDto;
-import it.fantacalcio.ffm.domain.entity.Listone;
 import it.fantacalcio.ffm.domain.entity.Operazione;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -33,13 +33,18 @@ public class ImportRoseBatchConfig {
     @Bean
     public Job importRoseJob(JobRepository jobRepository,
                              Step importRoseStep,
-                             Step deleteInputFileStep) {
+                             Step deleteInputFileStep,
+                             JobExecutionDecider importDecider,
+                             JobExecutionListener jobExecutionListener) {
         return new JobBuilder("importRoseJob", jobRepository)
+                .listener(jobExecutionListener)
                 .incrementer(new RunIdIncrementer())
                 .start(importRoseStep)
-                .on("*").to(deleteInputFileStep) // Esegui deleteInputFileStep indipendentemente dal risultato di importRoseStep
-                .from(deleteInputFileStep).end()
-                .build();
+                .on("*").to(deleteInputFileStep)
+                .from(deleteInputFileStep).on("*").to(importDecider)
+                .from(importDecider).on("COMPLETED").end()
+                .from(importDecider).on("NOT_COMPLETED").fail()
+                .build().build();
     }
 
     @Bean

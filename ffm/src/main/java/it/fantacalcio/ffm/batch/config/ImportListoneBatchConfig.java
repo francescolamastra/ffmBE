@@ -8,9 +8,11 @@ import it.fantacalcio.ffm.domain.entity.Giocatore;
 import it.fantacalcio.ffm.domain.entity.Listone;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -31,13 +33,18 @@ public class ImportListoneBatchConfig {
     @Bean
     public Job importListoneJob(JobRepository jobRepository,
                                 Step importListoneStep,
-                                Step deleteInputFileStep) {
+                                Step deleteInputFileStep,
+                                JobExecutionDecider importDecider,
+                                JobExecutionListener jobExecutionListener) {
         return new JobBuilder("importListoneJob", jobRepository)
+                .listener(jobExecutionListener)
                 .incrementer(new RunIdIncrementer())
                 .start(importListoneStep)
-                .on("*").to(deleteInputFileStep) // Esegui deleteInputFileStep indipendentemente dal risultato di importListoneStep
-                .from(deleteInputFileStep).end()
-                .build();
+                .on("*").to(deleteInputFileStep)
+                .from(deleteInputFileStep).on("*").to(importDecider)
+                .from(importDecider).on("COMPLETED").end()
+                .from(importDecider).on("NOT_COMPLETED").fail()
+                .build().build();
     }
 
     @Bean

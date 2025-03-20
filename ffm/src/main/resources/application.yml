@@ -7,17 +7,32 @@ spring:
     password: admin
     url: jdbc:mysql://192.168.1.248:3306/ffm
   jpa:
-    show-sql: true
+#    show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
+  batch:
+    jdbc:
+      initialize-schema: never
+#  sql:
+#    init:
+#      mode: always
+#      schema-locations: classpath:schema-mysql.sql
+#  sql:
+#    init:
+#      #mode: never
+#      #schema-locations: classpath:schema-h2.sql
+#      mode: always
+#      data-locations: classpath:clear-batch-tables.sql
 
-logging:
-  level:
-    org:
-      hibernate: INFO
-      SQL: DEBUG
-      cache: DEBUG
-      stat: DEBUG
+#logging:
+#  level:
+#    org:
+#      hibernate: INFO
+#      SQL: DEBUG
+#      cache: DEBUG
+#      stat: DEBUG
+#      springframework:
+#        batch: DEBUG
 springdoc:
   api-docs:
     path: /v3/api-docs

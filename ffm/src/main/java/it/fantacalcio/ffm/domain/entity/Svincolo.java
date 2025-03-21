@@ -1,5 +1,6 @@
 package it.fantacalcio.ffm.domain.entity;
 
+import it.fantacalcio.ffm.converter.BooleanConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,5 +23,9 @@ public class Svincolo {
 
     @Column(name = "PERCENTUALE", nullable = false)
     private Integer percentuale;
+
+    @Convert(converter = BooleanConverter.class)
+    @Column(name = "PRELAZIONABILE", nullable = false)
+    private Boolean prelazionabile = false;
 
 }

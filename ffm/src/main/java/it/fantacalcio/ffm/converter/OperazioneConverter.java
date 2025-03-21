@@ -30,6 +30,7 @@ public class OperazioneConverter {
         operazioneDto.setTransazione(TransazioneOperazioneConverter.toDto(operazione.getTransazione(), context));
         operazioneDto.setAcquisto(operazione.getAcquisto() != null ? AcquistoConverter.toDto(operazione.getAcquisto(), context) : null);
         operazioneDto.setSvincolo(operazione.getSvincolo() != null ? SvincoloConverter.toDto(operazione.getSvincolo(), context) : null);
+        operazioneDto.setSessioneMercato(operazione.getSessioneMercato());
         operazioneDto.setDataCreazione(operazione.getDataCreazione());
         return operazioneDto;
     }
@@ -60,6 +61,7 @@ public class OperazioneConverter {
             operazione.setSvincolo(SvincoloConverter.toEntity(operazioneDto.getSvincolo(), context));
         }
         operazione.setDataCreazione(operazioneDto.getDataCreazione());
+        operazione.setSessioneMercato(operazioneDto.getSessioneMercato());
         return operazione;
     }
 }

@@ -1,7 +1,6 @@
 package it.fantacalcio.ffm.domain.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import it.fantacalcio.ffm.utility.CustomDateDeserializer;
+import it.fantacalcio.ffm.utility.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +25,6 @@ public class OperazioneDto implements Serializable {
     TransazioneOperazioneDto transazione;
     AcquistoDto acquisto;
     SvincoloDto svincolo;
-    @JsonDeserialize(using = CustomDateDeserializer.class)
+    Constants.SessioneMercatoOpAcquisto sessioneMercato;
     LocalDateTime dataCreazione;
 }

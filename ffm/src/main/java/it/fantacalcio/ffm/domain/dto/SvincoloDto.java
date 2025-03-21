@@ -18,4 +18,5 @@ public class SvincoloDto implements Serializable {
     Integer id;
     OperazioneDto idOperazione;
     Integer percentuale;
+    Boolean prelazionabile;
 }

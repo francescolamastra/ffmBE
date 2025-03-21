@@ -66,4 +66,24 @@ public class Constants {
 
         private final String sigla;
     }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum SessioneMercatoOpAcquisto {
+        PREASTA("PRE"),
+        INIZIALE("INI"),
+        AGOSTO("AGO"),
+        SETTEMBRE("SET"),
+        FEBBRAIO("FEB");
+
+        private final String sigla;
+        public static SessioneMercatoOpAcquisto fromValue(String sigla) {
+            for (SessioneMercatoOpAcquisto sessione : values()) {
+                if (sessione.sigla.equalsIgnoreCase(sigla)) {
+                    return sessione;
+                }
+            }
+            throw new IllegalArgumentException("Valore non valido per SessioneMercatoOpAcquisto: " + sigla);
+        }
+    }
 }

@@ -43,6 +43,7 @@ public class ImportRoseItemProcessor implements ItemProcessor<RosaBatchRecord, O
             operazioneDto.setIdStagione(stagioneDto);
             operazioneDto.setIdTipoOperazione(tipoOperazioneDto);
             operazioneDto.setDataCreazione(LocalDateTime.now());
+            operazioneDto.setSessioneMercato(Constants.SessioneMercatoOpAcquisto.INIZIALE);
             TransazioneOperazioneDto transazioneOperazioneDto = new TransazioneOperazioneDto(
                     null,
                     operazioneDto,

@@ -1,5 +1,7 @@
 package it.fantacalcio.ffm.domain.entity;
 
+import it.fantacalcio.ffm.converter.SessioneMercatoOpAcquistoConverter;
+import it.fantacalcio.ffm.utility.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,6 +44,10 @@ public class Operazione {
 
     @OneToOne(mappedBy = "idOperazione", cascade = CascadeType.ALL, orphanRemoval = true)
     private Svincolo svincolo;
+
+    @Convert(converter = SessioneMercatoOpAcquistoConverter.class)
+    @Column(name = "SESSIONE_MERCATO", nullable = false)
+    private Constants.SessioneMercatoOpAcquisto sessioneMercato;
 
     @Column(name = "DATA_CREAZIONE", nullable = false)
     private LocalDateTime dataCreazione;

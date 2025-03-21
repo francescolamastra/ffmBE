@@ -9,10 +9,10 @@ INSERT INTO categoria (DESCRIZIONE, SIGLA) VALUES
 ('Categoria 3', 'C')
 ;
 
---Giocatore
-INSERT INTO giocatore (ID_FANTAGAZZETTA, NOME, RUOLO) VALUES
-(1, 'Giocatore 1', 'P'),
-(2, 'Giocatore 2', 'A');
+----Giocatore
+--INSERT INTO giocatore (ID_FANTAGAZZETTA, NOME, RUOLO) VALUES
+--(1, 'Giocatore 1', 'P'),
+--(2, 'Giocatore 2', 'A');
 
 -- Nazione
 INSERT INTO nazione (DESCRIZIONE, SIGLA) VALUES
@@ -20,10 +20,10 @@ INSERT INTO nazione (DESCRIZIONE, SIGLA) VALUES
 ('Euro Nord', 'EN'),
 ('Francia', 'FRA');
 
--- Squadra
-INSERT INTO squadra (ID_NAZIONE, ID_CATEGORIA, NOME, ID_STADIO, DATA_CREAZIONE) VALUES
-(1, 1, 'Squadra 1', 1, CURRENT_TIMESTAMP),
-(2, 2, 'Squadra 2', 2, CURRENT_TIMESTAMP);
+---- Squadra
+--INSERT INTO squadra (ID_NAZIONE, ID_CATEGORIA, NOME, ID_STADIO, DATA_CREAZIONE) VALUES
+--(1, 1, 'Squadra 1', 1, CURRENT_TIMESTAMP),
+--(2, 2, 'Squadra 2', 2, CURRENT_TIMESTAMP);
 
 -- Stagione
 INSERT INTO stagione (ANNO_INIZIO, ANNO_FINE) VALUES
@@ -48,10 +48,10 @@ INSERT INTO tipo_dett_trattativa (SIGLA, DESCRIZIONE) VALUES
 ('D', 'Definitivo'),
 ('P', 'Prestito');
 
--- Operazione
-INSERT INTO operazione (ID_SQUADRA, ID_GIOCATORE, ID_TIPO_OPERAZIONE, ID_STAGIONE, DATA_CREAZIONE) VALUES
-(1, 1, 1, 1, CURRENT_TIMESTAMP),
-(2, 2, 2, 2, CURRENT_TIMESTAMP);
+---- Operazione
+--INSERT INTO operazione (ID_SQUADRA, ID_GIOCATORE, ID_TIPO_OPERAZIONE, ID_STAGIONE, DATA_CREAZIONE) VALUES
+--(1, 1, 1, 1, CURRENT_TIMESTAMP),
+--(2, 2, 2, 2, CURRENT_TIMESTAMP);
 
 -- Competizione
 INSERT INTO competizione (SIGLA, DESCRIZIONE) VALUES

@@ -25,6 +25,7 @@ public class SvincoloConverter {
         svincoloDto.setId(svincolo.getId());
         svincoloDto.setIdOperazione(OperazioneConverter.toDto(svincolo.getIdOperazione(), context));
         svincoloDto.setPercentuale(svincolo.getPercentuale());
+        svincoloDto.setPrelazionabile(svincolo.getPrelazionabile());
         return svincoloDto;
     }
 
@@ -44,6 +45,7 @@ public class SvincoloConverter {
         svincoloEntity.setId(svincoloDto.getId());
         svincoloEntity.setIdOperazione(OperazioneConverter.toEntity(svincoloDto.getIdOperazione(), context));
         svincoloEntity.setPercentuale(svincoloDto.getPercentuale());
+        svincoloEntity.setPrelazionabile(svincoloDto.getPrelazionabile() != null ? svincoloDto.getPrelazionabile() : false);
         return svincoloEntity;
     }
 }

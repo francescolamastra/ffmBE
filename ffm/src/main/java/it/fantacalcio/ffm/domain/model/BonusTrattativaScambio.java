@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BonusTrattativa {
+public class BonusTrattativaScambio {
     private int massimale;
     private int singolo;
 }

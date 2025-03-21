@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -12,17 +13,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrattativaScambio {
-    private BonusTrattativa bonusPostSquadraA;
-    private BonusTrattativa bonusPostSquadraB;
+    private BonusTrattativaScambio bonusPostSquadraA;
+    private BonusTrattativaScambio bonusPostSquadraB;
     private int creditiPagatiSquadraA;
     private int creditiPagatiSquadraB;
     private int creditiPostSquadraA;
     private int creditiPostSquadraB;
-    private String dataTrattativa;
+    private LocalDateTime dataTrattativa;
     private int gettoniSquadraA;
     private int gettoniSquadraB;
     private int idSquadraA;
     private int idSquadraB;
-    private List<GiocatoreTrattativa> listGiocatoriCedutiSquadraA;
-    private List<GiocatoreTrattativa> listGiocatoriCedutiSquadraB;
+    private List<GiocatoreTrattativaScambio> listGiocatoriCedutiSquadraA;
+    private List<GiocatoreTrattativaScambio> listGiocatoriCedutiSquadraB;
+    private String clausole;
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrestitoTrattativa {
+public class PrestitoTrattativaScambio {
     private int costoRiscatto;
     private boolean obbligo;
     private boolean riscatto;

@@ -46,4 +46,24 @@ public class Constants {
 
         private final String sigla;
     }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum RisultatoCompetizione {
+        VITTORIA("V"),
+        PAREGGIO("P"),
+        SCONFITTA("S");
+
+        private final String sigla;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum StadioCompetizione {
+        CASA("C"),
+        TRASFERTA("T"),
+        NEUTRO("N");
+
+        private final String sigla;
+    }
 }

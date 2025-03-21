@@ -13,5 +13,6 @@ import java.time.LocalDateTime;
 public class TrattativaDto implements Serializable {
     Integer id;
     StagioneDto idStagione;
+    String clausole;
     LocalDateTime dataCreazione;
 }

@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GiocatoreTrattativa {
+public class GiocatoreTrattativaScambio {
     private int idFantagazzetta;
-    private PrestitoTrattativa prestito;
+    private PrestitoTrattativaScambio prestito;
     private String tipoCessione;
 }

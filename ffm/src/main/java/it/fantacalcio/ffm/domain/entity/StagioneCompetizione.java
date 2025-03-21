@@ -16,11 +16,11 @@ public class StagioneCompetizione {
     @Column(name = "ID", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_STAGIONE", nullable = false)
     private Stagione idStagione;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_COMPETIZIONE", nullable = false)
     private Competizione idCompetizione;
 

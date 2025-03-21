@@ -1,11 +1,18 @@
 package it.fantacalcio.ffm.facade;
 
+import it.fantacalcio.ffm.converter.CompetizioneConverter;
+import it.fantacalcio.ffm.converter.StagioneConverter;
 import it.fantacalcio.ffm.domain.dto.*;
-import it.fantacalcio.ffm.domain.model.GiocatoreTrattativa;
+import it.fantacalcio.ffm.domain.entity.Competizione;
+import it.fantacalcio.ffm.domain.entity.Stagione;
+import it.fantacalcio.ffm.domain.entity.StagioneCompetizione;
+import it.fantacalcio.ffm.domain.model.BonusTrattativaScambio;
+import it.fantacalcio.ffm.domain.model.GiocatoreTrattativaScambio;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
 import it.fantacalcio.ffm.service.*;
 import it.fantacalcio.ffm.utility.CollectionUtility;
 import it.fantacalcio.ffm.utility.Constants;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +22,12 @@ import java.util.List;
 
 @Component
 public class ApiGatewayFacade {
+
+        private final EntityManager entityManager;
+
+        public ApiGatewayFacade(EntityManager entityManager){
+                this.entityManager = entityManager;
+        }
 
         private GiocatoreService giocatoreService;
         private NazioneService nazioneService;
@@ -30,6 +43,9 @@ public class ApiGatewayFacade {
         private TipoDettTrattativaService tipoDettTrattativaService;
         private DettaglioTrattativaService dettaglioTrattativaService;
         private PrestitoService prestitoService;
+        private BonusTrattativaService bonusTrattativaService;
+        private CompetizioneService competizioneService;
+        private StagioneCompetizioneService stagioneCompetizioneService;
 
         /* INIZIO METODI SETTER PER INJECTION */
         @Autowired
@@ -83,6 +99,15 @@ public class ApiGatewayFacade {
 
         @Autowired
         public void setPrestitoService(PrestitoService prestitoService) { this.prestitoService = prestitoService; }
+
+        @Autowired
+        public void setBonusTrattativaService(BonusTrattativaService bonusTrattativaService) { this.bonusTrattativaService = bonusTrattativaService; }
+
+        @Autowired
+        public void setCompetizioneService(CompetizioneService competizioneService) { this.competizioneService = competizioneService; }
+
+        @Autowired
+        public void setStagioneCompetizioneService(StagioneCompetizioneService stagioneCompetizioneService) { this.stagioneCompetizioneService = stagioneCompetizioneService; }
         /* FINE METODI SETTER PER INJECTION */
 
         /* METODI DI DOMINIO */
@@ -128,6 +153,10 @@ public class ApiGatewayFacade {
 
         public StagioneDto getLastStagione() { return stagioneService.getLastStagione().orElseThrow(); }
 
+        public List<CompetizioneDto> getCompetizioni() {
+                return competizioneService.findAll();
+        }
+
         public StagioneDto saveStagione(StagioneDto stagioneDto) {
                 return stagioneService.save(stagioneDto);
         }
@@ -146,6 +175,10 @@ public class ApiGatewayFacade {
 
         public FidoDto saveFido(FidoDto fidoDto) {
                 return fidoTrattativaService.save(fidoDto);
+        }
+
+        public BonusTrattativaDto saveBonusTrattativa(BonusTrattativaDto bonusTrattativaDto) {
+                return bonusTrattativaService.save(bonusTrattativaDto);
         }
 
         public TransazioneTrattativaDto saveTransazioneTrattativa(TransazioneTrattativaDto transazioneTrattativaDto) {
@@ -168,80 +201,128 @@ public class ApiGatewayFacade {
                 return dettaglioTrattativaService.save(dettaglioTrattativaDto);
         }
 
+        public StagioneCompetizioneDto saveStagioneCompetizione(StagioneCompetizioneDto stagioneCompetizioneDto) {
+                return stagioneCompetizioneService.save(stagioneCompetizioneDto);
+        }
+
+        public StagioneCompetizioneDto saveStagioneCompetizione(StagioneCompetizione stagioneCompetizione) {
+                return stagioneCompetizioneService.save(stagioneCompetizione);
+        }
+
+        @Transactional
+        public void inizializzaCompetizioni(){
+                StagioneDto stagioneDto = getLastStagione();
+                List<CompetizioneDto> competizioneDtoList = getCompetizioni();
+                competizioneDtoList.forEach(
+                        competizioneDto -> {
+                                createAndSaveStagioneCompetizione(stagioneDto, competizioneDto);
+                        }
+                );
+        }
+
         @Transactional
         public TrattativaDto createTrattativaScambio(TrattativaScambio trattativaScambio) {
-                TrattativaDto trattativaDto = createTrattativa();
+                TrattativaDto trattativaDto = createTrattativa(trattativaScambio);
 
                 SquadraDto squadraDtoA = getSquadraById(trattativaScambio.getIdSquadraA());
                 SquadraDto squadraDtoB = getSquadraById(trattativaScambio.getIdSquadraB());
 
                 createTransazioneTrattativa(trattativaScambio,trattativaDto, squadraDtoA, squadraDtoB);
                 createFidoTrattativa(trattativaScambio,trattativaDto,squadraDtoA,squadraDtoB);
+                createBonusTrattativa(trattativaScambio,trattativaDto,squadraDtoA,squadraDtoB);
 
-                CollectionUtility.safeForEach(trattativaScambio.getListGiocatoriCedutiSquadraA(), giocatoreTrattativa -> {
-                        creaDettaglioTrattativa(trattativaDto, giocatoreTrattativa, squadraDtoA, squadraDtoB, Constants.SquadraCedente.SQUADRA_A);
+                CollectionUtility.safeForEach(trattativaScambio.getListGiocatoriCedutiSquadraA(), giocatoreTrattativaScambio -> {
+                        creaDettaglioTrattativa(trattativaDto, giocatoreTrattativaScambio, squadraDtoA, squadraDtoB, Constants.SquadraCedente.SQUADRA_A);
                 });
-                CollectionUtility.safeForEach(trattativaScambio.getListGiocatoriCedutiSquadraB(), giocatoreTrattativa -> {
-                        creaDettaglioTrattativa(trattativaDto, giocatoreTrattativa, squadraDtoA, squadraDtoB, Constants.SquadraCedente.SQUADRA_B);
+                CollectionUtility.safeForEach(trattativaScambio.getListGiocatoriCedutiSquadraB(), giocatoreTrattativaScambio -> {
+                        creaDettaglioTrattativa(trattativaDto, giocatoreTrattativaScambio, squadraDtoA, squadraDtoB, Constants.SquadraCedente.SQUADRA_B);
                 });
                 return trattativaDto;
         }
 
-        private TrattativaDto createTrattativa(){
+        private void createBonusTrattativa(TrattativaScambio trattativaScambio, TrattativaDto trattativaDto, SquadraDto squadraDtoA, SquadraDto squadraDtoB) {
+                if (trattativaScambio.getBonusPostSquadraA() != null) {
+                        createAndSaveBonus(trattativaScambio.getBonusPostSquadraA(), trattativaDto, squadraDtoA, squadraDtoB, Constants.Segno.DEBITO.getSigla(), Constants.Segno.CREDITO.getSigla());
+                }
+                if (trattativaScambio.getBonusPostSquadraB() != null) {
+                        createAndSaveBonus(trattativaScambio.getBonusPostSquadraB(), trattativaDto, squadraDtoA, squadraDtoB, Constants.Segno.CREDITO.getSigla(), Constants.Segno.DEBITO.getSigla());
+                }
+        }
+
+        private void createAndSaveBonus(BonusTrattativaScambio bonus, TrattativaDto trattativaDto, SquadraDto squadraDtoA, SquadraDto squadraDtoB, String segnoSquadraA, String segnoSquadraB) {
+                int creditiMassimaleBonus = bonus.getMassimale();
+                BonusTrattativaDto bonusTrattativaDtoSquadraA = new BonusTrattativaDto(null, trattativaDto, squadraDtoA, creditiMassimaleBonus, segnoSquadraA);
+                BonusTrattativaDto bonusTrattativaDtoSquadraB = new BonusTrattativaDto(null, trattativaDto, squadraDtoB, creditiMassimaleBonus, segnoSquadraB);
+                saveBonusTrattativa(bonusTrattativaDtoSquadraA);
+                saveBonusTrattativa(bonusTrattativaDtoSquadraB);
+        }
+
+        private TrattativaDto createTrattativa(TrattativaScambio trattativaScambio){
                 StagioneDto stagioneDto = getLastStagione();
-                TrattativaDto trattativaDto = new TrattativaDto(null, stagioneDto, LocalDateTime.now());
+                TrattativaDto trattativaDto = new TrattativaDto(null, stagioneDto, trattativaScambio.getClausole(), trattativaScambio.getDataTrattativa());
                 return saveTrattativa(trattativaDto);
         }
 
         private void createTransazioneTrattativa(TrattativaScambio trattativaScambio,TrattativaDto trattativaDto, SquadraDto squadraDtoA, SquadraDto squadraDtoB){
-                int creditiPagati = trattativaScambio.getCreditiPagatiSquadraA() > 0 ? trattativaScambio.getCreditiPagatiSquadraA() : trattativaScambio.getCreditiPagatiSquadraB();
-                String segnoSquadraA = Constants.Segno.DEBITO.getSigla();
-                String segnoSquadraB = Constants.Segno.CREDITO.getSigla();
-                if(trattativaScambio.getCreditiPagatiSquadraB() > 0){
-                        segnoSquadraA = Constants.Segno.CREDITO.getSigla();
-                        segnoSquadraB = Constants.Segno.DEBITO.getSigla();
+                if(trattativaScambio.getCreditiPagatiSquadraA() > 0 || trattativaScambio.getCreditiPagatiSquadraB() > 0) {
+                        int creditiPagati = trattativaScambio.getCreditiPagatiSquadraA() > 0 ? trattativaScambio.getCreditiPagatiSquadraA() : trattativaScambio.getCreditiPagatiSquadraB();
+                        String segnoSquadraA = Constants.Segno.DEBITO.getSigla();
+                        String segnoSquadraB = Constants.Segno.CREDITO.getSigla();
+                        if (trattativaScambio.getCreditiPagatiSquadraB() > 0) {
+                                segnoSquadraA = Constants.Segno.CREDITO.getSigla();
+                                segnoSquadraB = Constants.Segno.DEBITO.getSigla();
+                        }
+                        TransazioneTrattativaDto transazioneTrattativaDtoSquadraA = new TransazioneTrattativaDto(null, trattativaDto, squadraDtoA, creditiPagati, segnoSquadraA, trattativaScambio.getGettoniSquadraA());
+                        TransazioneTrattativaDto transazioneTrattativaDtoSquadraB = new TransazioneTrattativaDto(null, trattativaDto, squadraDtoB, creditiPagati, segnoSquadraB, trattativaScambio.getGettoniSquadraB());
+                        saveTransazioneTrattativa(transazioneTrattativaDtoSquadraA);
+                        saveTransazioneTrattativa(transazioneTrattativaDtoSquadraB);
                 }
-                TransazioneTrattativaDto transazioneTrattativaDtoSquadraA = new TransazioneTrattativaDto(null, trattativaDto, squadraDtoA, creditiPagati, segnoSquadraA, trattativaScambio.getGettoniSquadraA());
-                TransazioneTrattativaDto transazioneTrattativaDtoSquadraB = new TransazioneTrattativaDto(null, trattativaDto, squadraDtoB, creditiPagati, segnoSquadraB, trattativaScambio.getGettoniSquadraB());
-                saveTransazioneTrattativa(transazioneTrattativaDtoSquadraA);
-                saveTransazioneTrattativa(transazioneTrattativaDtoSquadraB);
         }
 
         private void createFidoTrattativa(TrattativaScambio trattativaScambio,TrattativaDto trattativaDto, SquadraDto squadraDtoA, SquadraDto squadraDtoB){
-                int creditiFido = trattativaScambio.getCreditiPostSquadraA() > 0 ? trattativaScambio.getCreditiPostSquadraA() : trattativaScambio.getCreditiPostSquadraB();
-                String segnoFidoSquadraA = Constants.Segno.DEBITO.getSigla();
-                String segnoFidoSquadraB = Constants.Segno.CREDITO.getSigla();
-                if(trattativaScambio.getCreditiPostSquadraB() > 0){
-                        segnoFidoSquadraA = Constants.Segno.CREDITO.getSigla();
-                        segnoFidoSquadraB = Constants.Segno.DEBITO.getSigla();
+                if(trattativaScambio.getCreditiPostSquadraA() > 0 || trattativaScambio.getCreditiPostSquadraB() > 0) {
+                        int creditiFido = trattativaScambio.getCreditiPostSquadraA() > 0 ? trattativaScambio.getCreditiPostSquadraA() : trattativaScambio.getCreditiPostSquadraB();
+                        String segnoFidoSquadraA = Constants.Segno.DEBITO.getSigla();
+                        String segnoFidoSquadraB = Constants.Segno.CREDITO.getSigla();
+                        if (trattativaScambio.getCreditiPostSquadraB() > 0) {
+                                segnoFidoSquadraA = Constants.Segno.CREDITO.getSigla();
+                                segnoFidoSquadraB = Constants.Segno.DEBITO.getSigla();
+                        }
+                        FidoDto fidoDtoSquadraA = new FidoDto(null, trattativaDto, squadraDtoA, creditiFido, segnoFidoSquadraA);
+                        FidoDto fidoDtoSquadraB = new FidoDto(null, trattativaDto, squadraDtoB, creditiFido, segnoFidoSquadraB);
+                        saveFido(fidoDtoSquadraA);
+                        saveFido(fidoDtoSquadraB);
                 }
-                FidoDto fidoDtoSquadraA = new FidoDto(null, trattativaDto, squadraDtoA, creditiFido, segnoFidoSquadraA);
-                FidoDto fidoDtoSquadraB = new FidoDto(null, trattativaDto, squadraDtoB, creditiFido, segnoFidoSquadraB);
-                saveFido(fidoDtoSquadraA);
-                saveFido(fidoDtoSquadraB);
         }
 
-        private void creaDettaglioTrattativa(TrattativaDto trattativaDto, GiocatoreTrattativa giocatoreTrattativa, SquadraDto squadraDtoA, SquadraDto squadraDtoB, Constants.SquadraCedente squadraCedente){
-                GiocatoreDto giocatoreDto = getGiocatoreByIdFantagazzetta(giocatoreTrattativa.getIdFantagazzetta());
-                TipoDettTrattativaDto tipoDettTrattativaDto = getTipoDettTrattativaBySigla(giocatoreTrattativa.getTipoCessione());
+        private void creaDettaglioTrattativa(TrattativaDto trattativaDto, GiocatoreTrattativaScambio giocatoreTrattativaScambio, SquadraDto squadraDtoA, SquadraDto squadraDtoB, Constants.SquadraCedente squadraCedente){
+                GiocatoreDto giocatoreDto = getGiocatoreByIdFantagazzetta(giocatoreTrattativaScambio.getIdFantagazzetta());
+                TipoDettTrattativaDto tipoDettTrattativaDto = getTipoDettTrattativaBySigla(giocatoreTrattativaScambio.getTipoCessione());
                 TipoOperazioneDto tipoOperazioneDtoSquadraA = squadraCedente.equals(Constants.SquadraCedente.SQUADRA_A) ? getTipoOperazioneBySigla(Constants.TipoOperazione.CESSIONE.getSigla()) : getTipoOperazioneBySigla(Constants.TipoOperazione.ACQUISTO.getSigla());
                 TipoOperazioneDto tipoOperazioneDtoSquadraB = squadraCedente.equals(Constants.SquadraCedente.SQUADRA_B) ? getTipoOperazioneBySigla(Constants.TipoOperazione.CESSIONE.getSigla()) : getTipoOperazioneBySigla(Constants.TipoOperazione.ACQUISTO.getSigla());
                 DettaglioTrattativaDto dettaglioTrattativaDtoSquadraA = new DettaglioTrattativaDto(null,trattativaDto,tipoDettTrattativaDto,squadraDtoA,giocatoreDto,tipoOperazioneDtoSquadraA, null);
                 DettaglioTrattativaDto dettaglioTrattativaDtoSquadraB = new DettaglioTrattativaDto(null,trattativaDto,tipoDettTrattativaDto,squadraDtoB,giocatoreDto,tipoOperazioneDtoSquadraB, null);
                 if(tipoDettTrattativaDto.isPrestito()){
-                        setPrestitoDettTrattativa(dettaglioTrattativaDtoSquadraA, giocatoreTrattativa);
-                        setPrestitoDettTrattativa(dettaglioTrattativaDtoSquadraB, giocatoreTrattativa);
+                        setPrestitoDettTrattativa(dettaglioTrattativaDtoSquadraA, giocatoreTrattativaScambio);
+                        setPrestitoDettTrattativa(dettaglioTrattativaDtoSquadraB, giocatoreTrattativaScambio);
                 }
                 saveDettaglioTrattativa(dettaglioTrattativaDtoSquadraA);
                 saveDettaglioTrattativa(dettaglioTrattativaDtoSquadraB);
         }
 
-        private void setPrestitoDettTrattativa(DettaglioTrattativaDto dettaglioTrattativaDto, GiocatoreTrattativa giocatoreTrattativa){
+        private void setPrestitoDettTrattativa(DettaglioTrattativaDto dettaglioTrattativaDto, GiocatoreTrattativaScambio giocatoreTrattativaScambio){
                 PrestitoDto prestitoDto = new PrestitoDto();
                 prestitoDto.setIdDettTrattativa(dettaglioTrattativaDto);
-                prestitoDto.setRiscatto(giocatoreTrattativa.getPrestito().isRiscatto());
-                prestitoDto.setObbligo(giocatoreTrattativa.getPrestito().isObbligo());
-                prestitoDto.setCostoRiscatto(giocatoreTrattativa.getPrestito().getCostoRiscatto());
+                prestitoDto.setRiscatto(giocatoreTrattativaScambio.getPrestito().isRiscatto());
+                prestitoDto.setObbligo(giocatoreTrattativaScambio.getPrestito().isObbligo());
+                prestitoDto.setCostoRiscatto(giocatoreTrattativaScambio.getPrestito().getCostoRiscatto());
                 dettaglioTrattativaDto.setIdPrestito(prestitoDto);
+        }
+
+        private void createAndSaveStagioneCompetizione(StagioneDto stagioneDto, CompetizioneDto competizioneDto){
+                Stagione stagione = entityManager.merge(StagioneConverter.toEntity(stagioneDto));
+                Competizione competizione = entityManager.merge(CompetizioneConverter.toEntity(competizioneDto));
+                StagioneCompetizione stagioneCompetizione = new StagioneCompetizione(null, stagione, competizione);
+                saveStagioneCompetizione(stagioneCompetizione);
         }
 }

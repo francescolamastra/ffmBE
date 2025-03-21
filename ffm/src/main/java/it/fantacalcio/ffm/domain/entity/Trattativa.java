@@ -25,8 +25,13 @@ public class Trattativa {
     @Column(name = "DATA_CREAZIONE", nullable = false)
     private LocalDateTime dataCreazione;
 
+    @Column(name = "CLAUSOLE")
+    private String clausole;
+
     @PrePersist
     protected void onCreate() {
-        dataCreazione = LocalDateTime.now();
+        if(dataCreazione == null){
+            dataCreazione = LocalDateTime.now();
+        }
     }
 }

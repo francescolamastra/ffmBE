@@ -104,4 +104,11 @@ public class ApiGatewayController {
     public TrattativaDto createTrattativaScambio(@RequestBody TrattativaScambio trattativaScambio) {
         return apiGatewayFacade.createTrattativaScambio(trattativaScambio);
     }
+
+    @PostMapping(value = "/inizializzaCompetizioni")
+    @ResponseBody
+    @Operation(summary = "Crea per la stagione in corso tutte le competizioni previste")
+    public void inizializzaCompetizioni() {
+        apiGatewayFacade.inizializzaCompetizioni();
+    }
 }

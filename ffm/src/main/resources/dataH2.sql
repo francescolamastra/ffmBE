@@ -52,3 +52,9 @@ INSERT INTO tipo_dett_trattativa (SIGLA, DESCRIZIONE) VALUES
 INSERT INTO operazione (ID_SQUADRA, ID_GIOCATORE, ID_TIPO_OPERAZIONE, ID_STAGIONE, DATA_CREAZIONE) VALUES
 (1, 1, 1, 1, CURRENT_TIMESTAMP),
 (2, 2, 2, 2, CURRENT_TIMESTAMP);
+
+-- Competizione
+INSERT INTO competizione (SIGLA, DESCRIZIONE) VALUES
+('C', 'Campionato'),
+('CDL', 'Coppa di Lega'),
+('CL', 'Champions League');

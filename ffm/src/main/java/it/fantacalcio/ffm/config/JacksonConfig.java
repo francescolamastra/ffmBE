@@ -19,7 +19,7 @@ public class JacksonConfig {
         ObjectMapper mapper = builder.createXmlMapper(false).build();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(LocalDateTime.class, new CustomDateDeserializer());
-        module.addDeserializer(Constants.SessioneMercatoOpAcquisto.class , new CustomSessioneMercatoOpAcquistoDeserializer());
+        module.addDeserializer(Constants.SessioneMercatoOpAcquistoEnum.class , new CustomSessioneMercatoOpAcquistoDeserializer());
         mapper.registerModule(module);
         return mapper;
     }

@@ -46,3 +46,7 @@ ffm:
       sheet-name: 'Tutti'
     csv-rose:
       skip-rows: 1
+    excel-risultati-competizione:
+      skip-rows: 3
+      sheet-name: 'Calendario'
+      giornata: 9999

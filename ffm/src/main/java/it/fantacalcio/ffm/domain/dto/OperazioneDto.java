@@ -25,6 +25,6 @@ public class OperazioneDto implements Serializable {
     TransazioneOperazioneDto transazione;
     AcquistoDto acquisto;
     SvincoloDto svincolo;
-    Constants.SessioneMercatoOpAcquisto sessioneMercato;
+    Constants.SessioneMercatoOpAcquistoEnum sessioneMercato;
     LocalDateTime dataCreazione;
 }

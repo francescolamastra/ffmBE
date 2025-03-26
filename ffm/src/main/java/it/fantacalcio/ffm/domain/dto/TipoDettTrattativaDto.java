@@ -17,7 +17,7 @@ public class TipoDettTrattativaDto implements Serializable {
     String descrizione;
 
     public boolean isPrestito(){
-        return Arrays.stream(Constants.TipoDettTrattativa.values())
-                .anyMatch(it -> it.getSigla().equalsIgnoreCase(sigla) && it.equals(Constants.TipoDettTrattativa.PRESTITO));
+        return Arrays.stream(Constants.TipoDettTrattativaEnum.values())
+                .anyMatch(it -> it.getSigla().equalsIgnoreCase(sigla) && it.equals(Constants.TipoDettTrattativaEnum.PRESTITO));
     }
 }

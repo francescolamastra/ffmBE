@@ -2,6 +2,7 @@ package it.fantacalcio.ffm.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,11 +19,11 @@ public class RisultatoCompetizione {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ID_STAGIONE_COMPETIZIONE", nullable = false)
-    private StagioneCompetizione idStagioneCompetizione;
+    private StagioneCompetizione stagioneCompetizione;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ID_SQUADRA", nullable = false)
-    private Squadra idSquadra;
+    private Squadra squadra;
 
     @Column(name = "RISULTATO", nullable = false, length = 1)
     private String risultato;
@@ -38,6 +39,10 @@ public class RisultatoCompetizione {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ID_FASE_COMPETIZIONE", nullable = false)
-    private FaseCompetizione idFaseCompetizione;
+    private FaseCompetizione faseCompetizione;
+
+    @ColumnDefault("0")
+    @Column(name = "BONUS_PUNTI", nullable = false)
+    private int bonusPunti;
 
 }

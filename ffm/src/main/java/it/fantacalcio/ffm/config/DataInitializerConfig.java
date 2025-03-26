@@ -15,7 +15,7 @@ public class DataInitializerConfig {
     @Autowired
     private DataSource dataSource;
 
-    @PostConstruct
+    //@PostConstruct
     public void loadData() {
         ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator(false, false, "UTF-8", new ClassPathResource("dataH2.sql"));
         resourceDatabasePopulator.execute(dataSource);

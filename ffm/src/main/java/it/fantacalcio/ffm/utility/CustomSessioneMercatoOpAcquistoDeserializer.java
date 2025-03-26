@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 
-public class CustomSessioneMercatoOpAcquistoDeserializer extends JsonDeserializer<Constants.SessioneMercatoOpAcquisto> {
+public class CustomSessioneMercatoOpAcquistoDeserializer extends JsonDeserializer<Constants.SessioneMercatoOpAcquistoEnum> {
 
     @Override
-    public Constants.SessioneMercatoOpAcquisto deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Constants.SessioneMercatoOpAcquistoEnum deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String value = p.getText();
-        return Constants.SessioneMercatoOpAcquisto.fromValue(value);
+        return Constants.SessioneMercatoOpAcquistoEnum.fromValue(value);
     }
 }

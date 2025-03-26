@@ -3,19 +3,18 @@ package it.fantacalcio.ffm.batch.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.batch.service.JobService;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.factory.annotation.Autowired;
+import it.fantacalcio.ffm.batch.utility.FileManager;
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
+
+import static it.fantacalcio.ffm.utility.Constants.UPLOADS_DIR;
 
 @RestController
 @RequestMapping(value = "/ffm/batch")
@@ -24,10 +23,12 @@ public class JobLauncherController{
 
     private final JobService jobService;
     private final Environment env;
+    private final FileManager fileManager;
 
-    public JobLauncherController(JobService jobService, Environment env) {
+    public JobLauncherController(JobService jobService, Environment env, FileManager fileManager) {
         this.jobService = jobService;
         this.env = env;
+        this.fileManager = fileManager;
     }
 
     @PostMapping(value = "/importListone",  consumes = "multipart/form-data")
@@ -45,23 +46,15 @@ public class JobLauncherController{
             }
 
             // Salva il file in una directory specifica interna all'applicazione
-            String fileName = Objects.requireNonNull(file.getOriginalFilename());
-            Path filePath = Paths.get("uploads", fileName);
-
-            if (Files.exists(filePath)) {
-                throw new FileAlreadyExistsException("File " + fileName + " already exists");
-            }
-
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath, file.getBytes());
+            String filePath = fileManager.copyToInDirectory(file, UPLOADS_DIR);
 
             // Esegui il job in modo asyncrono
-            jobService.runImportListoneJob(filePath.toString(), skipRows.longValue(), sheetName);
+            jobService.runImportListoneJob(filePath, skipRows.longValue(), sheetName);
             return "Job importListone started";
         } catch (FileAlreadyExistsException e) {
-            return "Job failed: " + e.getMessage();
+            return "Job importListone failed: " + e.getMessage();
         } catch (Exception e) {
-            return "Job failed:"+e;
+            return "Job importListone failed:"+e;
         }
     }
 
@@ -76,23 +69,47 @@ public class JobLauncherController{
             }
 
             // Salva il file in una directory specifica interna all'applicazione
-            String fileName = Objects.requireNonNull(file.getOriginalFilename());
-            Path filePath = Paths.get("uploads", fileName);
-
-            if (Files.exists(filePath)) {
-                throw new FileAlreadyExistsException("File " + fileName + " already exists");
-            }
-
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath, file.getBytes());
+            String filePath = fileManager.copyToInDirectory(file, UPLOADS_DIR);
 
             // Esegui il job in modo asyncrono
-            jobService.runImportRoseJob(filePath.toString(), skipRows.longValue());
+            jobService.runImportRoseJob(filePath, skipRows.longValue());
             return "Job importRose started!";
         } catch (FileAlreadyExistsException e) {
-            return "Job failed: " + e.getMessage();
+            return "Job importRose failed: " + e.getMessage();
         } catch (Exception e) {
-            return "Job failed:"+e;
+            return "Job importRose failed:"+e;
+        }
+    }
+
+    @PostMapping(value = "/importRisultatiCompetizione",  consumes = "multipart/form-data")
+    @Operation(summary = "Import dei risultati di una competizione tramite excel fantagazzetta")
+    public String importRisultatiCompetizione(@RequestParam("file") MultipartFile file,
+                                              @RequestParam(value = "skipRows", required = false) Long skipRows,
+                                              @RequestParam(value = "sheetName", required = false) String sheetName,
+                                              @RequestParam(value = "giornata", required = false) Long giornata,
+                                              @RequestParam(value = "competizione") String competizione,
+                                              @RequestParam(value = "faseCompetizione") String faseCompetizione) {
+        // Salva il file in una directory specifica interna all'applicazione
+        String filePath = null;
+        try {
+            filePath = fileManager.copyToInDirectory(file, UPLOADS_DIR);
+            // Recupera i valori predefiniti da application.yml se i parametri non sono forniti o sono vuoti
+            if (skipRows == null) {
+                skipRows = Long.parseLong(Objects.requireNonNull(env.getProperty("ffm.batch.excel-risultati-competizione.skip-rows")));
+            }
+            if (sheetName == null || sheetName.isEmpty()) {
+                sheetName = env.getProperty("ffm.batch.excel-risultati-competizione.sheet-name");
+            }
+            if (giornata == null) {
+                giornata = Long.parseLong(Objects.requireNonNull(env.getProperty("ffm.batch.excel-risultati-competizione.giornata")));
+            }
+
+            // Esegui il job in modo asyncrono
+            jobService.runImportRisultatiCompetizione(filePath, skipRows, sheetName, competizione, faseCompetizione, giornata);
+            return "Job importRisultatiCompetizione started";
+        } catch (Exception e) {
+            fileManager.deleteFile(filePath);
+            return "Job importRisultatiCompetizione failed:"+e;
         }
     }
 }

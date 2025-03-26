@@ -10,11 +10,12 @@ import java.io.Serializable;
 @Value
 public class RisultatoCompetizioneDto implements Serializable {
     Integer id;
-    StagioneCompetizioneDto idStagioneCompetizione;
-    SquadraDto idSquadra;
+    StagioneCompetizioneDto stagioneCompetizione;
+    SquadraDto squadra;
     String risultato;
     Integer giornataSerieA;
     Integer giornataCompetizione;
     String luogoRisultato;
-    FaseCompetizioneDto idFaseCompetizione;
+    FaseCompetizioneDto faseCompetizione;
+    int bonusPunti;
 }

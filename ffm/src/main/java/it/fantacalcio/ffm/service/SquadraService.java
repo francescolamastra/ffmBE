@@ -53,7 +53,11 @@ public class SquadraService {
         return squadraRepository.findById(id).map(SquadraConverter::toDto);
     }
 
-    public SquadraDto findByNome(SquadraDto squadraDto) {
+    public Optional<SquadraDto> findByNome(String nome){
+        return squadraRepository.findByNome(nome).map(SquadraConverter::toDto);
+    }
+
+    public SquadraDto findByNomeOrSave(SquadraDto squadraDto) {
         return squadraCache.getSquadraList().stream()
                 .filter(c -> c.getNome().equalsIgnoreCase(squadraDto.getNome()))
                 .findFirst()

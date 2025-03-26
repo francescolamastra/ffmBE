@@ -8,25 +8,27 @@ public class RisultatoCompetizioneConverter {
 
     public static RisultatoCompetizioneDto toDto(RisultatoCompetizione risultatoCompetizione){
         return new RisultatoCompetizioneDto(risultatoCompetizione.getId(),
-                StagioneCompetizioneConverter.toDto(risultatoCompetizione.getIdStagioneCompetizione()),
-                SquadraConverter.toDto(risultatoCompetizione.getIdSquadra()),
+                StagioneCompetizioneConverter.toDto(risultatoCompetizione.getStagioneCompetizione()),
+                SquadraConverter.toDto(risultatoCompetizione.getSquadra()),
                 risultatoCompetizione.getRisultato(),
                 risultatoCompetizione.getGiornataSerieA(),
                 risultatoCompetizione.getGiornataCompetizione(),
                 risultatoCompetizione.getLuogoRisultato(),
-                FaseCompetizioneConverter.toDto(risultatoCompetizione.getIdFaseCompetizione()));
+                FaseCompetizioneConverter.toDto(risultatoCompetizione.getFaseCompetizione()),
+                risultatoCompetizione.getBonusPunti());
     }
 
     public static RisultatoCompetizione toEntity(RisultatoCompetizioneDto risultatoCompetizione){
         RisultatoCompetizione risultatoCompetizioneEntity = new RisultatoCompetizione();
         risultatoCompetizioneEntity.setId(risultatoCompetizione.getId());
+        risultatoCompetizioneEntity.setStagioneCompetizione(StagioneCompetizioneConverter.toEntity(risultatoCompetizione.getStagioneCompetizione()));
+        risultatoCompetizioneEntity.setSquadra(SquadraConverter.toEntity(risultatoCompetizione.getSquadra()));
         risultatoCompetizioneEntity.setRisultato(risultatoCompetizione.getRisultato());
-        risultatoCompetizioneEntity.setGiornataCompetizione(risultatoCompetizione.getGiornataCompetizione());
-        risultatoCompetizioneEntity.setIdFaseCompetizione(FaseCompetizioneConverter.toEntity(risultatoCompetizione.getIdFaseCompetizione()));
-        risultatoCompetizioneEntity.setLuogoRisultato(risultatoCompetizione.getLuogoRisultato());
-        risultatoCompetizioneEntity.setGiornataCompetizione(risultatoCompetizione.getGiornataCompetizione());
-        risultatoCompetizioneEntity.setIdStagioneCompetizione(StagioneCompetizioneConverter.toEntity(risultatoCompetizione.getIdStagioneCompetizione()));
         risultatoCompetizioneEntity.setGiornataSerieA(risultatoCompetizione.getGiornataSerieA());
+        risultatoCompetizioneEntity.setGiornataCompetizione(risultatoCompetizione.getGiornataCompetizione());
+        risultatoCompetizioneEntity.setLuogoRisultato(risultatoCompetizione.getLuogoRisultato());
+        risultatoCompetizioneEntity.setFaseCompetizione(FaseCompetizioneConverter.toEntity(risultatoCompetizione.getFaseCompetizione()));
+        risultatoCompetizioneEntity.setBonusPunti(risultatoCompetizione.getBonusPunti());
         return risultatoCompetizioneEntity;
     }
 }

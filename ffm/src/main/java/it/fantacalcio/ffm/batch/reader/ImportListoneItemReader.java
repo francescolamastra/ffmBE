@@ -1,7 +1,11 @@
 package it.fantacalcio.ffm.batch.reader;
 
 import it.fantacalcio.ffm.batch.model.ListoneBatchRecord;
-import org.apache.poi.ss.usermodel.*;
+import it.fantacalcio.ffm.batch.utility.ExcelHelper;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.core.io.Resource;
 
@@ -34,22 +38,12 @@ public class ImportListoneItemReader implements ItemReader<ListoneBatchRecord> {
             Row row = rowIterator.next();
 
             return new ListoneBatchRecord(
-                    Integer.parseInt(Objects.requireNonNull(getCellValue(row.getCell(0)))),
-                    getCellValue(row.getCell(3)),
-                    getCellValue(row.getCell(1)),
-                    Integer.parseInt(Objects.requireNonNull(getCellValue(row.getCell(11))))
+                    Integer.parseInt(Objects.requireNonNull(ExcelHelper.getCellValue(row.getCell(0)))),
+                    ExcelHelper.getCellValue(row.getCell(3)),
+                    ExcelHelper.getCellValue(row.getCell(1)),
+                    Integer.parseInt(Objects.requireNonNull(ExcelHelper.getCellValue(row.getCell(11))))
             );
         }
         return null;
-    }
-
-    private String getCellValue(Cell cell){
-        if (cell.getCellType() == CellType.STRING) {
-            return cell.getStringCellValue();
-        } else if (cell.getCellType() == CellType.NUMERIC) {
-            return String.valueOf((int) cell.getNumericCellValue());
-        } else {
-            return null;
-        }
     }
 }

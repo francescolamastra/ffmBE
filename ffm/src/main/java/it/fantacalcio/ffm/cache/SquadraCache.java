@@ -1,6 +1,7 @@
 package it.fantacalcio.ffm.cache;
 
 import it.fantacalcio.ffm.domain.dto.SquadraDto;
+import it.fantacalcio.ffm.utility.Constants;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,9 @@ public class SquadraCache {
     private final List<SquadraDto> squadraList = new CopyOnWriteArrayList<>();
 
     public void addSquadra(SquadraDto squadraDto) {
-        this.squadraList.clear();
+        if(this.squadraList.size() == Constants.TOT_SQUADRE_CAT_A){
+            this.squadraList.clear();
+        }
         this.squadraList.add(squadraDto);
     }
 

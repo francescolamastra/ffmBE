@@ -58,3 +58,8 @@ INSERT INTO competizione (SIGLA, DESCRIZIONE) VALUES
 ('C', 'Campionato'),
 ('CDL', 'Coppa di Lega'),
 ('CL', 'Champions League');
+
+INSERT INTO fase_competizione (SIGLA, DESCRIZIONE) VALUES
+('R', 'Regolare'),
+('P1', 'Preliminare 1'),
+('P2', 'Preliminare 2');

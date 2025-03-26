@@ -47,7 +47,7 @@ public class Operazione {
 
     @Convert(converter = SessioneMercatoOpAcquistoConverter.class)
     @Column(name = "SESSIONE_MERCATO", nullable = false)
-    private Constants.SessioneMercatoOpAcquisto sessioneMercato;
+    private Constants.SessioneMercatoOpAcquistoEnum sessioneMercato;
 
     @Column(name = "DATA_CREAZIONE", nullable = false)
     private LocalDateTime dataCreazione;

@@ -24,6 +24,9 @@ public class JobService {
     private Job importRoseJob;
 
     @Autowired
+    private Job importRisultatiCompetizioneJob;
+
+    @Autowired
     private TaskExecutor taskExecutor;
 
     public void runImportListoneJob(String filePath, Long skipRows, String sheetName) {
@@ -37,11 +40,8 @@ public class JobService {
             } catch (Exception e) {
                 try {
                     throw e;
-                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException ex) {
-                    throw new RuntimeException(ex);
-                } catch (JobRestartException ex) {
-                    throw new RuntimeException(ex);
-                } catch (JobInstanceAlreadyCompleteException ex) {
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
                     throw new RuntimeException(ex);
                 }
             }
@@ -56,7 +56,34 @@ public class JobService {
                         .addLong("skipRows", skipRows)
                         .toJobParameters());
             } catch (Exception e) {
-                // Gestisci l'eccezione
+                try {
+                    throw e;
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    public void runImportRisultatiCompetizione(String filePath, Long skipRows, String sheetName, String competizione, String faseCompetizione, Long giornata) {
+        taskExecutor.execute(() -> {
+            try {
+                jobLauncher.run(importRisultatiCompetizioneJob, new JobParametersBuilder()
+                        .addString("filePath", filePath)
+                        .addLong("skipRows", skipRows)
+                        .addString("sheetName", sheetName)
+                        .addString("competizione", competizione)
+                        .addString("faseCompetizione", faseCompetizione)
+                        .addLong("giornata", giornata)
+                        .toJobParameters());
+            } catch (Exception e) {
+                try {
+                    throw e;
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }

@@ -3,6 +3,8 @@ package it.fantacalcio.ffm.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.domain.dto.*;
+import it.fantacalcio.ffm.domain.model.FantalegheLoginRequest;
+import it.fantacalcio.ffm.domain.model.FantalegheLoginResponse;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,13 @@ public class ApiGatewayController {
 
     public ApiGatewayController(ApiGatewayFacade apiGatewayFacade) {
         this.apiGatewayFacade = apiGatewayFacade;
+    }
+
+    @PostMapping(value = "/fantalegheLogin")
+    @ResponseBody
+    @Operation(summary = "Effettua il login all'applicazione Fantaleghe")
+    public FantalegheLoginResponse login(@RequestBody FantalegheLoginRequest loginRequest) {
+        return apiGatewayFacade.fantalegheLogin(loginRequest);
     }
 
     /* METODI GET */

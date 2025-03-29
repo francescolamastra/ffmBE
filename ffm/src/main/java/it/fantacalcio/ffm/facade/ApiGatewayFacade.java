@@ -7,9 +7,7 @@ import it.fantacalcio.ffm.domain.dto.*;
 import it.fantacalcio.ffm.domain.entity.Competizione;
 import it.fantacalcio.ffm.domain.entity.Stagione;
 import it.fantacalcio.ffm.domain.entity.StagioneCompetizione;
-import it.fantacalcio.ffm.domain.model.BonusTrattativaScambio;
-import it.fantacalcio.ffm.domain.model.GiocatoreTrattativaScambio;
-import it.fantacalcio.ffm.domain.model.TrattativaScambio;
+import it.fantacalcio.ffm.domain.model.*;
 import it.fantacalcio.ffm.service.*;
 import it.fantacalcio.ffm.utility.CollectionUtility;
 import it.fantacalcio.ffm.utility.Constants;
@@ -51,6 +49,7 @@ public class ApiGatewayFacade {
         private StagioneCompetizioneService stagioneCompetizioneService;
         private RisultatoCompetizioneService risultatoCompetizioneService;
         private FaseCompetizioneService faseCompetizioneService;
+        private FantalegheLoginService fantalegheLoginService;
 
         /* INIZIO METODI SETTER PER INJECTION */
         @Autowired
@@ -119,7 +118,14 @@ public class ApiGatewayFacade {
 
         @Autowired
         public void setFaseCompetizioneService(FaseCompetizioneService faseCompetizioneService) { this.faseCompetizioneService = faseCompetizioneService; }
+
+        @Autowired
+        public void setFantalegheLoginService(FantalegheLoginService fantalegheLoginService) { this.fantalegheLoginService = fantalegheLoginService; }
         /* FINE METODI SETTER PER INJECTION */
+
+        public FantalegheLoginResponse fantalegheLogin(FantalegheLoginRequest loginRequest) {
+                return fantalegheLoginService.login(loginRequest);
+        }
 
         /* METODI DI DOMINIO */
         public List<GiocatoreDto> getGiocatori() {

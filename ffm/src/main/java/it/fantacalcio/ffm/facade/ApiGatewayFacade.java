@@ -22,7 +22,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import static it.fantacalcio.ffm.utility.Constants.*;
+import static it.fantacalcio.ffm.utility.Constants.PATTERN_NAZIONE_LOGIN_FANTALEGHE;
+import static it.fantacalcio.ffm.utility.Constants.PATTERN_SQUADRA_JOINED_STRING;
 
 @Component
 public class ApiGatewayFacade {
@@ -136,21 +137,25 @@ public class ApiGatewayFacade {
         public void setCredenzialiService(CredenzialiService credenzialiService) { this.credenzialiService = credenzialiService; }
         /* FINE METODI SETTER PER INJECTION */
 
-        public FantalegheLoginResponse fantalegheLogin(FantalegheLoginRequest loginRequest) {
-                FantalegheLoginResponse fantalegheLoginResponse = fantalegheLoginService.login(loginRequest);
-                fantalegheLoginResponse.getData().getLeghe()
-                        .forEach(lega -> {
-                                try{
-                                        UtenteDto utenteDto = utenteService.findByNickname(ADMIN_A_NICKNAME).orElseThrow();
-                                        NazioneDto nazioneDto = nazioneFromNomeLega(lega.getNome());
-                                        TokenCredenzialiDto tokenCredenzialiDto = new TokenCredenzialiDto(null, lega.getJwt(), utenteDto, nazioneDto, true, LocalDateTime.now());
-                                        tokenCredenzialiService.save(tokenCredenzialiDto);
-                                } catch (Exception e){
-                                        // Log dell'errore e continuazione del ciclo
-                                        logger.error("Errore durante l'elaborazione della lega {}: {}", lega.getNome(), e.getMessage());
-                                }
-                        });
-                return fantalegheLoginResponse;
+        public List<TokenCredenzialiProjectionDto> fantalegheLogin(FantalegheLoginRequest loginRequest, String nickname) {
+                UtenteDto utenteDto = utenteService.findByNickname(nickname).orElseThrow();
+                List<TokenCredenzialiProjectionDto> tokenCredenzialiProjectionDtoList = tokenCredenzialiService.getAllTokenCredenzialiInfo(utenteDto);
+                if(tokenCredenzialiProjectionDtoList.stream().anyMatch(token -> !token.getIsValid())) {
+                        FantalegheLoginResponse fantalegheLoginResponse = fantalegheLoginService.login(loginRequest);
+                        tokenCredenzialiProjectionDtoList.clear();
+                        fantalegheLoginResponse.getData().getLeghe()
+                                .forEach(lega -> {
+                                        try {
+                                                NazioneDto nazioneDto = nazioneFromNomeLega(lega.getNome());
+                                                TokenCredenzialiDto tokenCredenzialiDto = new TokenCredenzialiDto(null, lega.getJwt(), utenteDto, nazioneDto, true, LocalDateTime.now());
+                                                tokenCredenzialiProjectionDtoList.add(tokenCredenzialiService.save(tokenCredenzialiDto));
+                                        } catch (Exception e) {
+                                                // Log dell'errore e continuazione del ciclo
+                                                logger.error("Errore durante l'elaborazione della lega {}: {}", lega.getNome(), e.getMessage());
+                                        }
+                                });
+                }
+                return tokenCredenzialiProjectionDtoList;
         }
 
         /* METODI DI DOMINIO */

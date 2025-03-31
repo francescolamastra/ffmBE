@@ -13,6 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TokenCredenzialiProjectionDto implements Serializable {
-    String jwt;
-    NazioneDto nazione;
+    private String jwt;
+    private NazioneDto nazione;
+    private Boolean isValid;
 }

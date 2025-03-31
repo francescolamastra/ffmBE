@@ -2,7 +2,7 @@ package it.fantacalcio.ffm.mapper;
 
 import it.fantacalcio.ffm.domain.dto.TokenCredenzialiProjectionDto;
 import it.fantacalcio.ffm.domain.entity.TokenCredenziali;
-import it.fantacalcio.ffm.domain.entity.TokenCredenzialiInfo;
+import it.fantacalcio.ffm.domain.entity.TokenCredenzialiProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -10,10 +10,8 @@ import org.mapstruct.factory.Mappers;
 public interface TokenCredenzialiProjectionMapper {
     TokenCredenzialiProjectionMapper INSTANCE = Mappers.getMapper(TokenCredenzialiProjectionMapper.class);
 
-    TokenCredenzialiProjectionDto toDto(TokenCredenzialiInfo tokenCredenzialiInfo);
+    TokenCredenzialiProjectionDto toDto(TokenCredenzialiProjection tokenCredenzialiProjection);
 
     TokenCredenzialiProjectionDto toDto(TokenCredenziali tokenCredenziali);
-
-    TokenCredenziali toEntity(TokenCredenzialiProjectionDto tokenCredenzialiProjectionDto);
 }
 

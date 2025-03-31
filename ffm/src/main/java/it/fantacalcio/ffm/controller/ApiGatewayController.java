@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.domain.dto.*;
 import it.fantacalcio.ffm.domain.model.FantalegheLoginRequest;
-import it.fantacalcio.ffm.domain.model.FantalegheLoginResponse;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
+import it.fantacalcio.ffm.utility.Constants;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +24,9 @@ public class ApiGatewayController {
     @PostMapping(value = "/fantalegheLogin")
     @ResponseBody
     @Operation(summary = "Effettua il login all'applicazione Fantaleghe")
-    public FantalegheLoginResponse login(@RequestBody FantalegheLoginRequest loginRequest) {
-        return apiGatewayFacade.fantalegheLogin(loginRequest);
+    public List<TokenCredenzialiProjectionDto> login(@RequestBody FantalegheLoginRequest loginRequest, @RequestParam(required = false) String nickname) {
+        if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+        return apiGatewayFacade.fantalegheLogin(loginRequest, nickname);
     }
 
     /* METODI GET */

@@ -3,7 +3,8 @@ package it.fantacalcio.ffm.domain.entity;
 /**
  * Projection for {@link TokenCredenziali}
  */
-public interface TokenCredenzialiInfo {
+public interface TokenCredenzialiProjection {
     String getJwt();
     Nazione getNazione();
+    Boolean getIsValid();
 }

@@ -1,7 +1,6 @@
 package it.fantacalcio.ffm.utility;
 
 import it.fantacalcio.ffm.config.ApiFantalegheProperties;
-import it.fantacalcio.ffm.service.CookieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LegacyHelper {
     private final ApiFantalegheProperties apiFantalegheProperties;
-    private final CookieService cookieService;
 
     public String fantalegheLoginUrl(){
         return apiFantalegheProperties.getLoginEndpoint();

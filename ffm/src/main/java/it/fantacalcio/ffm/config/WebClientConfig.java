@@ -3,6 +3,8 @@ package it.fantacalcio.ffm.config;
 import io.netty.channel.ChannelOption;
 import it.fantacalcio.ffm.handler.CustomWebClientErrorHandler;
 import it.fantacalcio.ffm.interceptor.CustomWebClientRequestInterceptor;
+import lombok.Data;
+import lombok.Getter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -13,14 +15,19 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
+@Getter
 public class WebClientConfig {
 
-    private final Map<String, List<String>> cookies = new ConcurrentHashMap<>();
+    private final Map<String, List<CookieWithExpiry>> cookies = new ConcurrentHashMap<>();
 
     @Bean
     public WebClient webClient() {
@@ -36,17 +43,50 @@ public class WebClientConfig {
                 .build();
     }
 
-    private ExchangeFilterFunction cookieFilter() {
+    @Data
+    static class CookieWithExpiry {
+        private final String cookie;
+        private final Instant expiry;
+    }
+
+    ExchangeFilterFunction cookieFilter() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-            List<String> cookieHeaders = cookies.get(clientRequest.url().getHost());
+            List<CookieWithExpiry> cookieHeaders = cookies.get(clientRequest.url().getHost());
             if (cookieHeaders != null) {
-                clientRequest.headers().put(HttpHeaders.COOKIE, cookieHeaders);
+                List<String> validCookies = new ArrayList<>();
+                Instant now = Instant.now();
+                cookieHeaders.removeIf(cookieWithExpiry -> cookieWithExpiry.getExpiry().isBefore(now));
+                for (CookieWithExpiry cookieWithExpiry : cookieHeaders) {
+                    validCookies.add(cookieWithExpiry.getCookie());
+                }
+                clientRequest.headers().put(HttpHeaders.COOKIE, validCookies);
             }
             return Mono.just(clientRequest);
         }).andThen(ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
             List<String> setCookieHeaders = clientResponse.headers().asHttpHeaders().get(HttpHeaders.SET_COOKIE);
             if (setCookieHeaders != null) {
-                cookies.put(clientResponse.request().getURI().getHost(), setCookieHeaders);
+                List<CookieWithExpiry> validCookies = new ArrayList<>();
+                Instant now = Instant.now();
+                for (String setCookieHeader : setCookieHeaders) {
+                    String[] attributes = setCookieHeader.split(";");
+                    String cookieValue = attributes[0].trim();
+                    Instant expiry = null;
+                    for (String attribute : attributes) {
+                        String[] keyValue = attribute.trim().split("=", 2);
+                        if (keyValue.length == 2 && keyValue[0].equalsIgnoreCase("Expires")) {
+                            try {
+                                expiry = Instant.from(DateTimeFormatter.RFC_1123_DATE_TIME.parse(keyValue[1].trim()));
+                            } catch (DateTimeParseException e) {
+                                // Gestione dell'errore di parsing
+                            }
+                            break;
+                        }
+                    }
+                    if (expiry != null) {
+                        validCookies.add(new CookieWithExpiry(cookieValue, expiry));
+                    }
+                }
+                cookies.put(clientResponse.request().getURI().getHost(), validCookies);
             }
             return Mono.just(clientResponse);
         }));

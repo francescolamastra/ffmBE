@@ -12,9 +12,11 @@ public class Constants {
     public static final int ANNI_CONTRATTO_DEFAULT = 3;
     public static final String SEPARATORE_RISULTATO = "-";
     public static final Pattern PATTERN_SQUADRA_JOINED_STRING = Pattern.compile("^(.*) (\\S+) (\\S+)$");
+    public static final Pattern PATTERN_NAZIONE_LOGIN_FANTALEGHE = Pattern.compile("^(.*) FFM$");
     public static final Integer DEFAULT_ALL = 9999;
     public static final Integer TOT_SQUADRE_CAT_A = 20;
     public static final Integer TOT_SQUADRE_CAT_B_C = 16;
+    public static final String ADMIN_A_NICKNAME = "AdminA";
 
     // Enumerazione per TipoOperazioneEnum
     @Getter

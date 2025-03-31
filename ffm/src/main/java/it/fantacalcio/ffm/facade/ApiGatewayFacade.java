@@ -12,17 +12,22 @@ import it.fantacalcio.ffm.service.*;
 import it.fantacalcio.ffm.utility.CollectionUtility;
 import it.fantacalcio.ffm.utility.Constants;
 import jakarta.persistence.EntityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import static it.fantacalcio.ffm.utility.Constants.PATTERN_SQUADRA_JOINED_STRING;
+import static it.fantacalcio.ffm.utility.Constants.*;
 
 @Component
 public class ApiGatewayFacade {
+
+        private static final Logger logger = LoggerFactory.getLogger(ApiGatewayFacade.class);
 
         private final EntityManager entityManager;
 
@@ -50,6 +55,8 @@ public class ApiGatewayFacade {
         private RisultatoCompetizioneService risultatoCompetizioneService;
         private FaseCompetizioneService faseCompetizioneService;
         private FantalegheLoginService fantalegheLoginService;
+        private TokenCredenzialiService tokenCredenzialiService;
+        private CredenzialiService credenzialiService;
 
         /* INIZIO METODI SETTER PER INJECTION */
         @Autowired
@@ -121,10 +128,29 @@ public class ApiGatewayFacade {
 
         @Autowired
         public void setFantalegheLoginService(FantalegheLoginService fantalegheLoginService) { this.fantalegheLoginService = fantalegheLoginService; }
+
+        @Autowired
+        public void setTokenCredenzialiService(TokenCredenzialiService tokenCredenzialiService) { this.tokenCredenzialiService = tokenCredenzialiService; }
+
+        @Autowired
+        public void setCredenzialiService(CredenzialiService credenzialiService) { this.credenzialiService = credenzialiService; }
         /* FINE METODI SETTER PER INJECTION */
 
         public FantalegheLoginResponse fantalegheLogin(FantalegheLoginRequest loginRequest) {
-                return fantalegheLoginService.login(loginRequest);
+                FantalegheLoginResponse fantalegheLoginResponse = fantalegheLoginService.login(loginRequest);
+                fantalegheLoginResponse.getData().getLeghe()
+                        .forEach(lega -> {
+                                try{
+                                        UtenteDto utenteDto = utenteService.findByNickname(ADMIN_A_NICKNAME).orElseThrow();
+                                        NazioneDto nazioneDto = nazioneFromNomeLega(lega.getNome());
+                                        TokenCredenzialiDto tokenCredenzialiDto = new TokenCredenzialiDto(null, lega.getJwt(), utenteDto, nazioneDto, true, LocalDateTime.now());
+                                        tokenCredenzialiService.save(tokenCredenzialiDto);
+                                } catch (Exception e){
+                                        // Log dell'errore e continuazione del ciclo
+                                        logger.error("Errore durante l'elaborazione della lega {}: {}", lega.getNome(), e.getMessage());
+                                }
+                        });
+                return fantalegheLoginResponse;
         }
 
         /* METODI DI DOMINIO */
@@ -254,6 +280,20 @@ public class ApiGatewayFacade {
                 } else {
                         System.out.println("squadraFromJoinedString Input non valido: " + squadraJoinedString);
                         return null;
+                }
+        }
+
+        public NazioneDto nazioneFromNomeLega(String nomeLega) {
+                Matcher matcher = PATTERN_NAZIONE_LOGIN_FANTALEGHE.matcher(nomeLega);
+
+                if (matcher.matches()) {
+                        String nomeNazione = matcher.group(1);
+                        return getNazioni().stream()
+                                .filter(nazioneDto -> nazioneDto.getDescrizione().equalsIgnoreCase(nomeNazione))
+                                .findFirst()
+                                .orElseThrow(() -> new IllegalArgumentException("Nazione non trovata per il nome lega: " + nomeLega));
+                } else {
+                        throw new IllegalArgumentException("Input non valido: " + nomeLega);
                 }
         }
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UtenteService {
@@ -22,6 +23,10 @@ public class UtenteService {
     public UtenteDto save(UtenteDto utenteDto){
         Utente utenteInsertito = utenteRepository.save(UtenteConverter.toEntity(utenteDto));
         return UtenteConverter.toDto(utenteInsertito);
+    }
+
+    public Optional<UtenteDto> findByNickname(String nickname){
+        return utenteRepository.findByNickname(nickname).map(UtenteConverter::toDto);
     }
 
     public List<UtenteDto> findAll(){

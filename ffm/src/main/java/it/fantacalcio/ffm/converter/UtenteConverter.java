@@ -12,6 +12,7 @@ public class UtenteConverter {
                 utenteEntity.getCognome(),
                 utenteEntity.getTelefono(),
                 utenteEntity.getEmail(),
+                utenteEntity.getNickname(),
                 utenteEntity.getDataCreazione());
     }
 
@@ -22,6 +23,7 @@ public class UtenteConverter {
         utenteEntity.setNome(utenteDto.getNome());
         utenteEntity.setTelefono(utenteDto.getTelefono());
         utenteEntity.setEmail(utenteDto.getEmail());
+        utenteEntity.setNickname(utenteDto.getNickname());
         return utenteEntity;
     }
 }

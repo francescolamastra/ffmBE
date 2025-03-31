@@ -7,13 +7,12 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * DTO for {@link it.fantacalcio.ffm.domain.entity.Nazione}
+ * DTO for {@link it.fantacalcio.ffm.domain.entity.TokenCredenziali}
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NazioneDto implements Serializable {
-    Integer id;
-    String descrizione;
-    String sigla;
+public class TokenCredenzialiProjectionDto implements Serializable {
+    String jwt;
+    NazioneDto nazione;
 }

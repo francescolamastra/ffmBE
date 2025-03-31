@@ -50,3 +50,29 @@ ffm:
       skip-rows: 3
       sheet-name: 'Calendario'
       giornata: 9999
+  web:
+    api-fantaleghe:
+      domain-url: https://apileague.fantacalcio.it
+      headers:
+        host: 'apileague.fantacalcio.it'
+        app-key: '0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a'
+        accept: 'application/json'
+        accept-encoding: 'gzip, deflate, br'
+        content-type: 'application/json'
+        user-agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
+      login-endpoint: "${ffm.web.api-fantaleghe.domain-url}/onboarding/v1/login"
+      teams-endpoint: "${ffm.web.api-fantaleghe.domain-url}/onboarding/v1/league/teams"
+      mercati-conclusi-endpoint: "${ffm.web.api-fantaleghe.domain-url}/market/v1/expired/A?"
+      mercati-svincoli: "${ffm.web.api-fantaleghe.domain-url}/market/v1/hiddenrelease/releases/closed"
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato esempio: /A/MK_20250117134307
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato?lastId=codiceLastIdPaginaPrecedente esempio: ?lastId=MTcxNDU4NS1BLU1LXzIwMjUwMTE3MTM0MzA3JGNsb3NlZC02ODIyMzk2LTIwMjUwMjAxMTEwMC01NDg2JGNsb3NlZC0yMDI1MDIwMTExMDA
+      mercati-acquisti: "${ffm.web.api-fantaleghe.domain-url}/market/v1/smartauction/purchases/closed"
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato esempio: /A/MK_20250117134307
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato?lastId=codiceLastIdPaginaPrecedente esempio: ?lastId=MTcxNDU4NS1BLU1LXzIwMjUwMTE3MTM0MzA3JGNsb3NlZC02ODIyMzk2LTIwMjUwMjAxMTEwMC01NDg2JGNsb3NlZC0yMDI1MDIwMTExMDA
+      mercati-svincoli-acquisti: "${ffm.web.api-fantaleghe.domain-url}/market/v1/smartauction/purchases/freeagency"
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato esempio: /A/MK_20250117134307
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato?lastId=codiceLastIdPaginaPrecedente esempio: ?lastId=MTcxNDU4NS1BLU1LXzIwMjUwMTE3MTM0MzA3JGNsb3NlZC02ODIyMzk2LTIwMjUwMjAxMTEwMC01NDg2JGNsb3NlZC0yMDI1MDIwMTExMDA
+      mercati-buste: "${ffm.web.api-fantaleghe.domain-url}/market/v1/sealedbid/purchases/closed"
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato esempio: /A/MK_20250117134307
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato?lastId=codiceLastIdPaginaPrecedente esempio: ?lastId=MTcxNDU4NS1BLU1LXzIwMjUwMTE3MTM0MzA3JGNsb3NlZC02ODIyMzk2LTIwMjUwMjAxMTEwMC01NDg2JGNsb3NlZC0yMDI1MDIwMTExMDA
+

@@ -30,6 +30,9 @@ public class Utente {
     @Column(name = "EMAIL", nullable = false, length = 50)
     private String email;
 
+    @Column(name = "NICKNAME", nullable = false, length = 50)
+    private String nickname;
+
     @Column(name = "DATA_CREAZIONE", nullable = false, updatable = false)
     private LocalDateTime dataCreazione;
 

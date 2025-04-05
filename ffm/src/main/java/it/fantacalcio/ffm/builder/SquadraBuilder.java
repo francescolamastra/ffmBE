@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 public class SquadraBuilder {
     private Integer id;
+    private Integer idFantagazzetta;
     private String nome;
     private Categoria idCategoria;
     private Nazione idNazione;
@@ -17,6 +18,11 @@ public class SquadraBuilder {
 
     public SquadraBuilder setId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public SquadraBuilder setIdFantagazzetta(Integer idFantagazzetta) {
+        this.idFantagazzetta = idFantagazzetta;
         return this;
     }
 
@@ -46,6 +52,6 @@ public class SquadraBuilder {
     }
 
     public Squadra build() {
-        return new Squadra(id, idNazione, idCategoria, nome, idStadio, dataCreazione);
+        return new Squadra(id,idFantagazzetta ,idNazione, idCategoria, nome, idStadio, dataCreazione);
     }
 }

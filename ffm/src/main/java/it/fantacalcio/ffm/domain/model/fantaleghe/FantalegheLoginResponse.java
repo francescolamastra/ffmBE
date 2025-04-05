@@ -1,4 +1,4 @@
-package it.fantacalcio.ffm.domain.model;
+package it.fantacalcio.ffm.domain.model.fantaleghe;
 
 import lombok.Value;
 

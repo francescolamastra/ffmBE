@@ -7,7 +7,13 @@ import it.fantacalcio.ffm.domain.dto.*;
 import it.fantacalcio.ffm.domain.entity.Competizione;
 import it.fantacalcio.ffm.domain.entity.Stagione;
 import it.fantacalcio.ffm.domain.entity.StagioneCompetizione;
-import it.fantacalcio.ffm.domain.model.*;
+import it.fantacalcio.ffm.domain.model.BonusTrattativaScambio;
+import it.fantacalcio.ffm.domain.model.GiocatoreTrattativaScambio;
+import it.fantacalcio.ffm.domain.model.TrattativaScambio;
+import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheLoginRequest;
+import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheLoginResponse;
+import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheMercato;
+import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheTeam;
 import it.fantacalcio.ffm.service.*;
 import it.fantacalcio.ffm.utility.CollectionUtility;
 import it.fantacalcio.ffm.utility.Constants;
@@ -20,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 
 import static it.fantacalcio.ffm.utility.Constants.PATTERN_NAZIONE_LOGIN_FANTALEGHE;
@@ -55,7 +62,7 @@ public class ApiGatewayFacade {
         private StagioneCompetizioneService stagioneCompetizioneService;
         private RisultatoCompetizioneService risultatoCompetizioneService;
         private FaseCompetizioneService faseCompetizioneService;
-        private FantalegheLoginService fantalegheLoginService;
+        private FantalegheService fantalegheService;
         private TokenCredenzialiService tokenCredenzialiService;
         private CredenzialiService credenzialiService;
 
@@ -128,7 +135,7 @@ public class ApiGatewayFacade {
         public void setFaseCompetizioneService(FaseCompetizioneService faseCompetizioneService) { this.faseCompetizioneService = faseCompetizioneService; }
 
         @Autowired
-        public void setFantalegheLoginService(FantalegheLoginService fantalegheLoginService) { this.fantalegheLoginService = fantalegheLoginService; }
+        public void setFantalegheLoginService(FantalegheService fantalegheService) { this.fantalegheService = fantalegheService; }
 
         @Autowired
         public void setTokenCredenzialiService(TokenCredenzialiService tokenCredenzialiService) { this.tokenCredenzialiService = tokenCredenzialiService; }
@@ -137,17 +144,16 @@ public class ApiGatewayFacade {
         public void setCredenzialiService(CredenzialiService credenzialiService) { this.credenzialiService = credenzialiService; }
         /* FINE METODI SETTER PER INJECTION */
 
-        public List<TokenCredenzialiProjectionDto> fantalegheLogin(FantalegheLoginRequest loginRequest, String nickname) {
-                UtenteDto utenteDto = utenteService.findByNickname(nickname).orElseThrow();
-                List<TokenCredenzialiProjectionDto> tokenCredenzialiProjectionDtoList = tokenCredenzialiService.getAllTokenCredenzialiInfo(utenteDto);
-                if(tokenCredenzialiProjectionDtoList.stream().anyMatch(token -> !token.getIsValid())) {
-                        FantalegheLoginResponse fantalegheLoginResponse = fantalegheLoginService.login(loginRequest);
+        public List<TokenCredenzialiProjectionDto> fantalegheLogin(CredenzialiDto credenzialiDto) {
+                List<TokenCredenzialiProjectionDto> tokenCredenzialiProjectionDtoList = tokenCredenzialiService.getAllTokenCredenzialiInfo(credenzialiDto.getIdUtente());
+                if(tokenCredenzialiProjectionDtoList.isEmpty() || tokenCredenzialiProjectionDtoList.stream().anyMatch(token -> !token.getIsValid())) {
+                        FantalegheLoginResponse fantalegheLoginResponse = fantalegheService.login(new FantalegheLoginRequest(credenzialiDto.getUserName(), credenzialiDto.getPassword()));
                         tokenCredenzialiProjectionDtoList.clear();
                         fantalegheLoginResponse.getData().getLeghe()
                                 .forEach(lega -> {
                                         try {
                                                 NazioneDto nazioneDto = nazioneFromNomeLega(lega.getNome());
-                                                TokenCredenzialiDto tokenCredenzialiDto = new TokenCredenzialiDto(null, lega.getJwt(), utenteDto, nazioneDto, true, LocalDateTime.now());
+                                                TokenCredenzialiDto tokenCredenzialiDto = new TokenCredenzialiDto(null, lega.getJwt(), credenzialiDto.getIdUtente(), nazioneDto, true, LocalDateTime.now());
                                                 tokenCredenzialiProjectionDtoList.add(tokenCredenzialiService.save(tokenCredenzialiDto));
                                         } catch (Exception e) {
                                                 // Log dell'errore e continuazione del ciclo
@@ -191,6 +197,14 @@ public class ApiGatewayFacade {
 
         public List<UtenteDto> getUtenti() {
                 return utenteService.findAll();
+        }
+
+        public UtenteDto getUtenteByNickname(String nickname){
+                return utenteService.findByNickname(nickname).orElseThrow();
+        }
+
+        public CredenzialiDto getCredenzialiByUtente(UtenteDto utenteDto){
+                return credenzialiService.findByIdUtente(utenteDto).orElseThrow();
         }
 
         public List<CategoriaDto> getCategorie() {
@@ -417,5 +431,44 @@ public class ApiGatewayFacade {
                 Competizione competizione = entityManager.merge(CompetizioneConverter.toEntity(competizioneDto));
                 StagioneCompetizione stagioneCompetizione = new StagioneCompetizione(null, stagione, competizione);
                 saveStagioneCompetizione(stagioneCompetizione);
+        }
+
+        public FantalegheMercato getMercatiByNazioneAndCategoria(String siglaNazione, String siglaCategoria, String nickname) {
+                UtenteDto utenteDto = getUtenteByNickname(nickname);
+                CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
+                NazioneDto nazioneDto = getNazioneBySigla(siglaNazione);
+                getCategoriaBySigla(siglaCategoria);
+                List<TokenCredenzialiProjectionDto> tokenCredenzialiDtoList = fantalegheLogin(credenzialiDto);
+                Optional<TokenCredenzialiProjectionDto> optToken = tokenCredenzialiDtoList.stream().filter(t-> t.getNazione().equals(nazioneDto))
+                        .findFirst();
+            return optToken
+                    .map(tokenCredenzialiProjectionDto -> getMercatiByNazioneAndCategoria(siglaCategoria, tokenCredenzialiProjectionDto.getJwt()))
+                    .orElse(null);
+        }
+
+        private FantalegheMercato getMercatiByNazioneAndCategoria(String siglaCategoria, String tokenJwt){
+                return fantalegheService.getMercatiCategoria(siglaCategoria, tokenJwt);
+        }
+
+        public List<FantalegheTeam> getTeamsByNazione(String siglaNazione, String nickname) {
+                UtenteDto utenteDto = getUtenteByNickname(nickname);
+                CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
+                NazioneDto nazioneDto = getNazioneBySigla(siglaNazione);
+                List<TokenCredenzialiProjectionDto> tokenCredenzialiDtoList = fantalegheLogin(credenzialiDto);
+                Optional<TokenCredenzialiProjectionDto> optToken = tokenCredenzialiDtoList.stream().filter(t-> t.getNazione().equals(nazioneDto))
+                        .findFirst();
+                return optToken
+                        .map(tokenCredenzialiProjectionDto -> getTeams(tokenCredenzialiProjectionDto.getJwt()))
+                        .orElse(null);
+        }
+
+        private List<FantalegheTeam> getTeams(String tokenJwt){
+                return fantalegheService.getTeams(tokenJwt);
+        }
+
+        public List<TokenCredenzialiProjectionDto> fantalegheLogin(String nickname) {
+                UtenteDto utenteDto = getUtenteByNickname(nickname);
+                CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
+                return fantalegheLogin(credenzialiDto);
         }
 }

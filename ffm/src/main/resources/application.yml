@@ -62,7 +62,8 @@ ffm:
         user-agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36'
       login-endpoint: "${ffm.web.api-fantaleghe.domain-url}/onboarding/v1/login"
       teams-endpoint: "${ffm.web.api-fantaleghe.domain-url}/onboarding/v1/league/teams"
-      mercati-conclusi-endpoint: "${ffm.web.api-fantaleghe.domain-url}/market/v1/expired/A?"
+      mercati-conclusi-endpoint: "${ffm.web.api-fantaleghe.domain-url}/market/v1/expired"
+      # da aggiungere dinamicamente all'url in base a categoria esempio per A: /A?
       mercati-svincoli: "${ffm.web.api-fantaleghe.domain-url}/market/v1/hiddenrelease/releases/closed"
       # da aggiungere dinamicamente all'url in base a categoria/codice mercato esempio: /A/MK_20250117134307
       # da aggiungere dinamicamente all'url in base a categoria/codice mercato?lastId=codiceLastIdPaginaPrecedente esempio: ?lastId=MTcxNDU4NS1BLU1LXzIwMjUwMTE3MTM0MzA3JGNsb3NlZC02ODIyMzk2LTIwMjUwMjAxMTEwMC01NDg2JGNsb3NlZC0yMDI1MDIwMTExMDA

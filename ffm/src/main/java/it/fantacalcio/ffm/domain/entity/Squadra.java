@@ -2,6 +2,7 @@ package it.fantacalcio.ffm.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -19,6 +20,10 @@ public class Squadra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     private Integer id;
+
+    @ColumnDefault(value = "0")
+    @Column(name = "ID_FANTAGAZZETTA", nullable = false)
+    private Integer idFantagazzetta;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ID_NAZIONE", nullable = false)

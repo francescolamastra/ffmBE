@@ -3,8 +3,9 @@ package it.fantacalcio.ffm.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.domain.dto.*;
-import it.fantacalcio.ffm.domain.model.FantalegheLoginRequest;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
+import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheMercato;
+import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheTeam;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
 import it.fantacalcio.ffm.utility.Constants;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,9 @@ public class ApiGatewayController {
     @PostMapping(value = "/fantalegheLogin")
     @ResponseBody
     @Operation(summary = "Effettua il login all'applicazione Fantaleghe")
-    public List<TokenCredenzialiProjectionDto> login(@RequestBody FantalegheLoginRequest loginRequest, @RequestParam(required = false) String nickname) {
+    public List<TokenCredenzialiProjectionDto> login(String nickname) {
         if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
-        return apiGatewayFacade.fantalegheLogin(loginRequest, nickname);
+        return apiGatewayFacade.fantalegheLogin(nickname);
     }
 
     /* METODI GET */
@@ -77,6 +78,25 @@ public class ApiGatewayController {
     @Operation(summary = "Recupera tutte le categorie")
     public List<CategoriaDto> getCategorie() {
         return apiGatewayFacade.getCategorie();
+    }
+
+    @GetMapping(value = "/mercati")
+    @ResponseBody
+    @Operation(summary = "Recupera tutti i mercati chiusi fantaleghe per una determinata nazione e categoria")
+    public FantalegheMercato getMercati(@RequestParam String siglaNazione,
+                                        @RequestParam String siglaCategoria,
+                                        @RequestParam(required = false) String nickname) {
+        if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+        return apiGatewayFacade.getMercatiByNazioneAndCategoria(siglaNazione, siglaCategoria, nickname);
+    }
+
+    @GetMapping(value = "/teams")
+    @ResponseBody
+    @Operation(summary = "Recupera tutti i teams fantagaleghe per una determinata nazione")
+    public List<FantalegheTeam> getTeams(@RequestParam String siglaNazione,
+                                         @RequestParam(required = false) String nickname) {
+        if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+        return apiGatewayFacade.getTeamsByNazione(siglaNazione, nickname);
     }
 
     /* METODI POST */

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 public class SquadraDtoBuilder {
     private Integer id;
+    private Integer idFantagazzetta;
     private String nome;
     private CategoriaDto idCategoria;
     private NazioneDto idNazione;
@@ -17,6 +18,11 @@ public class SquadraDtoBuilder {
 
     public SquadraDtoBuilder setId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public SquadraDtoBuilder setIdFantagazzetta(Integer idFantagazzetta) {
+        this.idFantagazzetta = idFantagazzetta;
         return this;
     }
 
@@ -46,6 +52,6 @@ public class SquadraDtoBuilder {
     }
 
     public SquadraDto build() {
-        return new SquadraDto(id, idNazione, idCategoria, nome, idStadio, dataCreazione);
+        return new SquadraDto(id, idFantagazzetta, idNazione, idCategoria, nome, idStadio, dataCreazione);
     }
 }

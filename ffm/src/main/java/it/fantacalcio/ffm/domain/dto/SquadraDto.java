@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Value
 public class SquadraDto implements Serializable {
     Integer id;
+    Integer idFantagazzetta;
     NazioneDto idNazione;
     CategoriaDto idCategoria;
     String nome;

@@ -17,6 +17,7 @@ public class Constants {
     public static final Integer TOT_SQUADRE_CAT_A = 20;
     public static final Integer TOT_SQUADRE_CAT_B_C = 16;
     public static final String ADMIN_A_NICKNAME = "AdminA";
+    public static final String SEMICOLON_SEPARATOR = ";";
 
     // Enumerazione per TipoOperazioneEnum
     @Getter

@@ -41,9 +41,9 @@ public class TipoDettTrattativaService {
 
     public Optional<TipoDettTrattativaDto> findBySigla(String sigla){
         return tipoDettTrattativaCache.getTipoDettTrattativaList().stream()
-                .filter(c -> c.getSigla().equals(sigla))
+                .filter(c -> c.getSigla().equalsIgnoreCase(sigla))
                 .findFirst()
-                .or(() -> tipoDettTrattativaRepository.findBySigla(sigla).map(tipoDettTrattativa -> {
+                .or(() -> tipoDettTrattativaRepository.findBySiglaIgnoreCase(sigla).map(tipoDettTrattativa -> {
                     TipoDettTrattativaDto tipoDettTrattativaDto = TipoDettTrattativaConverter.toDto(tipoDettTrattativa);
                     tipoDettTrattativaCache.addTipoDettTrattativa(tipoDettTrattativaDto);
                     return tipoDettTrattativaDto;

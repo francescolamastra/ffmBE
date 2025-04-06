@@ -52,7 +52,11 @@ public class RisultatoCompetizioneBatchRecordItemProcessor implements ItemProces
     }
 
     private SquadraDto getSquadraDto(RisultatoCompetizioneBatchRecord item, boolean isSquadraA) {
-        return apiGatewayFacade.squadraFromJoinedString(isSquadraA ? item.getSquadraA() : item.getSquadraB());
+        SquadraDto squadraDto = apiGatewayFacade.squadraFromJoinedString(isSquadraA ? item.getSquadraA() : item.getSquadraB());
+        if(squadraDto != null){
+            squadraDto = apiGatewayFacade.getSquadraByNomeOrSave(squadraDto);
+        }
+        return squadraDto;
     }
 
     private String getRisultato(EsitoRisultato esitoRisultato, Constants.SquadraOwnerEnum squadraOwner) {

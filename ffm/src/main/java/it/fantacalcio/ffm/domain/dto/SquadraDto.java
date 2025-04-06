@@ -1,6 +1,7 @@
 package it.fantacalcio.ffm.domain.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -8,7 +9,8 @@ import java.time.LocalDateTime;
 /**
  * DTO for {@link it.fantacalcio.ffm.domain.entity.Squadra}
  */
-@Value
+@Data
+@AllArgsConstructor
 public class SquadraDto implements Serializable {
     Integer id;
     Integer idFantagazzetta;

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -59,7 +60,16 @@ public class WebClientConfig {
                 for (CookieWithExpiry cookieWithExpiry : cookieHeaders) {
                     validCookies.add(cookieWithExpiry.getCookie());
                 }
-                clientRequest.headers().put(HttpHeaders.COOKIE, validCookies);
+                // Crea una nuova mappa di intestazioni per evitare di modificare le intestazioni di sola lettura
+                HttpHeaders headers = new HttpHeaders();
+                headers.addAll(clientRequest.headers());
+                headers.put(HttpHeaders.COOKIE, validCookies);
+
+                ClientRequest newRequest = ClientRequest.from(clientRequest)
+                        .headers(httpHeaders -> httpHeaders.addAll(headers))
+                        .build();
+
+                return Mono.just(newRequest);
             }
             return Mono.just(clientRequest);
         }).andThen(ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {

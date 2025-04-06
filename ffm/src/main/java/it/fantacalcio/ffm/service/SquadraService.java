@@ -62,11 +62,9 @@ public class SquadraService {
                 .filter(c -> c.getNome().equalsIgnoreCase(squadraDto.getNome()))
                 .findFirst()
                 .orElseGet(() -> {
-                    Optional<Squadra> optionalSquadraFromDB = squadraRepository.findByNome(squadraDto.getNome());
+                    Optional<SquadraDto> optionalSquadraFromDB = findByNome(squadraDto.getNome());
                     if (optionalSquadraFromDB.isPresent()) {
-                        SquadraDto squadraDtoDB = SquadraConverter.toDto(optionalSquadraFromDB.get());
-                        squadraCache.addSquadra(squadraDtoDB);
-                        return squadraDtoDB;
+                        return squadraCache.addSquadra(optionalSquadraFromDB.get());
                     } else {
                         return save(squadraDto);
                     }

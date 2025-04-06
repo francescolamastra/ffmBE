@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface TipoDettTrattativaRepository extends JpaRepository<TipoDettTrattativa, Integer> {
-    Optional<TipoDettTrattativa> findBySigla(String sigla);
+    Optional<TipoDettTrattativa> findBySiglaIgnoreCase(String sigla);
 }

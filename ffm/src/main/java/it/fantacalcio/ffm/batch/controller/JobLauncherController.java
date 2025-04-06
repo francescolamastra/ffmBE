@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.batch.service.JobService;
 import it.fantacalcio.ffm.batch.utility.FileManager;
+import it.fantacalcio.ffm.utility.Constants;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,6 +77,20 @@ public class JobLauncherController{
             return "Job importRose started!";
         } catch (FileAlreadyExistsException e) {
             return "Job importRose failed: " + e.getMessage();
+        } catch (Exception e) {
+            return "Job importRose failed:"+e;
+        }
+    }
+
+    @PostMapping(value = "/importRoseWebApi")
+    @Operation(summary = "Import delle rose tramite api fantagazzetta")
+    public String importRoseApi(@RequestParam String siglaNazione,
+                                @RequestParam(required = false) String nickname) {
+        try{
+             if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+            // Esegui il job in modo asyncrono
+            jobService.runImportRoseApiJob(siglaNazione, nickname);
+            return "Job importRoseApi started!";
         } catch (Exception e) {
             return "Job importRose failed:"+e;
         }

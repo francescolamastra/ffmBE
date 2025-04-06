@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface FaseCompetizioneRepository extends JpaRepository<FaseCompetizione, Integer> {
-    Optional<FaseCompetizione> findBySigla(String sigla);
+    Optional<FaseCompetizione> findBySiglaIgnoreCase(String sigla);
 }

@@ -41,9 +41,9 @@ public class CategoriaService {
 
     public Optional<CategoriaDto> findBySigla(String sigla){
         return categoriaCache.getCategorie().stream()
-                .filter(c -> c.getSigla().equals(sigla))
+                .filter(c -> c.getSigla().equalsIgnoreCase(sigla))
                 .findFirst()
-                .or(() -> categoriaRepository.findBySigla(sigla).map(categoria -> {
+                .or(() -> categoriaRepository.findBySiglaIgnoreCase(sigla).map(categoria -> {
                     CategoriaDto categoriaDto = CategoriaConverter.toDto(categoria);
                     categoriaCache.addCategoria(categoriaDto);
                     return categoriaDto;

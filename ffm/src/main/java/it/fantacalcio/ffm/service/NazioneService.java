@@ -43,9 +43,9 @@ public class NazioneService {
 
     public Optional<NazioneDto> findBySigla(String sigla){
         return nazioneCache.getNazioni().stream()
-                .filter(n -> n.getSigla().equals(sigla))
+                .filter(n -> n.getSigla().equalsIgnoreCase(sigla))
                 .findFirst()
-                .or(() -> nazioneRepository.findBySigla(sigla).map(nazione -> {
+                .or(() -> nazioneRepository.findBySiglaIgnoreCase(sigla).map(nazione -> {
                     NazioneDto nazioneDto = NazioneConverter.toDto(nazione);
                     nazioneCache.addNazione(nazioneDto);
                     return nazioneDto;

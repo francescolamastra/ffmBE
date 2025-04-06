@@ -2,10 +2,13 @@ package it.fantacalcio.ffm.batch.config;
 
 import it.fantacalcio.ffm.batch.decider.ImportDecider;
 import it.fantacalcio.ffm.batch.tasklet.DeleteFileTasklet;
+import it.fantacalcio.ffm.domain.entity.Operazione;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -33,6 +36,13 @@ public class CommonBatchConfig {
                 .tasklet(deleteFileTasklet, transactionManager)
                 .allowStartIfComplete(true)
                 .build();
+    }
+
+    @Bean
+    public JpaItemWriter<Operazione> operazioneItemWriter(EntityManagerFactory entityManagerFactory) {
+        JpaItemWriter<Operazione> writer = new JpaItemWriter<>();
+        writer.setEntityManagerFactory(entityManagerFactory);
+        return writer;
     }
 
     @Bean

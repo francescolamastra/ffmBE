@@ -41,9 +41,9 @@ public class TipoOperazioneService {
 
     public Optional<TipoOperazioneDto> findBySigla(String sigla){
         return tipoOperazioneCache.getTipiOperazione().stream()
-                .filter(c -> c.getSigla().equals(sigla))
+                .filter(c -> c.getSigla().equalsIgnoreCase(sigla))
                 .findFirst()
-                .or(() -> tipoOperazioneRepository.findBySigla(sigla).map(tipoOperazione -> {
+                .or(() -> tipoOperazioneRepository.findBySiglaIgnoreCase(sigla).map(tipoOperazione -> {
                     TipoOperazioneDto tipoOperazioneDto = TipoOperazioneConverter.toDto(tipoOperazione);
                     tipoOperazioneCache.addTipoOperazione(tipoOperazioneDto);
                     return tipoOperazioneDto;

@@ -290,12 +290,11 @@ public class ApiGatewayFacade {
                         String siglaCategoria = matcher.group(3);
                         CategoriaDto categoriaDto = getCategoriaBySigla(siglaCategoria);
                         NazioneDto nazioneDto = getNazioneBySigla(siglaNazione);
-                        SquadraDto squadraDto =  new SquadraDtoBuilder()
+                        return new SquadraDtoBuilder()
                                 .setNome(nomeSquadra)
                                 .setIdNazione(nazioneDto)
                                 .setIdCategoria(categoriaDto)
                                 .build();
-                        return getSquadraByNomeOrSave(squadraDto);
                 } else {
                         System.out.println("squadraFromJoinedString Input non valido: " + squadraJoinedString);
                         return null;

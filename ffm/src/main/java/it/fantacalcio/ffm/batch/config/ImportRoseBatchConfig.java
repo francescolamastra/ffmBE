@@ -88,12 +88,4 @@ public class ImportRoseBatchConfig {
 
         return lineMapper;
     }
-
-    @Bean
-    public JpaItemWriter<Operazione> operazioneItemWriter(EntityManagerFactory entityManagerFactory) {
-        JpaItemWriter<Operazione> writer = new JpaItemWriter<>();
-        writer.setEntityManagerFactory(entityManagerFactory);
-        return writer;
-    }
-
 }

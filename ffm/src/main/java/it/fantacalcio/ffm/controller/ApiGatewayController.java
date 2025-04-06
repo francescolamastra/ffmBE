@@ -22,6 +22,7 @@ public class ApiGatewayController {
         this.apiGatewayFacade = apiGatewayFacade;
     }
 
+    /* SEZIONE COMUNICAZIONE API FANTALEGHE */
     @PostMapping(value = "/fantalegheLogin")
     @ResponseBody
     @Operation(summary = "Effettua il login all'applicazione Fantaleghe")
@@ -30,7 +31,26 @@ public class ApiGatewayController {
         return apiGatewayFacade.fantalegheLogin(nickname);
     }
 
-    /* METODI GET */
+    @GetMapping(value = "/mercati")
+    @ResponseBody
+    @Operation(summary = "Recupera tutti i mercati chiusi fantaleghe per una determinata nazione e categoria")
+    public FantalegheMercato getMercati(@RequestParam String siglaNazione,
+                                        @RequestParam String siglaCategoria,
+                                        @RequestParam(required = false) String nickname) {
+        if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+        return apiGatewayFacade.getMercatiByNazioneAndCategoria(siglaNazione, siglaCategoria, nickname);
+    }
+
+    @GetMapping(value = "/teams")
+    @ResponseBody
+    @Operation(summary = "Recupera tutti i teams fantagaleghe per una determinata nazione")
+    public List<FantalegheTeam> getTeams(@RequestParam String siglaNazione,
+                                         @RequestParam(required = false) String nickname) {
+        if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+        return apiGatewayFacade.getTeamsByNazione(siglaNazione, nickname);
+    }
+
+    /* METODI GET DOMINIO */
     @GetMapping(value = "/giocatori")
     @ResponseBody
     @Operation(summary = "Recupera tutti i giocatori")
@@ -80,26 +100,7 @@ public class ApiGatewayController {
         return apiGatewayFacade.getCategorie();
     }
 
-    @GetMapping(value = "/mercati")
-    @ResponseBody
-    @Operation(summary = "Recupera tutti i mercati chiusi fantaleghe per una determinata nazione e categoria")
-    public FantalegheMercato getMercati(@RequestParam String siglaNazione,
-                                        @RequestParam String siglaCategoria,
-                                        @RequestParam(required = false) String nickname) {
-        if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
-        return apiGatewayFacade.getMercatiByNazioneAndCategoria(siglaNazione, siglaCategoria, nickname);
-    }
-
-    @GetMapping(value = "/teams")
-    @ResponseBody
-    @Operation(summary = "Recupera tutti i teams fantagaleghe per una determinata nazione")
-    public List<FantalegheTeam> getTeams(@RequestParam String siglaNazione,
-                                         @RequestParam(required = false) String nickname) {
-        if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
-        return apiGatewayFacade.getTeamsByNazione(siglaNazione, nickname);
-    }
-
-    /* METODI POST */
+    /* METODI POST DOMINIO */
     @PostMapping(value = "/utente")
     @ResponseBody
     @Operation(summary = "Crea un nuovo utente")

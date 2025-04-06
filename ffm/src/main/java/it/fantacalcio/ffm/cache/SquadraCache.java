@@ -13,11 +13,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SquadraCache {
     private final List<SquadraDto> squadraList = new CopyOnWriteArrayList<>();
 
-    public void addSquadra(SquadraDto squadraDto) {
+    public SquadraDto addSquadra(SquadraDto squadraDto) {
         if(this.squadraList.size() == Constants.TOT_SQUADRE_CAT_A){
             this.squadraList.clear();
         }
         this.squadraList.add(squadraDto);
+        return squadraDto;
     }
 
     public boolean isEmpty(){

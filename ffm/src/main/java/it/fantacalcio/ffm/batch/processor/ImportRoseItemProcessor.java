@@ -30,6 +30,7 @@ public class ImportRoseItemProcessor implements ItemProcessor<RosaBatchRecord, O
         }
         SquadraDto squadraDto = apiGatewayFacade.squadraFromJoinedString(item.getSquadraNazioneCategoria());
         if(squadraDto != null) {
+            squadraDto = apiGatewayFacade.getSquadraByNomeOrSave(squadraDto);
             GiocatoreDto giocatoreDto = apiGatewayFacade.getGiocatoreByIdFantagazzetta(Integer.valueOf(item.getIdFantagazzetta()));
             TipoOperazioneDto tipoOperazioneDto = apiGatewayFacade.getTipoOperazioneBySigla(ACQUISTO.getSigla());
             StagioneDto stagioneDto = apiGatewayFacade.getLastStagione();

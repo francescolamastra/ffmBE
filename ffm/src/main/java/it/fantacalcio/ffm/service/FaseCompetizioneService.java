@@ -41,9 +41,9 @@ public class FaseCompetizioneService {
 
     public Optional<FaseCompetizioneDto> findBySigla(String sigla){
         return faseCompetizioneCache.getFaseCompetizioneList().stream()
-                .filter(c -> c.getSigla().equals(sigla))
+                .filter(c -> c.getSigla().equalsIgnoreCase(sigla))
                 .findFirst()
-                .or(() -> faseCompetizioneRepository.findBySigla(sigla).map(faseCompetizione -> {
+                .or(() -> faseCompetizioneRepository.findBySiglaIgnoreCase(sigla).map(faseCompetizione -> {
                     FaseCompetizioneDto faseCompetizioneDto = FaseCompetizioneConverter.toDto(faseCompetizione);
                     faseCompetizioneCache.addFaseCompetizione(faseCompetizioneDto);
                     return faseCompetizioneDto;

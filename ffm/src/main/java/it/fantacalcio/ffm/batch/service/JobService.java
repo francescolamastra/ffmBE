@@ -27,6 +27,9 @@ public class JobService {
     private Job importRisultatiCompetizioneJob;
 
     @Autowired
+    private Job importRoseApiJob;
+
+    @Autowired
     private TaskExecutor taskExecutor;
 
     public void runImportListoneJob(String filePath, Long skipRows, String sheetName) {
@@ -54,6 +57,24 @@ public class JobService {
                 jobLauncher.run(importRoseJob, new JobParametersBuilder()
                         .addString("filePath", filePath)
                         .addLong("skipRows", skipRows)
+                        .toJobParameters());
+            } catch (Exception e) {
+                try {
+                    throw e;
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    public void runImportRoseApiJob(String siglaNazione, String nickname) {
+        taskExecutor.execute(() -> {
+            try {
+                jobLauncher.run(importRoseApiJob, new JobParametersBuilder()
+                        .addString("siglaNazione", siglaNazione)
+                        .addString("nickname", nickname)
                         .toJobParameters());
             } catch (Exception e) {
                 try {

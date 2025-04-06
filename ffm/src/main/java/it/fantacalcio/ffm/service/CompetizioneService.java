@@ -41,9 +41,9 @@ public class CompetizioneService {
 
     public Optional<CompetizioneDto> findBySigla(String sigla){
         return competizioneCache.getListCompetizioni().stream()
-                .filter(c -> c.getSigla().equals(sigla))
+                .filter(c -> c.getSigla().equalsIgnoreCase(sigla))
                 .findFirst()
-                .or(() -> competizioneRepository.findBySigla(sigla).map(competizione -> {
+                .or(() -> competizioneRepository.findBySiglaIgnoreCase(sigla).map(competizione -> {
                     CompetizioneDto competizioneDto = CompetizioneConverter.toDto(competizione);
                     competizioneCache.addCompetizione(competizioneDto);
                     return competizioneDto;

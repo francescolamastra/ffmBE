@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface NazioneRepository extends JpaRepository<Nazione, Integer> {
-    Optional<Nazione> findBySigla(String sigla);
+    Optional<Nazione> findBySiglaIgnoreCase(String sigla);
 }

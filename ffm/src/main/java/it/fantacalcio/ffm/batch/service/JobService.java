@@ -27,7 +27,10 @@ public class JobService {
     private Job importRisultatiCompetizioneJob;
 
     @Autowired
-    private Job importRoseApiJob;
+    private Job importRoseWebApiJob;
+
+    @Autowired
+    private Job importSquadreWebApiJob;
 
     @Autowired
     private TaskExecutor taskExecutor;
@@ -69,10 +72,28 @@ public class JobService {
         });
     }
 
-    public void runImportRoseApiJob(String siglaNazione, String nickname) {
+    public void runImportRoseWebApiJob(String siglaNazione, String nickname) {
         taskExecutor.execute(() -> {
             try {
-                jobLauncher.run(importRoseApiJob, new JobParametersBuilder()
+                jobLauncher.run(importRoseWebApiJob, new JobParametersBuilder()
+                        .addString("siglaNazione", siglaNazione)
+                        .addString("nickname", nickname)
+                        .toJobParameters());
+            } catch (Exception e) {
+                try {
+                    throw e;
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    public void runImportSquadreWebApiJob(String siglaNazione, String nickname) {
+        taskExecutor.execute(() -> {
+            try {
+                jobLauncher.run(importSquadreWebApiJob, new JobParametersBuilder()
                         .addString("siglaNazione", siglaNazione)
                         .addString("nickname", nickname)
                         .toJobParameters());

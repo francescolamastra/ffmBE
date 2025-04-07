@@ -19,11 +19,11 @@ import static it.fantacalcio.ffm.utility.Constants.SEMICOLON_SEPARATOR;
 import static it.fantacalcio.ffm.utility.Constants.TipoOperazioneEnum.ACQUISTO;
 
 @Component
-public class ImportRoseApiItemProcessor implements ItemProcessor<FantalegheTeam, List<Operazione>> {
+public class ImportRoseWebApiItemProcessor implements ItemProcessor<FantalegheTeam, List<Operazione>> {
 
     private final ApiGatewayFacade apiGatewayFacade;
 
-    public ImportRoseApiItemProcessor(ApiGatewayFacade apiGatewayFacade){
+    public ImportRoseWebApiItemProcessor(ApiGatewayFacade apiGatewayFacade){
         this.apiGatewayFacade = apiGatewayFacade;
     }
 
@@ -40,10 +40,10 @@ public class ImportRoseApiItemProcessor implements ItemProcessor<FantalegheTeam,
         }
         SquadraDto squadraDto = apiGatewayFacade.squadraFromJoinedString(item.getNomeTeam());
         if(squadraDto != null) {
+            squadraDto.setIdFantagazzetta(item.getIdTeam());
+            squadraDto = apiGatewayFacade.getSquadraByNomeOrSave(squadraDto);
             int i = 0;
             for (Integer idCalciatore : calciatoriIds) {
-                squadraDto.setIdFantagazzetta(item.getIdTeam());
-                squadraDto = apiGatewayFacade.getSquadraByNomeOrSave(squadraDto);
                 GiocatoreDto giocatoreDto = apiGatewayFacade.getGiocatoreByIdFantagazzetta(idCalciatore);
                 TipoOperazioneDto tipoOperazioneDto = apiGatewayFacade.getTipoOperazioneBySigla(ACQUISTO.getSigla());
                 StagioneDto stagioneDto = apiGatewayFacade.getLastStagione();

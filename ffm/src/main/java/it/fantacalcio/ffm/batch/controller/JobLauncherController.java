@@ -32,8 +32,8 @@ public class JobLauncherController{
         this.fileManager = fileManager;
     }
 
-    @PostMapping(value = "/importListone",  consumes = "multipart/form-data")
-    @Operation(summary = "Import del listone tramite excel fantagazzetta")
+    @PostMapping(value = "/importListoneInit",  consumes = "multipart/form-data")
+    @Operation(summary = "Import del listone tramite excel fantagazzetta, prima inizializzazione del valore FVM per la stagione")
     public String importListone(@RequestParam("file") MultipartFile file,
                               @RequestParam(value = "skipRows", required = false) Integer skipRows,
                               @RequestParam(value = "sheetName", required = false) String sheetName) {
@@ -59,8 +59,8 @@ public class JobLauncherController{
         }
     }
 
-    @PostMapping(value = "/importRose",  consumes = "multipart/form-data")
-    @Operation(summary = "Import delle rose tramite csv fantagazzetta")
+    @PostMapping(value = "/importRoseInit",  consumes = "multipart/form-data")
+    @Operation(summary = "Import delle rose tramite csv fantagazzetta, prima inizializzazione della stagione")
     public String importRose(@RequestParam("file") MultipartFile file,
                               @RequestParam(value = "skipRows", required = false) Integer skipRows) {
         try {
@@ -83,13 +83,27 @@ public class JobLauncherController{
     }
 
     @PostMapping(value = "/importRoseWebApi")
-    @Operation(summary = "Import delle rose tramite api fantagazzetta")
-    public String importRoseApi(@RequestParam String siglaNazione,
+    @Operation(summary = "Import delle rose tramite api fantagazzetta, prima inizializzazione della stagione con settaggio ID Fantaleghe")
+    public String importRoseWebApi(@RequestParam String siglaNazione,
                                 @RequestParam(required = false) String nickname) {
         try{
              if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
             // Esegui il job in modo asyncrono
-            jobService.runImportRoseApiJob(siglaNazione, nickname);
+            jobService.runImportRoseWebApiJob(siglaNazione, nickname);
+            return "Job importRoseApi started!";
+        } catch (Exception e) {
+            return "Job importRose failed:"+e;
+        }
+    }
+
+    @PostMapping(value = "/importSquadreWebApi")
+    @Operation(summary = "Import delle squadre tramite api fantagazzetta per nazione")
+    public String importSquadreWebApi(@RequestParam String siglaNazione,
+                                      @RequestParam(required = false) String nickname) {
+        try{
+            if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+            // Esegui il job in modo asyncrono
+            jobService.runImportSquadreWebApiJob(siglaNazione, nickname);
             return "Job importRoseApi started!";
         } catch (Exception e) {
             return "Job importRose failed:"+e;

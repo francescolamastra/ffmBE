@@ -179,6 +179,8 @@ public class ApiGatewayFacade {
 
         public SquadraDto getSquadraByNomeOrSave(SquadraDto squadraDto) { return squadraService.findByNomeOrSave(squadraDto); }
 
+        public SquadraDto getSquadraByIdFantagazzetta(SquadraDto squadraDto) { return squadraService.findByIdFantagazzetta(squadraDto); }
+
         public SquadraDto getSquadraById(Integer id) { return squadraService.findById(id).orElseThrow(); }
 
         public List<StagioneDto> getStagioni() {

@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SquadraRepository extends JpaRepository<Squadra, Integer> {
     Optional<Squadra> findByNome(String nome);
+    Optional<Squadra> findByIdFantagazzetta(Integer idFantagazzetta);
 }

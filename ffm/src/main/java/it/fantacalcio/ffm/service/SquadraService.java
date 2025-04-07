@@ -57,6 +57,10 @@ public class SquadraService {
         return squadraRepository.findByNome(nome).map(SquadraConverter::toDto);
     }
 
+    public Optional<SquadraDto> findByIdFantagazzetta(Integer idFantagazzetta){
+        return squadraRepository.findByIdFantagazzetta(idFantagazzetta).map(SquadraConverter::toDto);
+    }
+
     public SquadraDto findByNomeOrSave(SquadraDto squadraDto) {
         return squadraCache.getSquadraList().stream()
                 .filter(c -> c.getNome().equalsIgnoreCase(squadraDto.getNome()))
@@ -68,6 +72,15 @@ public class SquadraService {
                     } else {
                         return save(squadraDto);
                     }
+                });
+    }
+    public SquadraDto findByIdFantagazzetta(SquadraDto squadraDto) {
+        return squadraCache.getSquadraList().stream()
+                .filter(c -> c.getIdFantagazzetta().equals(squadraDto.getIdFantagazzetta()))
+                .findFirst()
+                .orElseGet(() -> {
+                    Optional<SquadraDto> optionalSquadraFromDB = findByIdFantagazzetta(squadraDto.getIdFantagazzetta());
+                    return optionalSquadraFromDB.map(squadraCache::addSquadra).orElse(null);
                 });
     }
 }

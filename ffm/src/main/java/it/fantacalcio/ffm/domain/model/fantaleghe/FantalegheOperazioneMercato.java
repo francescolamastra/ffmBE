@@ -1,5 +1,6 @@
 package it.fantacalcio.ffm.domain.model.fantaleghe;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ public class FantalegheOperazioneMercato {
     @JsonProperty("lstid")
     private String lastId;
 
-    @JsonProperty("oprs")
+    @JsonAlias({"oprs", "auct"})
     private List<Operation> listaOperazioni;
 
     @Data

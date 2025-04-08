@@ -15,12 +15,25 @@ public class LegacyFantalegheHelper {
         baseHeaders = new HttpHeaders();
     }
 
+    public String domainUrl(){
+        return apiFantalegheProperties.getDomainUrl();
+    }
+
     public String fantalegheLoginUrl(){
         return apiFantalegheProperties.getLoginEndpoint();
     }
 
     public String fantalegheMercatiUrl(){
         return apiFantalegheProperties.getMercatiConclusiEndpoint();
+    }
+
+    public String fantalegheOperazioniMercatoUrl(Constants.TipologiaMercatoFantalegheEnum tipoMercato){
+        return switch (tipoMercato) {
+            case ASTA -> apiFantalegheProperties.getMercatiAcquisti();
+            case SVINCOLI -> apiFantalegheProperties.getMercatiSvincoli();
+            case BUSTE -> apiFantalegheProperties.getMercatiBuste();
+            default -> throw new IllegalArgumentException("Tipo di mercato non supportato: " + tipoMercato);
+        };
     }
 
     public String fantalegheTeamsUrl(){

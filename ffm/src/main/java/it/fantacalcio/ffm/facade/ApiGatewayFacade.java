@@ -10,10 +10,7 @@ import it.fantacalcio.ffm.domain.entity.StagioneCompetizione;
 import it.fantacalcio.ffm.domain.model.BonusTrattativaScambio;
 import it.fantacalcio.ffm.domain.model.GiocatoreTrattativaScambio;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
-import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheLoginRequest;
-import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheLoginResponse;
-import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheMercato;
-import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheTeam;
+import it.fantacalcio.ffm.domain.model.fantaleghe.*;
 import it.fantacalcio.ffm.service.*;
 import it.fantacalcio.ffm.utility.CollectionUtility;
 import it.fantacalcio.ffm.utility.Constants;
@@ -471,5 +468,23 @@ public class ApiGatewayFacade {
                 UtenteDto utenteDto = getUtenteByNickname(nickname);
                 CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
                 return fantalegheLogin(credenzialiDto);
+        }
+
+        public FantalegheOperazioneMercato getOperazioniMercatoByNazioneAndCategoria(String siglaNazione, String siglaCategoria, String idMercato, Integer tipoMercato, String nickname) {
+                Constants.TipologiaMercatoFantalegheEnum tipologiaMercato = Constants.TipologiaMercatoFantalegheEnum.fromValue(tipoMercato);
+                UtenteDto utenteDto = getUtenteByNickname(nickname);
+                CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
+                NazioneDto nazioneDto = getNazioneBySigla(siglaNazione);
+                getCategoriaBySigla(siglaCategoria);
+                List<TokenCredenzialiProjectionDto> tokenCredenzialiDtoList = fantalegheLogin(credenzialiDto);
+                Optional<TokenCredenzialiProjectionDto> optToken = tokenCredenzialiDtoList.stream().filter(t-> t.getNazione().equals(nazioneDto))
+                        .findFirst();
+                return optToken
+                        .map(tokenCredenzialiProjectionDto -> getOperazioniMercatoByNazioneAndCategoria(siglaCategoria, idMercato, tipologiaMercato, tokenCredenzialiProjectionDto.getJwt()))
+                        .orElse(null);
+        }
+
+        private FantalegheOperazioneMercato getOperazioniMercatoByNazioneAndCategoria(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String tokenJwt){
+                return fantalegheService.getOperazioniMercato(siglaCategoria, idMercato, tipoMercato, tokenJwt);
         }
 }

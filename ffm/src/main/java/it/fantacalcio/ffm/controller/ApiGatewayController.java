@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.domain.dto.*;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
 import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheMercato;
+import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheOperazioneMercato;
 import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheTeam;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
 import it.fantacalcio.ffm.utility.Constants;
@@ -39,6 +40,18 @@ public class ApiGatewayController {
                                         @RequestParam(required = false) String nickname) {
         if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
         return apiGatewayFacade.getMercatiByNazioneAndCategoria(siglaNazione, siglaCategoria, nickname);
+    }
+
+    @GetMapping(value = "/operazioniMercato")
+    @ResponseBody
+    @Operation(summary = "Recupera tutte le operazioni di un mercato per una determinata nazione e categoria")
+    public FantalegheOperazioneMercato getOperazioniMercato(@RequestParam String siglaNazione,
+                                                            @RequestParam String siglaCategoria,
+                                                            @RequestParam String idMercato,
+                                                            @RequestParam Integer tipoMercato,
+                                                            @RequestParam(required = false) String nickname) {
+        if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+        return apiGatewayFacade.getOperazioniMercatoByNazioneAndCategoria(siglaNazione, siglaCategoria, idMercato, tipoMercato, nickname);
     }
 
     @GetMapping(value = "/teams")

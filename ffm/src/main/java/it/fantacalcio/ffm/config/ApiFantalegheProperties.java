@@ -14,6 +14,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiFantalegheProperties {
+    String domainUrl;
     Map<String, String> headers;
     String loginEndpoint;
     String teamsEndpoint;

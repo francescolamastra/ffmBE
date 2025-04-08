@@ -3,6 +3,7 @@ package it.fantacalcio.ffm.config;
 import io.netty.channel.ChannelOption;
 import it.fantacalcio.ffm.handler.CustomWebClientErrorHandler;
 import it.fantacalcio.ffm.interceptor.CustomWebClientRequestInterceptor;
+import it.fantacalcio.ffm.utility.LegacyFantalegheHelper;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,8 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriBuilderFactory;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
@@ -31,13 +34,21 @@ public class WebClientConfig {
     private final Map<String, List<CookieWithExpiry>> cookies = new ConcurrentHashMap<>();
 
     @Bean
-    public WebClient webClient() {
+    public DefaultUriBuilderFactory uriBuilderFactory(LegacyFantalegheHelper legacyFantalegheHelper) {
+        DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory(legacyFantalegheHelper.domainUrl());
+        uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.TEMPLATE_AND_VALUES);
+        return uriBuilderFactory;
+    }
+
+    @Bean
+    public WebClient webClient(UriBuilderFactory uriBuilderFactory) {
         HttpClient httpClient = HttpClient.create()
                 .responseTimeout(Duration.ofMillis(5000)) // Timeout di lettura
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000); // Timeout di connessione
 
         return WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .uriBuilderFactory(uriBuilderFactory)
                 .filter(new CustomWebClientErrorHandler())
                 .filter(new CustomWebClientRequestInterceptor())
                 .filter(cookieFilter())
@@ -76,7 +87,6 @@ public class WebClientConfig {
             List<String> setCookieHeaders = clientResponse.headers().asHttpHeaders().get(HttpHeaders.SET_COOKIE);
             if (setCookieHeaders != null) {
                 List<CookieWithExpiry> validCookies = new ArrayList<>();
-                Instant now = Instant.now();
                 for (String setCookieHeader : setCookieHeaders) {
                     String[] attributes = setCookieHeader.split(";");
                     String cookieValue = attributes[0].trim();
@@ -87,7 +97,7 @@ public class WebClientConfig {
                             try {
                                 expiry = Instant.from(DateTimeFormatter.RFC_1123_DATE_TIME.parse(keyValue[1].trim()));
                             } catch (DateTimeParseException e) {
-                                // Gestione dell'errore di parsing
+                                expiry = Instant.now();
                             }
                             break;
                         }

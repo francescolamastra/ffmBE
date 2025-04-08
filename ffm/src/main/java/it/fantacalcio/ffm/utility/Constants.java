@@ -145,4 +145,23 @@ public class Constants {
             throw new IllegalArgumentException("Valore non valido per CompetizioneEnum: " + sigla);
         }
     }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum TipologiaMercatoFantalegheEnum {
+        SCAMBI(3),
+        SVINCOLI(10),
+        ASTA(4),
+        BUSTE(6);
+
+        private final Integer value;
+        public static TipologiaMercatoFantalegheEnum fromValue(Integer value) {
+            for (TipologiaMercatoFantalegheEnum tipologiaMercatoFantalegheEnum : values()) {
+                if (tipologiaMercatoFantalegheEnum.value.equals(value)) {
+                    return tipologiaMercatoFantalegheEnum;
+                }
+            }
+            throw new IllegalArgumentException("Valore non valido per TipologiaMercatoFantalegheEnum: " + value);
+        }
+    }
 }

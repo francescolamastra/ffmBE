@@ -149,15 +149,25 @@ public class Constants {
     @Getter
     @RequiredArgsConstructor
     public enum TipologiaMercatoFantalegheEnum {
-        SCAMBI(3),
-        SVINCOLI(10),
-        ASTA(4),
-        BUSTE(6);
+        SCAMBI(3,"SCA"),
+        SVINCOLI(10, "S"),
+        SVINCOLI_ASTA(4, "SA"),
+        ASTA(4, "A"),
+        BUSTE(6, "B");
 
-        private final Integer value;
+        private final Integer valueFantaleghe;
+        private final String valueDominio;
         public static TipologiaMercatoFantalegheEnum fromValue(Integer value) {
             for (TipologiaMercatoFantalegheEnum tipologiaMercatoFantalegheEnum : values()) {
-                if (tipologiaMercatoFantalegheEnum.value.equals(value)) {
+                if (tipologiaMercatoFantalegheEnum.valueFantaleghe.equals(value)) {
+                    return tipologiaMercatoFantalegheEnum;
+                }
+            }
+            throw new IllegalArgumentException("Valore non valido per TipologiaMercatoFantalegheEnum: " + value);
+        }
+        public static TipologiaMercatoFantalegheEnum fromValue(String value) {
+            for (TipologiaMercatoFantalegheEnum tipologiaMercatoFantalegheEnum : values()) {
+                if (tipologiaMercatoFantalegheEnum.valueDominio.equals(value)) {
                     return tipologiaMercatoFantalegheEnum;
                 }
             }

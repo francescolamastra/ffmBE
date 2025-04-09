@@ -176,7 +176,7 @@ public class ApiGatewayFacade {
 
         public SquadraDto getSquadraByNomeOrSave(SquadraDto squadraDto) { return squadraService.findByNomeOrSave(squadraDto); }
 
-        public SquadraDto getSquadraByIdFantagazzetta(SquadraDto squadraDto) { return squadraService.findByIdFantagazzetta(squadraDto); }
+        public SquadraDto getSquadraByIdFantagazzetta(Integer idFantagazzetta) { return squadraService.findByIdFantagazzetta(idFantagazzetta).orElse(null); }
 
         public SquadraDto getSquadraById(Integer id) { return squadraService.findById(id).orElseThrow(); }
 
@@ -470,7 +470,7 @@ public class ApiGatewayFacade {
                 return fantalegheLogin(credenzialiDto);
         }
 
-        public FantalegheOperazioneMercato getOperazioniMercatoByNazioneAndCategoria(String siglaNazione, String siglaCategoria, String idMercato, Integer tipoMercato, String nickname) {
+        public FantalegheOperazioneMercato getOperazioniMercatoByNazioneAndCategoria(String siglaNazione, String siglaCategoria, String idMercato, String tipoMercato, String nickname) {
                 Constants.TipologiaMercatoFantalegheEnum tipologiaMercato = Constants.TipologiaMercatoFantalegheEnum.fromValue(tipoMercato);
                 UtenteDto utenteDto = getUtenteByNickname(nickname);
                 CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
@@ -486,5 +486,23 @@ public class ApiGatewayFacade {
 
         private FantalegheOperazioneMercato getOperazioniMercatoByNazioneAndCategoria(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String tokenJwt){
                 return fantalegheService.getOperazioniMercato(siglaCategoria, idMercato, tipoMercato, tokenJwt);
+        }
+
+        public FantalegheTrattativeScambio getTrattativeScambioByNazioneAndCategoria(String siglaNazione, String siglaCategoria, String idMercato, String tipoMercato, String nickname) {
+                Constants.TipologiaMercatoFantalegheEnum tipologiaMercato = Constants.TipologiaMercatoFantalegheEnum.fromValue(tipoMercato);
+                UtenteDto utenteDto = getUtenteByNickname(nickname);
+                CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
+                NazioneDto nazioneDto = getNazioneBySigla(siglaNazione);
+                getCategoriaBySigla(siglaCategoria);
+                List<TokenCredenzialiProjectionDto> tokenCredenzialiDtoList = fantalegheLogin(credenzialiDto);
+                Optional<TokenCredenzialiProjectionDto> optToken = tokenCredenzialiDtoList.stream().filter(t-> t.getNazione().equals(nazioneDto))
+                        .findFirst();
+                return optToken
+                        .map(tokenCredenzialiProjectionDto -> getTrattativeScambioByNazioneAndCategoria(siglaCategoria, idMercato, tipologiaMercato, tokenCredenzialiProjectionDto.getJwt()))
+                        .orElse(null);
+        }
+
+        private FantalegheTrattativeScambio getTrattativeScambioByNazioneAndCategoria(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String tokenJwt){
+                return fantalegheService.getTrattativeScambio(siglaCategoria, idMercato, tipoMercato, tokenJwt);
         }
 }

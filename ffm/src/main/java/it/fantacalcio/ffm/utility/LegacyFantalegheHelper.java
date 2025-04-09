@@ -32,7 +32,8 @@ public class LegacyFantalegheHelper {
             case ASTA -> apiFantalegheProperties.getMercatiAcquisti();
             case SVINCOLI -> apiFantalegheProperties.getMercatiSvincoli();
             case BUSTE -> apiFantalegheProperties.getMercatiBuste();
-            default -> throw new IllegalArgumentException("Tipo di mercato non supportato: " + tipoMercato);
+            case SVINCOLI_ASTA -> apiFantalegheProperties.getMercatiSvincoliAcquisti();
+            case SCAMBI -> apiFantalegheProperties.getMercatiScambi();
         };
     }
 

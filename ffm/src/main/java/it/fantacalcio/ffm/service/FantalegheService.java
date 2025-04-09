@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
-import org.springframework.web.util.UriBuilderFactory;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import java.util.List;
 public class FantalegheService {
     private final WebClient webClient;
     private final LegacyFantalegheHelper legacyFantalegheHelper;
-    private final UriBuilderFactory uriBuilderFactory;
 
     public FantalegheLoginResponse login(FantalegheLoginRequest loginRequest) {
 
@@ -68,16 +66,6 @@ public class FantalegheService {
             .block();
     }
 
-    private String buildEndpoint(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String lastId) {
-        UriBuilder uriBuilder = uriBuilderFactory.builder()
-                .path(legacyFantalegheHelper.fantalegheOperazioniMercatoUrl(tipoMercato))
-                .pathSegment(siglaCategoria, idMercato);
-        if (lastId != null) {
-            uriBuilder.queryParam("lastId", lastId);
-        }
-        return uriBuilder.build().toString();
-    }
-
     public FantalegheOperazioneMercato getOperazioniMercato(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String tokenJwt) {
         HttpHeaders headers = legacyFantalegheHelper.getBaseFantalegheHeaders();
         headers.setBearerAuth(tokenJwt);
@@ -107,5 +95,36 @@ public class FantalegheService {
 
         operazioniMercato.setListaOperazioni(listOperazioni);
         return operazioniMercato;
+    }
+
+    public FantalegheTrattativeScambio getTrattativeScambio(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String tokenJwt) {
+        HttpHeaders headers = legacyFantalegheHelper.getBaseFantalegheHeaders();
+        headers.setBearerAuth(tokenJwt);
+        List<FantalegheTrattativeScambio.Scambio> listScambi = new ArrayList<>();
+        String lastId = null;
+        FantalegheTrattativeScambio trattativeScambio;
+
+        do {
+            String finalLastId = lastId;
+            trattativeScambio = webClient.get()
+                    .uri(uriBuilder -> {
+                        UriBuilder builder = uriBuilder
+                                .path(legacyFantalegheHelper.fantalegheOperazioniMercatoUrl(tipoMercato))
+                                .pathSegment(siglaCategoria, idMercato);
+                        if (finalLastId != null) {
+                            builder.queryParam("lastId", finalLastId);
+                        }
+                        return builder.build();
+                    })
+                    .headers(httpHeaders -> httpHeaders.addAll(headers))
+                    .retrieve()
+                    .bodyToMono(FantalegheTrattativeScambio.class)
+                    .block();
+            lastId = trattativeScambio.getLastId();
+            listScambi.addAll(trattativeScambio.getListaScambi());
+        } while (lastId != null);
+
+        trattativeScambio.setListaScambi(listScambi);
+        return trattativeScambio;
     }
 }

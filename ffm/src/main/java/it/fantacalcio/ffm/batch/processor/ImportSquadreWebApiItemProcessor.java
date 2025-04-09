@@ -23,7 +23,7 @@ public class ImportSquadreWebApiItemProcessor implements ItemProcessor<Fantalegh
         SquadraDto squadraDto = apiGatewayFacade.squadraFromJoinedString(item.getNomeTeam());
         if(squadraDto != null) {
                 squadraDto.setIdFantagazzetta(item.getIdTeam());
-                if(apiGatewayFacade.getSquadraByIdFantagazzetta(squadraDto) != null) return null;
+                if(apiGatewayFacade.getSquadraByIdFantagazzetta(item.getIdTeam()) != null) return null;
         }
         return SquadraConverter.toEntity(squadraDto);
     }

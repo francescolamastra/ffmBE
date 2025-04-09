@@ -23,4 +23,5 @@ public class ApiFantalegheProperties {
     String mercatiAcquisti;
     String mercatiSvincoliAcquisti;
     String mercatiBuste;
+    String mercatiScambi;
 }

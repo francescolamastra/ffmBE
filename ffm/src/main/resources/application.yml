@@ -76,4 +76,7 @@ ffm:
       mercati-buste: "/market/v1/sealedbid/purchases/closed"
       # da aggiungere dinamicamente all'url in base a categoria/codice mercato esempio: /A/MK_20250117134307
       # da aggiungere dinamicamente all'url in base a categoria/codice mercato?lastId=codiceLastIdPaginaPrecedente esempio: ?lastId=MTcxNDU4NS1BLU1LXzIwMjUwMTE3MTM0MzA3JGNsb3NlZC02ODIyMzk2LTIwMjUwMjAxMTEwMC01NDg2JGNsb3NlZC0yMDI1MDIwMTExMDA
+      mercati-scambi: "/market/v1/trades/accepted"
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato esempio: /A/MK_20250117134307
+      # da aggiungere dinamicamente all'url in base a categoria/codice mercato?lastId=codiceLastIdPaginaPrecedente esempio: ?lastId=MTcxNDU4NS1BLU1LXzIwMjUwMTE3MTM0MzA3JGNsb3NlZC02ODIyMzk2LTIwMjUwMjAxMTEwMC01NDg2JGNsb3NlZC0yMDI1MDIwMTExMDA
 

@@ -110,6 +110,23 @@ public class JobLauncherController{
         }
     }
 
+    @PostMapping(value = "/importOperazioniMercatoWebApi")
+    @Operation(summary = "Import delle operazioni fantaleghe di un mercato per una determinata nazione e categoria")
+    public String importOperazioniMercatoWebApi(@RequestParam String siglaNazione,
+                                                @RequestParam String siglaCategoria,
+                                                @RequestParam String idMercato,
+                                                @RequestParam String tipoMercato,
+                                                @RequestParam(required = false) String nickname) {
+        try{
+            if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+            // Esegui il job in modo asyncrono
+            jobService.runImportOperazioniMercatoWebApiJob(siglaNazione, siglaCategoria, idMercato, tipoMercato, nickname);
+            return "Job importRoseApi started!";
+        } catch (Exception e) {
+            return "Job importRose failed:"+e;
+        }
+    }
+
     @PostMapping(value = "/importRisultatiCompetizione",  consumes = "multipart/form-data")
     @Operation(summary = "Import dei risultati di una competizione tramite excel fantagazzetta")
     public String importRisultatiCompetizione(@RequestParam("file") MultipartFile file,

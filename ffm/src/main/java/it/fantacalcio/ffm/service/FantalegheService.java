@@ -69,7 +69,7 @@ public class FantalegheService {
     public FantalegheOperazioneMercato getOperazioniMercato(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String tokenJwt) {
         HttpHeaders headers = legacyFantalegheHelper.getBaseFantalegheHeaders();
         headers.setBearerAuth(tokenJwt);
-        List<FantalegheOperazioneMercato.Operation> listOperazioni = new ArrayList<>();
+        List<FantalegheOperazioneMercato.OperazioneMercato> listOperazioni = new ArrayList<>();
         String lastId = null;
         FantalegheOperazioneMercato operazioniMercato;
 

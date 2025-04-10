@@ -471,7 +471,7 @@ public class ApiGatewayFacade {
         }
 
         public FantalegheOperazioneMercato getOperazioniMercatoByNazioneAndCategoria(String siglaNazione, String siglaCategoria, String idMercato, String tipoMercato, String nickname) {
-                Constants.TipologiaMercatoFantalegheEnum tipologiaMercato = Constants.TipologiaMercatoFantalegheEnum.fromValue(tipoMercato);
+                Constants.TipologiaMercatoFantalegheEnum tipologiaMercato = Constants.TipologiaMercatoFantalegheEnum.valueOf(tipoMercato);
                 UtenteDto utenteDto = getUtenteByNickname(nickname);
                 CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
                 NazioneDto nazioneDto = getNazioneBySigla(siglaNazione);
@@ -489,7 +489,7 @@ public class ApiGatewayFacade {
         }
 
         public FantalegheTrattativeScambio getTrattativeScambioByNazioneAndCategoria(String siglaNazione, String siglaCategoria, String idMercato, String tipoMercato, String nickname) {
-                Constants.TipologiaMercatoFantalegheEnum tipologiaMercato = Constants.TipologiaMercatoFantalegheEnum.fromValue(tipoMercato);
+                Constants.TipologiaMercatoFantalegheEnum tipologiaMercato = Constants.TipologiaMercatoFantalegheEnum.valueOf(tipoMercato);
                 UtenteDto utenteDto = getUtenteByNickname(nickname);
                 CredenzialiDto credenzialiDto = getCredenzialiByUtente(utenteDto);
                 NazioneDto nazioneDto = getNazioneBySigla(siglaNazione);

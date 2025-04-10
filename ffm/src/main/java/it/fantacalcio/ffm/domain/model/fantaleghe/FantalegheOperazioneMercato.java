@@ -12,10 +12,10 @@ public class FantalegheOperazioneMercato {
     private String lastId;
 
     @JsonAlias({"oprs", "auct"})
-    private List<Operation> listaOperazioni;
+    private List<OperazioneMercato> listaOperazioni;
 
     @Data
-    public static class Operation {
+    public static class OperazioneMercato {
         @JsonProperty("cost")
         private int costo;
 

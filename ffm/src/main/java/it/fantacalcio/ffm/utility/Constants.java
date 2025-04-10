@@ -18,6 +18,8 @@ public class Constants {
     public static final Integer TOT_SQUADRE_CAT_B_C = 16;
     public static final String ADMIN_A_NICKNAME = "AdminA";
     public static final String SEMICOLON_SEPARATOR = ";";
+    public static final Integer PERCENTUALE_SVINCOLO_100 = 100;
+    public static final Integer PERCENTUALE_SVINCOLO_50 = 50;
 
     // Enumerazione per TipoOperazioneEnum
     @Getter
@@ -149,15 +151,14 @@ public class Constants {
     @Getter
     @RequiredArgsConstructor
     public enum TipologiaMercatoFantalegheEnum {
-        SCAMBI(3,"SCA"),
-        SVINCOLI(10, "S"),
-        SVINCOLI_ASTA(4, "SA"),
-        ASTA(4, "A"),
-        BUSTE(6, "B");
+        SCAMBI(3),
+        SVINCOLI(10),
+        SVINCOLI_ASTA(4),
+        ASTA(4),
+        BUSTE(6);
 
         private final Integer valueFantaleghe;
-        private final String valueDominio;
-        public static TipologiaMercatoFantalegheEnum fromValue(Integer value) {
+        public static TipologiaMercatoFantalegheEnum fromValueFantaleghe(Integer value) {
             for (TipologiaMercatoFantalegheEnum tipologiaMercatoFantalegheEnum : values()) {
                 if (tipologiaMercatoFantalegheEnum.valueFantaleghe.equals(value)) {
                     return tipologiaMercatoFantalegheEnum;
@@ -165,13 +166,8 @@ public class Constants {
             }
             throw new IllegalArgumentException("Valore non valido per TipologiaMercatoFantalegheEnum: " + value);
         }
-        public static TipologiaMercatoFantalegheEnum fromValue(String value) {
-            for (TipologiaMercatoFantalegheEnum tipologiaMercatoFantalegheEnum : values()) {
-                if (tipologiaMercatoFantalegheEnum.valueDominio.equals(value)) {
-                    return tipologiaMercatoFantalegheEnum;
-                }
-            }
-            throw new IllegalArgumentException("Valore non valido per TipologiaMercatoFantalegheEnum: " + value);
+        public boolean isMercatoAcquisti(){
+            return this.equals(ASTA) || this.equals(BUSTE);
         }
     }
 }

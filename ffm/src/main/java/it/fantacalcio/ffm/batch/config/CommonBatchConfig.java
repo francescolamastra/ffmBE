@@ -64,7 +64,7 @@ public class CommonBatchConfig {
     }
 
     @Bean
-    public JobExecutionDecider importListoneDecider() {
+    public JobExecutionDecider importDecider() {
         return new ImportDecider();
     }
 }

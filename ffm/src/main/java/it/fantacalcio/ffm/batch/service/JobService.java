@@ -33,6 +33,9 @@ public class JobService {
     private Job importSquadreWebApiJob;
 
     @Autowired
+    private Job importOperazioniMercatoWebApiJob;
+
+    @Autowired
     private TaskExecutor taskExecutor;
 
     public void runImportListoneJob(String filePath, Long skipRows, String sheetName) {
@@ -118,6 +121,27 @@ public class JobService {
                         .addString("competizione", competizione)
                         .addString("faseCompetizione", faseCompetizione)
                         .addLong("giornata", giornata)
+                        .toJobParameters());
+            } catch (Exception e) {
+                try {
+                    throw e;
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    public void runImportOperazioniMercatoWebApiJob(String siglaNazione, String siglaCategoria, String idMercato, String tipoMercato, String nickname) {
+        taskExecutor.execute(() -> {
+            try {
+                jobLauncher.run(importOperazioniMercatoWebApiJob, new JobParametersBuilder()
+                        .addString("siglaNazione", siglaNazione)
+                        .addString("siglaCategoria", siglaCategoria)
+                        .addString("idMercato", idMercato)
+                        .addString("tipoMercato", tipoMercato)
+                        .addString("nickname", nickname)
                         .toJobParameters());
             } catch (Exception e) {
                 try {

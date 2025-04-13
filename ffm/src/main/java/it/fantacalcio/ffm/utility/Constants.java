@@ -89,13 +89,35 @@ public class Constants {
         FEBBRAIO("FEB");
 
         private final String sigla;
-        public static SessioneMercatoOpAcquistoEnum fromValue(String sigla) {
+        public static SessioneMercatoOpAcquistoEnum fromSigla(String sigla) {
             for (SessioneMercatoOpAcquistoEnum sessione : values()) {
                 if (sessione.sigla.equalsIgnoreCase(sigla)) {
                     return sessione;
                 }
             }
             throw new IllegalArgumentException("Valore non valido per SessioneMercatoOpAcquistoEnum: " + sigla);
+        }
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum SessioneMercatoTrattiveScambioEnum {
+        ESTIVA("EST"),
+        SETTEMBRE("SET"),
+        OTTOBRE("OTT"),
+        NOVEMBRE("NOV"),
+        DICEMBRE("DIC"),
+        GENNAIO("GEN"),
+        FEBBRAIO("FEB");
+
+        private final String sigla;
+        public static SessioneMercatoTrattiveScambioEnum fromSigla(String sigla) {
+            for (SessioneMercatoTrattiveScambioEnum sessione : values()) {
+                if (sessione.sigla.equalsIgnoreCase(sigla)) {
+                    return sessione;
+                }
+            }
+            throw new IllegalArgumentException("Valore non valido per SessioneMercatoTrattiveScambioEnum: " + sigla);
         }
     }
 
@@ -113,7 +135,7 @@ public class Constants {
         SUPERCOPPA_EUROPEA("SE");
 
         private final String sigla;
-        public static CompetizioneEnum fromValue(String sigla) {
+        public static CompetizioneEnum fromSigla(String sigla) {
             for (CompetizioneEnum competizioneEnum : values()) {
                 if (competizioneEnum.sigla.equalsIgnoreCase(sigla)) {
                     return competizioneEnum;
@@ -138,7 +160,7 @@ public class Constants {
         REGOLARE("R");
 
         private final String sigla;
-        public static FaseCompetizioneEnum fromValue(String sigla) {
+        public static FaseCompetizioneEnum fromSigla(String sigla) {
             for (FaseCompetizioneEnum faseCompetizioneEnum : values()) {
                 if (faseCompetizioneEnum.sigla.equalsIgnoreCase(sigla)) {
                     return faseCompetizioneEnum;

@@ -1,5 +1,7 @@
 package it.fantacalcio.ffm.domain.entity;
 
+import it.fantacalcio.ffm.converter.SessioneMercatoTrattativeScambioConverter;
+import it.fantacalcio.ffm.utility.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +29,10 @@ public class Trattativa {
 
     @Column(name = "CLAUSOLE")
     private String clausole;
+
+    @Convert(converter = SessioneMercatoTrattativeScambioConverter.class)
+    @Column(name = "SESSIONE_MERCATO", nullable = false)
+    private Constants.SessioneMercatoTrattiveScambioEnum sessioneMercato;
 
     @PrePersist
     protected void onCreate() {

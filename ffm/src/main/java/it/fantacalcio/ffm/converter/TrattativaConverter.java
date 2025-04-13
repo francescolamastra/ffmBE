@@ -10,6 +10,7 @@ public class TrattativaConverter {
         return new TrattativaDto(trattativa.getId(),
                 StagioneConverter.toDto(trattativa.getIdStagione()),
                 trattativa.getClausole(),
+                trattativa.getSessioneMercato(),
                 trattativa.getDataCreazione());
     }
 
@@ -19,6 +20,7 @@ public class TrattativaConverter {
         trattativaEntity.setIdStagione(StagioneConverter.toEntity(trattativa.getIdStagione()));
         trattativaEntity.setDataCreazione(trattativa.getDataCreazione());
         trattativaEntity.setClausole(trattativa.getClausole());
+        trattativaEntity.setSessioneMercato(trattativa.getSessioneMercato());
         return trattativaEntity;
     }
 }

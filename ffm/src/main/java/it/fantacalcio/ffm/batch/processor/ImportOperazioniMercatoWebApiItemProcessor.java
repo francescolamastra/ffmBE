@@ -21,6 +21,7 @@ public class ImportOperazioniMercatoWebApiItemProcessor implements ItemProcessor
 
     private final ApiGatewayFacade apiGatewayFacade;
     private final Boolean isMercatoAcquisto;
+    private final Constants.SessioneMercatoOpAcquistoEnum sessioneMercatoOpAcquistoEnum;
 
     @Override
     public Operazione process(FantalegheOperazioneMercato.OperazioneMercato item) throws Exception {
@@ -35,7 +36,7 @@ public class ImportOperazioniMercatoWebApiItemProcessor implements ItemProcessor
             operazioneDto.setIdStagione(stagioneDto);
             operazioneDto.setIdTipoOperazione(tipoOperazioneDto);
             operazioneDto.setDataCreazione(LocalDateTime.now());
-            operazioneDto.setSessioneMercato(Constants.SessioneMercatoOpAcquistoEnum.INIZIALE);
+            operazioneDto.setSessioneMercato(sessioneMercatoOpAcquistoEnum);
             TransazioneOperazioneDto transazioneOperazioneDto = new TransazioneOperazioneDto(
                     null,
                     operazioneDto,

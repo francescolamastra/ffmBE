@@ -71,8 +71,10 @@ public class ImportOperazioniMercatoWebApiBatchConfig {
     @Bean
     @StepScope
     public ItemProcessor<FantalegheOperazioneMercato.OperazioneMercato, Operazione> processorFantalegheOperazioneMercato(ApiGatewayFacade apiGatewayFacade,
-                                                                                                             @Value("#{jobParameters['tipoMercato']}") String tipoMercato){
+                                                                                                                         @Value("#{jobParameters['sessioneMercato']}") String sessioneMercato,
+                                                                                                                         @Value("#{jobParameters['tipoMercato']}") String tipoMercato){
         boolean isMercatoAcquisti = Constants.TipologiaMercatoFantalegheEnum.valueOf(tipoMercato).isMercatoAcquisti();
-        return new ImportOperazioniMercatoWebApiItemProcessor(apiGatewayFacade, isMercatoAcquisti);
+        Constants.SessioneMercatoOpAcquistoEnum sessioneMercatoEnum = Constants.SessioneMercatoOpAcquistoEnum.valueOf(sessioneMercato);
+        return new ImportOperazioniMercatoWebApiItemProcessor(apiGatewayFacade, isMercatoAcquisti, sessioneMercatoEnum);
     }
 }

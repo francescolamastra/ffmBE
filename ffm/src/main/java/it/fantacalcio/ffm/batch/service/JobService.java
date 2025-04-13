@@ -36,6 +36,9 @@ public class JobService {
     private Job importOperazioniMercatoWebApiJob;
 
     @Autowired
+    private Job importTrattativeScambioWebApiJob;
+
+    @Autowired
     private TaskExecutor taskExecutor;
 
     public void runImportListoneJob(String filePath, Long skipRows, String sheetName) {
@@ -133,7 +136,7 @@ public class JobService {
         });
     }
 
-    public void runImportOperazioniMercatoWebApiJob(String siglaNazione, String siglaCategoria, String idMercato, String tipoMercato, String nickname) {
+    public void runImportOperazioniMercatoWebApiJob(String siglaNazione, String siglaCategoria, String idMercato, String tipoMercato, String sessioneMercato, String nickname) {
         taskExecutor.execute(() -> {
             try {
                 jobLauncher.run(importOperazioniMercatoWebApiJob, new JobParametersBuilder()
@@ -141,6 +144,29 @@ public class JobService {
                         .addString("siglaCategoria", siglaCategoria)
                         .addString("idMercato", idMercato)
                         .addString("tipoMercato", tipoMercato)
+                        .addString("sessioneMercato", sessioneMercato)
+                        .addString("nickname", nickname)
+                        .toJobParameters());
+            } catch (Exception e) {
+                try {
+                    throw e;
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    public void runImportTrattativeScambioWebApiJob(String siglaNazione, String siglaCategoria, String idMercato, String tipoMercato, String sessioneMercato, String nickname) {
+        taskExecutor.execute(() -> {
+            try {
+                jobLauncher.run(importTrattativeScambioWebApiJob, new JobParametersBuilder()
+                        .addString("siglaNazione", siglaNazione)
+                        .addString("siglaCategoria", siglaCategoria)
+                        .addString("idMercato", idMercato)
+                        .addString("tipoMercato", tipoMercato)
+                        .addString("sessioneMercato", sessioneMercato)
                         .addString("nickname", nickname)
                         .toJobParameters());
             } catch (Exception e) {

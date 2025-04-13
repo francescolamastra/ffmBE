@@ -116,11 +116,30 @@ public class JobLauncherController{
                                                 @RequestParam String siglaCategoria,
                                                 @RequestParam String idMercato,
                                                 @RequestParam String tipoMercato,
+                                                @RequestParam String sessioneMercato,
                                                 @RequestParam(required = false) String nickname) {
         try{
             if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
             // Esegui il job in modo asyncrono
-            jobService.runImportOperazioniMercatoWebApiJob(siglaNazione, siglaCategoria, idMercato, tipoMercato, nickname);
+            jobService.runImportOperazioniMercatoWebApiJob(siglaNazione, siglaCategoria, idMercato, tipoMercato, sessioneMercato, nickname);
+            return "Job importRoseApi started!";
+        } catch (Exception e) {
+            return "Job importRose failed:"+e;
+        }
+    }
+
+    @PostMapping(value = "/importTrattativeScambioWebApi")
+    @Operation(summary = "Import delle trattative scambio fantaleghe di un mercato per una determinata nazione e categoria")
+    public String importTrattativeScambioWebApi(@RequestParam String siglaNazione,
+                                                @RequestParam String siglaCategoria,
+                                                @RequestParam String idMercato,
+                                                @RequestParam String tipoMercato,
+                                                @RequestParam String sessioneMercato,
+                                                @RequestParam(required = false) String nickname) {
+        try{
+            if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+            // Esegui il job in modo asyncrono
+            jobService.runImportTrattativeScambioWebApiJob(siglaNazione, siglaCategoria, idMercato, tipoMercato, sessioneMercato, nickname);
             return "Job importRoseApi started!";
         } catch (Exception e) {
             return "Job importRose failed:"+e;

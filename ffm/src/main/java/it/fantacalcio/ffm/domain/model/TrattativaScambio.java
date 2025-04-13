@@ -1,5 +1,6 @@
 package it.fantacalcio.ffm.domain.model;
 
+import it.fantacalcio.ffm.utility.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,16 +16,17 @@ import java.util.List;
 public class TrattativaScambio {
     private BonusTrattativaScambio bonusPostSquadraA;
     private BonusTrattativaScambio bonusPostSquadraB;
-    private int creditiPagatiSquadraA;
-    private int creditiPagatiSquadraB;
-    private int creditiPostSquadraA;
-    private int creditiPostSquadraB;
+    private Integer creditiPagatiSquadraA;
+    private Integer creditiPagatiSquadraB;
+    private Integer creditiPostSquadraA;
+    private Integer creditiPostSquadraB;
     private LocalDateTime dataTrattativa;
-    private int gettoniSquadraA;
-    private int gettoniSquadraB;
-    private int idSquadraA;
-    private int idSquadraB;
+    private Integer gettoniSquadraA;
+    private Integer gettoniSquadraB;
+    private Integer idSquadraA;
+    private Integer idSquadraB;
     private List<GiocatoreTrattativaScambio> listGiocatoriCedutiSquadraA;
     private List<GiocatoreTrattativaScambio> listGiocatoriCedutiSquadraB;
     private String clausole;
+    private Constants.SessioneMercatoTrattiveScambioEnum sessioneMercatoTrattiveScambioEnum;
 }

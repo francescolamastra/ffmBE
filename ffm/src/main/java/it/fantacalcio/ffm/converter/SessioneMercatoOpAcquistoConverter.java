@@ -14,6 +14,6 @@ public class SessioneMercatoOpAcquistoConverter implements AttributeConverter<Co
 
     @Override
     public Constants.SessioneMercatoOpAcquistoEnum convertToEntityAttribute(String dbData) {
-        return dbData != null ? Constants.SessioneMercatoOpAcquistoEnum.fromValue(dbData) : null;
+        return dbData != null ? Constants.SessioneMercatoOpAcquistoEnum.fromSigla(dbData) : null;
     }
 }

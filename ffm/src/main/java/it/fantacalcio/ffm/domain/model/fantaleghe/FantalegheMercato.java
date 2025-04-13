@@ -1,8 +1,10 @@
 package it.fantacalcio.ffm.domain.model.fantaleghe;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,13 +24,15 @@ public class FantalegheMercato {
         private String idMercato;
 
         @JsonProperty("meDat")
-        private String dataFineMercato;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmm")
+        private LocalDateTime dataFineMercato;
 
         @JsonProperty("mLabl")
         private MarketLabel marketLabel;
 
         @JsonProperty("msDat")
-        private String dataInizioMercato;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmm")
+        private LocalDateTime dataInizioMercato;
 
         @JsonProperty("mType")
         private int mType;

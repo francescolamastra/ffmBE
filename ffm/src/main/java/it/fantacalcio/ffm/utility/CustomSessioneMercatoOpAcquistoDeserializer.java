@@ -11,6 +11,6 @@ public class CustomSessioneMercatoOpAcquistoDeserializer extends JsonDeserialize
     @Override
     public Constants.SessioneMercatoOpAcquistoEnum deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String value = p.getText();
-        return Constants.SessioneMercatoOpAcquistoEnum.fromValue(value);
+        return Constants.SessioneMercatoOpAcquistoEnum.fromSigla(value);
     }
 }

@@ -7,6 +7,8 @@ import it.fantacalcio.ffm.repository.TrattativaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TrattativaService {
 
@@ -20,5 +22,9 @@ public class TrattativaService {
     public TrattativaDto save(TrattativaDto trattativaDto){
         Trattativa trattativaInsertita = trattativaRepository.save(TrattativaConverter.toEntity(trattativaDto));
         return TrattativaConverter.toDto(trattativaInsertita);
+    }
+
+    public Optional<TrattativaDto> findTrattativaById(Integer idTrattativa) {
+        return trattativaRepository.findById(idTrattativa).map(TrattativaConverter::toDto);
     }
 }

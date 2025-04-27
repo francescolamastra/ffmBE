@@ -1,5 +1,7 @@
 package it.fantacalcio.ffm.domain.entity;
 
+import it.fantacalcio.ffm.converter.TipologiaListoneConverter;
+import it.fantacalcio.ffm.utility.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,8 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
-@Table(name = "listone")
-public class Listone {
+@Table(name = "giocatore_listone")
+public class GiocatoreListone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -27,6 +29,10 @@ public class Listone {
 
     @Column(name = "FVM", nullable = false, length = 4)
     private Integer fvm;
+
+    @Convert(converter = TipologiaListoneConverter.class)
+    @Column(name = "TIPOLOGIA_LISTONE", nullable = false)
+    private Constants.TipologiaListoneEnum tipologiaListone;
 
     @Column(name = "DATA_CREAZIONE", nullable = false, updatable = false)
     private LocalDateTime dataCreazione;

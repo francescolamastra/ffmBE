@@ -21,13 +21,13 @@ public class JobService {
     private Job importListoneJob;
 
     @Autowired
-    private Job importRoseJob;
+    private Job importRoseAndOperazioneJob;
 
     @Autowired
     private Job importRisultatiCompetizioneJob;
 
     @Autowired
-    private Job importRoseWebApiJob;
+    private Job importRoseAndOperazioneWebApiJob;
 
     @Autowired
     private Job importSquadreWebApiJob;
@@ -39,15 +39,19 @@ public class JobService {
     private Job importTrattativeScambioWebApiJob;
 
     @Autowired
+    private Job importRoseWebApiJob;
+
+    @Autowired
     private TaskExecutor taskExecutor;
 
-    public void runImportListoneJob(String filePath, Long skipRows, String sheetName) {
+    public void runImportListoneJob(String filePath, Long skipRows, String sheetName, String tipologiaListone) {
         taskExecutor.execute(() -> {
             try {
                 jobLauncher.run(importListoneJob, new JobParametersBuilder()
                         .addString("filePath", filePath)
                         .addLong("skipRows", skipRows)
                         .addString("sheetName", sheetName)
+                        .addString("tipologiaListone", tipologiaListone)
                         .toJobParameters());
             } catch (Exception e) {
                 try {
@@ -60,12 +64,13 @@ public class JobService {
         });
     }
 
-    public void runImportRoseJob(String filePath, Long skipRows) {
+    public void runImportRoseAndOperazioneJob(String filePath, Long skipRows, String sessioneMercato) {
         taskExecutor.execute(() -> {
             try {
-                jobLauncher.run(importRoseJob, new JobParametersBuilder()
+                jobLauncher.run(importRoseAndOperazioneJob, new JobParametersBuilder()
                         .addString("filePath", filePath)
                         .addLong("skipRows", skipRows)
+                        .addString("sessioneMercato", sessioneMercato)
                         .toJobParameters());
             } catch (Exception e) {
                 try {
@@ -78,12 +83,32 @@ public class JobService {
         });
     }
 
-    public void runImportRoseWebApiJob(String siglaNazione, String nickname) {
+    public void runImportRoseAndOperazioneWebApiJob(String siglaNazione, String sessioneMercato, String nickname) {
+        taskExecutor.execute(() -> {
+            try {
+                jobLauncher.run(importRoseAndOperazioneWebApiJob, new JobParametersBuilder()
+                        .addString("siglaNazione", siglaNazione)
+                        .addString("sessioneMercato", sessioneMercato)
+                        .addString("nickname", nickname, false)
+                        .toJobParameters());
+            } catch (Exception e) {
+                try {
+                    throw e;
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    public void runImportRoseWebApiJob(String siglaNazione, String tipologiaRosa, String nickname) {
         taskExecutor.execute(() -> {
             try {
                 jobLauncher.run(importRoseWebApiJob, new JobParametersBuilder()
                         .addString("siglaNazione", siglaNazione)
-                        .addString("nickname", nickname)
+                        .addString("tipologiaRosa", tipologiaRosa)
+                        .addString("nickname", nickname, false)
                         .toJobParameters());
             } catch (Exception e) {
                 try {
@@ -101,7 +126,7 @@ public class JobService {
             try {
                 jobLauncher.run(importSquadreWebApiJob, new JobParametersBuilder()
                         .addString("siglaNazione", siglaNazione)
-                        .addString("nickname", nickname)
+                        .addString("nickname", nickname, false)
                         .toJobParameters());
             } catch (Exception e) {
                 try {
@@ -145,7 +170,7 @@ public class JobService {
                         .addString("idMercato", idMercato)
                         .addString("tipoMercato", tipoMercato)
                         .addString("sessioneMercato", sessioneMercato)
-                        .addString("nickname", nickname)
+                        .addString("nickname", nickname, false)
                         .toJobParameters());
             } catch (Exception e) {
                 try {
@@ -167,7 +192,7 @@ public class JobService {
                         .addString("idMercato", idMercato)
                         .addString("tipoMercato", tipoMercato)
                         .addString("sessioneMercato", sessioneMercato)
-                        .addString("nickname", nickname)
+                        .addString("nickname", nickname, false)
                         .toJobParameters());
             } catch (Exception e) {
                 try {

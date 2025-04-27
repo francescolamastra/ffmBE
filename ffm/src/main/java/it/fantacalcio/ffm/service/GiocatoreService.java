@@ -32,4 +32,8 @@ public class GiocatoreService {
         Giocatore giocatoreInserito = giocatoreRepository.save(GiocatoreConverter.toEntity(giocatoreDto));
         return GiocatoreConverter.toDto(giocatoreInserito);
     }
+
+    public boolean existsByIdFantagazzetta(Integer integer) {
+        return giocatoreRepository.existsByIdFantagazzetta(integer);
+    }
 }

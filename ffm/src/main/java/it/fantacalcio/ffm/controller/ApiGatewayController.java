@@ -3,11 +3,9 @@ package it.fantacalcio.ffm.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.domain.dto.*;
+import it.fantacalcio.ffm.domain.model.DettagliAggiuntiviTrattativaScambio;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
-import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheMercato;
-import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheOperazioneMercato;
-import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheTeam;
-import it.fantacalcio.ffm.domain.model.fantaleghe.FantalegheTrattativeScambio;
+import it.fantacalcio.ffm.domain.model.fantaleghe.*;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
 import it.fantacalcio.ffm.utility.Constants;
 import org.springframework.web.bind.annotation.*;
@@ -162,10 +160,24 @@ public class ApiGatewayController {
         return apiGatewayFacade.createTrattativaScambio(trattativaScambio);
     }
 
+    @PostMapping(value = "/aggiungiDettagliTrattativaScambio")
+    @ResponseBody
+    @Operation(summary = "Aggiunge i dettagli (Bonus, Fido, Gettoni) per una specifica trattativa scambio")
+    public TrattativaDto createDettagliAggiuntiviTrattativaScambio(@RequestBody DettagliAggiuntiviTrattativaScambio dettagliAggiuntiviTrattativaScambio) {
+        return apiGatewayFacade.createDettagliAggiuntiviTrattativaScambio(dettagliAggiuntiviTrattativaScambio);
+    }
+
     @PostMapping(value = "/inizializzaCompetizioni")
     @ResponseBody
     @Operation(summary = "Crea per la stagione in corso tutte le competizioni previste")
     public void inizializzaCompetizioni() {
         apiGatewayFacade.inizializzaCompetizioni();
+    }
+
+    @PostMapping(value = "/acquistoPacchettoGettoni")
+    @ResponseBody
+    @Operation(summary = "Registra l'acquisto di N gettoni per una squadra")
+    public GettoneDto acquistoPacchettoGettoni(@RequestBody AcquistoGettoni acquistoGettoni) {
+        return apiGatewayFacade.acquistoPacchettoGettoni(acquistoGettoni);
     }
 }

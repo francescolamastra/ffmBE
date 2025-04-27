@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface StagioneRepository extends JpaRepository<Stagione, Integer> {
     Optional<Stagione> findFirstByOrderByAnnoFineDesc();
+    Optional<Stagione> findByAnnoFine(Integer annoFine);
 }

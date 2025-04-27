@@ -1,8 +1,10 @@
 package it.fantacalcio.ffm.batch.config;
 
 import it.fantacalcio.ffm.batch.model.RosaBatchRecord;
+import it.fantacalcio.ffm.batch.processor.ImportRoseAndOperazioneItemProcessor;
 import it.fantacalcio.ffm.domain.entity.Operazione;
-import jakarta.persistence.EntityManagerFactory;
+import it.fantacalcio.ffm.facade.ApiGatewayFacade;
+import it.fantacalcio.ffm.utility.Constants;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -15,7 +17,6 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -28,18 +29,18 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-public class ImportRoseBatchConfig {
+public class ImportRoseAndOperazioneBatchConfig {
 
     @Bean
-    public Job importRoseJob(JobRepository jobRepository,
-                             Step importRoseStep,
+    public Job importRoseAndOperazioneJob(JobRepository jobRepository,
+                             Step importRoseAndOperazioneStep,
                              Step deleteInputFileStep,
                              JobExecutionDecider importDecider,
                              JobExecutionListener jobExecutionListener) {
-        return new JobBuilder("importRoseJob", jobRepository)
+        return new JobBuilder("importRoseAndOperazioneJob", jobRepository)
                 .listener(jobExecutionListener)
                 .incrementer(new RunIdIncrementer())
-                .start(importRoseStep)
+                .start(importRoseAndOperazioneStep)
                 .on("*").to(deleteInputFileStep)
                 .from(deleteInputFileStep).on("*").to(importDecider)
                 .from(importDecider).on("COMPLETED").end()
@@ -48,12 +49,12 @@ public class ImportRoseBatchConfig {
     }
 
     @Bean
-    public Step importRoseStep(JobRepository jobRepository,
+    public Step importRoseAndOperazioneStep(JobRepository jobRepository,
                                     PlatformTransactionManager transactionManager,
                                     ItemReader<RosaBatchRecord> readerRosaBatchRecord,
                                     ItemProcessor<RosaBatchRecord, Operazione> processorRosaBatchRecord,
                                     ItemWriter<Operazione> operazioneItemWriter) {
-        return new StepBuilder("importRoseStep", jobRepository)
+        return new StepBuilder("importRoseAndOperazioneStep", jobRepository)
                 .<RosaBatchRecord, Operazione>chunk(10, transactionManager)
                 .reader(readerRosaBatchRecord)
                 .processor(processorRosaBatchRecord)
@@ -87,5 +88,13 @@ public class ImportRoseBatchConfig {
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
         return lineMapper;
+    }
+
+    @Bean
+    @StepScope
+    public ItemProcessor<RosaBatchRecord, Operazione> processorRosaBatchRecord(ApiGatewayFacade apiGatewayFacade,
+                                                                               @Value("#{jobParameters['sessioneMercato']}") String sessioneMercato) {
+        Constants.SessioneMercatoOpAcquistoEnum sessioneMercatoOpAcquistoEnum = Constants.SessioneMercatoOpAcquistoEnum.valueOf(sessioneMercato);
+        return new ImportRoseAndOperazioneItemProcessor(apiGatewayFacade, sessioneMercatoOpAcquistoEnum);
     }
 }

@@ -1,29 +1,27 @@
 package it.fantacalcio.ffm.batch.processor;
 
 import it.fantacalcio.ffm.batch.model.ListoneBatchRecord;
-import it.fantacalcio.ffm.batch.model.ListoneGiocatoreDtoWrapper;
+import it.fantacalcio.ffm.batch.model.GiocatoreListoneGiocatoreComposite;
 import it.fantacalcio.ffm.domain.dto.GiocatoreDto;
-import it.fantacalcio.ffm.domain.dto.ListoneDto;
+import it.fantacalcio.ffm.domain.dto.GiocatoreListoneDto;
 import it.fantacalcio.ffm.domain.dto.StagioneDto;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
+import it.fantacalcio.ffm.utility.Constants;
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
-public class ImportListoneItemProcessor implements ItemProcessor<ListoneBatchRecord, ListoneGiocatoreDtoWrapper> {
+@RequiredArgsConstructor
+public class ImportListoneItemProcessor implements ItemProcessor<ListoneBatchRecord, GiocatoreListoneGiocatoreComposite> {
     private final ApiGatewayFacade apiGatewayFacade;
-
-    public ImportListoneItemProcessor(ApiGatewayFacade apiGatewayFacade){
-        this.apiGatewayFacade = apiGatewayFacade;
-    }
+    private final Constants.TipologiaListoneEnum tipologiaListoneEnum;
 
     @Override
-    public ListoneGiocatoreDtoWrapper process(ListoneBatchRecord item) {
+    public GiocatoreListoneGiocatoreComposite process(ListoneBatchRecord item) {
         StagioneDto stagioneDto = apiGatewayFacade.getLastStagione();
-        ListoneDto listoneDto = new ListoneDto(null, item.idFantagazzetta(), stagioneDto, item.fvm(), LocalDateTime.now());
+        GiocatoreListoneDto giocatoreListoneDto = new GiocatoreListoneDto(null, item.idFantagazzetta(), stagioneDto, item.fvm(), tipologiaListoneEnum, LocalDateTime.now());
         GiocatoreDto giocatoreDto = new GiocatoreDto(null, item.idFantagazzetta(), item.nome(), item.ruolo());
-        return new ListoneGiocatoreDtoWrapper(listoneDto,giocatoreDto);
+        return new GiocatoreListoneGiocatoreComposite(giocatoreListoneDto,giocatoreDto);
     }
 }

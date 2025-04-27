@@ -1,11 +1,14 @@
 package it.fantacalcio.ffm.batch.config;
 
 import it.fantacalcio.ffm.batch.model.ListoneBatchRecord;
-import it.fantacalcio.ffm.batch.model.ListoneGiocatoreDtoWrapper;
+import it.fantacalcio.ffm.batch.model.GiocatoreListoneGiocatoreComposite;
+import it.fantacalcio.ffm.batch.processor.ImportListoneItemProcessor;
 import it.fantacalcio.ffm.batch.reader.ImportListoneItemReader;
 import it.fantacalcio.ffm.batch.writer.ImportListoneJpaItemWriter;
 import it.fantacalcio.ffm.domain.entity.Giocatore;
-import it.fantacalcio.ffm.domain.entity.Listone;
+import it.fantacalcio.ffm.domain.entity.GiocatoreListone;
+import it.fantacalcio.ffm.facade.ApiGatewayFacade;
+import it.fantacalcio.ffm.utility.Constants;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
@@ -51,10 +54,10 @@ public class ImportListoneBatchConfig {
     public Step importListoneStep(JobRepository jobRepository,
                                     PlatformTransactionManager transactionManager,
                                     ItemReader<ListoneBatchRecord> itemReader,
-                                    ItemProcessor<ListoneBatchRecord, ListoneGiocatoreDtoWrapper> itemProcessor,
-                                    ItemWriter<ListoneGiocatoreDtoWrapper> customBatchRecordJpaItemWriter) {
+                                    ItemProcessor<ListoneBatchRecord, GiocatoreListoneGiocatoreComposite> itemProcessor,
+                                    ItemWriter<GiocatoreListoneGiocatoreComposite> customBatchRecordJpaItemWriter) {
         return new StepBuilder("importListoneStep", jobRepository)
-                .<ListoneBatchRecord, ListoneGiocatoreDtoWrapper>chunk(10, transactionManager)
+                .<ListoneBatchRecord, GiocatoreListoneGiocatoreComposite>chunk(10, transactionManager)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(customBatchRecordJpaItemWriter)
@@ -69,15 +72,17 @@ public class ImportListoneBatchConfig {
     }
 
     @Bean
-    public JpaItemWriter<Listone> listoneItemWriter(EntityManagerFactory entityManagerFactory) {
-        JpaItemWriter<Listone> writer = new JpaItemWriter<>();
+    public JpaItemWriter<GiocatoreListone> listoneItemWriter(EntityManagerFactory entityManagerFactory) {
+        JpaItemWriter<GiocatoreListone> writer = new JpaItemWriter<>();
         writer.setEntityManagerFactory(entityManagerFactory);
         return writer;
     }
 
     @Bean
-    public ItemWriter<ListoneGiocatoreDtoWrapper> customBatchRecordJpaItemWriter(JpaItemWriter<Giocatore> giocatoreItemWriter, JpaItemWriter<Listone> listoneItemWriter) {
-        return new ImportListoneJpaItemWriter(giocatoreItemWriter,listoneItemWriter);
+    public ItemWriter<GiocatoreListoneGiocatoreComposite> customBatchRecordJpaItemWriter(ApiGatewayFacade apiGatewayFacade,
+                                                                                         JpaItemWriter<Giocatore> giocatoreItemWriter,
+                                                                                         JpaItemWriter<GiocatoreListone> listoneItemWriter) {
+        return new ImportListoneJpaItemWriter(apiGatewayFacade, giocatoreItemWriter,listoneItemWriter);
     }
 
     @Bean
@@ -87,6 +92,14 @@ public class ImportListoneBatchConfig {
                                                      @Value("#{jobParameters['sheetName']}") String sheetName) throws Exception {
         Resource resource = new FileSystemResource(filePath);
         return new ImportListoneItemReader(resource, skipRows, sheetName);
+    }
+
+    @Bean
+    @StepScope
+    public ItemProcessor<ListoneBatchRecord, GiocatoreListoneGiocatoreComposite> itemProcessor(ApiGatewayFacade apiGatewayFacade,
+                                                                                               @Value("#{jobParameters['tipologiaListone']}") String tipologiaListone) {
+        Constants.TipologiaListoneEnum tipologiaListoneEnum = Constants.TipologiaListoneEnum.valueOf(tipologiaListone);
+        return new ImportListoneItemProcessor(apiGatewayFacade, tipologiaListoneEnum);
     }
 
 }

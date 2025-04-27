@@ -57,4 +57,18 @@ public class StagioneService {
         }
         return stagioneCache.getStagioni().stream().max(Comparator.comparing(StagioneDto::getAnnoFine));
     }
+
+    public Optional<StagioneDto> getStagioneByAnnoFine(Integer annoFine){
+        if (stagioneCache.isEmpty()) {
+            stagioneRepository.findByAnnoFine(annoFine)
+                    .map(stagione -> {
+                        StagioneDto stagioneDto = StagioneConverter.toDto(stagione);
+                        stagioneCache.addStagione(stagioneDto);
+                        return stagioneDto;
+                    });
+        }
+        return stagioneCache.getStagioni().stream()
+                .filter(s -> s.getAnnoFine().equals(annoFine))
+                .findFirst();
+    }
 }

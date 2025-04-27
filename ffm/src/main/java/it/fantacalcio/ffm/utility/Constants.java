@@ -86,7 +86,8 @@ public class Constants {
         INIZIALE("INI"),
         AGOSTO("AGO"),
         SETTEMBRE("SET"),
-        FEBBRAIO("FEB");
+        FEBBRAIO("FEB"),
+        FINALE("FIN");
 
         private final String sigla;
         public static SessioneMercatoOpAcquistoEnum fromSigla(String sigla) {
@@ -190,6 +191,46 @@ public class Constants {
         }
         public boolean isMercatoAcquisti(){
             return this.equals(ASTA) || this.equals(BUSTE);
+        }
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum TipologiaListoneEnum {
+        INIZIALE("INI"),
+        STIPENDI("STIP"),
+        FINALE("FIN");
+
+        private final String sigla;
+        public static TipologiaListoneEnum fromSigla(String sigla) {
+            for (TipologiaListoneEnum sessione : values()) {
+                if (sessione.sigla.equalsIgnoreCase(sigla)) {
+                    return sessione;
+                }
+            }
+            throw new IllegalArgumentException("Valore non valido per TipologiaListoneEnum: " + sigla);
+        }
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum TipologiaRosaEnum {
+        PREASTA("PRE"),
+        INIZIALE("INI"),
+        POST_LISTONE("POST_LIST"),
+        STIPENDI_SETTEMBRE("STIP_SETT"),
+        STIPENDI_FEBBRAIO("STIP_FEB"),
+        FINALE("FIN"),
+        MANAGERIALE("MAN");
+
+        private final String sigla;
+        public static TipologiaRosaEnum fromSigla(String sigla) {
+            for (TipologiaRosaEnum sessione : values()) {
+                if (sessione.sigla.equalsIgnoreCase(sigla)) {
+                    return sessione;
+                }
+            }
+            throw new IllegalArgumentException("Valore non valido per TipologiaRosaEnum: " + sigla);
         }
     }
 }

@@ -1,7 +1,7 @@
 package it.fantacalcio.ffm.batch.model;
 
 import it.fantacalcio.ffm.domain.dto.GiocatoreDto;
-import it.fantacalcio.ffm.domain.dto.ListoneDto;
+import it.fantacalcio.ffm.domain.dto.GiocatoreListoneDto;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class ListoneGiocatoreDtoWrapper {
-    private ListoneDto listoneDto;
+public class GiocatoreListoneGiocatoreComposite {
+    private GiocatoreListoneDto giocatoreListoneDto;
     private GiocatoreDto giocatoreDto;
 }

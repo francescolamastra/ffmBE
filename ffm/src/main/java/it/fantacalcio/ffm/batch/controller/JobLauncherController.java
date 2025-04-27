@@ -1,6 +1,7 @@
 package it.fantacalcio.ffm.batch.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.batch.service.JobService;
 import it.fantacalcio.ffm.batch.utility.FileManager;
@@ -33,24 +34,27 @@ public class JobLauncherController{
     }
 
     @PostMapping(value = "/importListoneInit",  consumes = "multipart/form-data")
-    @Operation(summary = "Import del listone tramite excel fantagazzetta, prima inizializzazione del valore FVM per la stagione")
+    @Operation(summary = "Import del listone tramite excel fantagazzetta, inizializzazione del valore FVM per la stagione in base alla Tipologia Listone(default INIZIALE)")
     public String importListone(@RequestParam("file") MultipartFile file,
-                              @RequestParam(value = "skipRows", required = false) Integer skipRows,
-                              @RequestParam(value = "sheetName", required = false) String sheetName) {
+                                @RequestParam(value = "skipRows", required = false) Long skipRows,
+                                @RequestParam(value = "sheetName", required = false) String sheetName,
+                                @Schema(description = "Tipologia Listone",
+                                        allowableValues = {"INIZIALE", "STIPENDI", "FINALE"})
+                                @RequestParam(value = "tipologiaListone", required = false) String tipologiaListone) {
         try {
             // Recupera i valori predefiniti da application.yml se i parametri non sono forniti o sono vuoti
             if (skipRows == null || skipRows.toString().isEmpty()) {
-                skipRows = Integer.parseInt(Objects.requireNonNull(env.getProperty("ffm.batch.excel-giocatori.skip-rows")));
+                skipRows = Long.parseLong(Objects.requireNonNull(env.getProperty("ffm.batch.excel-giocatori.skip-rows")));
             }
             if (sheetName == null || sheetName.isEmpty()) {
                 sheetName = env.getProperty("ffm.batch.excel-giocatori.sheet-name");
             }
-
+            if(tipologiaListone == null) tipologiaListone = Constants.TipologiaListoneEnum.INIZIALE.getSigla();
             // Salva il file in una directory specifica interna all'applicazione
             String filePath = fileManager.copyToInDirectory(file, UPLOADS_DIR);
 
             // Esegui il job in modo asyncrono
-            jobService.runImportListoneJob(filePath, skipRows.longValue(), sheetName);
+            jobService.runImportListoneJob(filePath, skipRows, sheetName, tipologiaListone);
             return "Job importListone started";
         } catch (FileAlreadyExistsException e) {
             return "Job importListone failed: " + e.getMessage();
@@ -59,40 +63,62 @@ public class JobLauncherController{
         }
     }
 
-    @PostMapping(value = "/importRoseInit",  consumes = "multipart/form-data")
-    @Operation(summary = "Import delle rose tramite csv fantagazzetta, prima inizializzazione della stagione")
-    public String importRose(@RequestParam("file") MultipartFile file,
-                              @RequestParam(value = "skipRows", required = false) Integer skipRows) {
+    @PostMapping(value = "/importRoseAndOperazioneInit",  consumes = "multipart/form-data")
+    @Operation(summary = "Import delle rose tramite csv fantagazzetta, in base alla sessione di Mercato(default INIZIALE)")
+    public String importRoseAndOperazione(@RequestParam("file") MultipartFile file,
+                             @RequestParam(value = "skipRows", required = false) Long skipRows,
+                             @RequestParam(required = false) String sessioneMercato) {
         try {
             // Recupera i valori predefiniti da application.yml se i parametri non sono forniti o sono vuoti
             if (skipRows == null || skipRows.toString().isEmpty()) {
-                skipRows = Integer.parseInt(Objects.requireNonNull(env.getProperty("ffm.batch.csv-rose.skip-rows")));
+                skipRows = Long.parseLong(Objects.requireNonNull(env.getProperty("ffm.batch.csv-rose.skip-rows")));
             }
-
+            if(sessioneMercato == null) sessioneMercato = Constants.SessioneMercatoOpAcquistoEnum.INIZIALE.getSigla();
             // Salva il file in una directory specifica interna all'applicazione
             String filePath = fileManager.copyToInDirectory(file, UPLOADS_DIR);
 
             // Esegui il job in modo asyncrono
-            jobService.runImportRoseJob(filePath, skipRows.longValue());
-            return "Job importRose started!";
+            jobService.runImportRoseAndOperazioneJob(filePath, skipRows, sessioneMercato);
+            return "Job importRoseAndOperazione started!";
         } catch (FileAlreadyExistsException e) {
-            return "Job importRose failed: " + e.getMessage();
+            return "Job importRoseAndOperazione failed: " + e.getMessage();
         } catch (Exception e) {
-            return "Job importRose failed:"+e;
+            return "Job importRoseAndOperazione failed:"+e;
         }
     }
 
-    @PostMapping(value = "/importRoseWebApi")
-    @Operation(summary = "Import delle rose tramite api fantagazzetta, prima inizializzazione della stagione con settaggio ID Fantaleghe")
-    public String importRoseWebApi(@RequestParam String siglaNazione,
-                                @RequestParam(required = false) String nickname) {
+    @PostMapping(value = "/importRoseAndOperazioneWebApi")
+    @Operation(summary = "Import delle rose tramite api fantagazzetta, in base alla sessione di Mercato(default INIZIALE) della stagione con settaggio ID Fantaleghe")
+    public String importRoseAndOperazioneWebApi(@RequestParam String siglaNazione,
+                                   @RequestParam(required = false) String sessioneMercato,
+                                   @RequestParam(required = false) String nickname) {
         try{
              if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+             if(sessioneMercato == null) sessioneMercato = Constants.SessioneMercatoOpAcquistoEnum.INIZIALE.getSigla();
             // Esegui il job in modo asyncrono
-            jobService.runImportRoseWebApiJob(siglaNazione, nickname);
-            return "Job importRoseApi started!";
+            jobService.runImportRoseAndOperazioneWebApiJob(siglaNazione, sessioneMercato, nickname);
+            return "Job importRoseAndOperazioneApi started!";
         } catch (Exception e) {
-            return "Job importRose failed:"+e;
+            return "Job importRoseAndOperazione failed:"+e;
+        }
+    }
+
+    @PostMapping(value = "/importRoseWebApiJob")
+    @Operation(summary = "Import delle rose tramite api fantagazzetta, in base alla tipologiaRosa")
+    public String importRoseWebApiJob(@RequestParam String siglaNazione,
+                                      @RequestParam
+                                      @Schema(description = "Tipologia della rosa",
+                                              allowableValues = {"PREASTA", "INIZIALE", "POST_LISTONE", "STIPENDI_SETTEMBRE", "STIPENDI_FEBBRAIO", "FINALE", "MANAGERIALE"})
+                                      String tipologiaRosa,
+                                      @RequestParam(required = false) String nickname) {
+        try{
+            if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
+
+            // Esegui il job in modo asyncrono
+            jobService.runImportRoseWebApiJob(siglaNazione, tipologiaRosa, nickname);
+            return "Job importRoseAndOperazioneApi started!";
+        } catch (Exception e) {
+            return "Job importRoseAndOperazione failed:"+e;
         }
     }
 
@@ -104,9 +130,9 @@ public class JobLauncherController{
             if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
             // Esegui il job in modo asyncrono
             jobService.runImportSquadreWebApiJob(siglaNazione, nickname);
-            return "Job importRoseApi started!";
+            return "Job importRoseAndOperazioneApi started!";
         } catch (Exception e) {
-            return "Job importRose failed:"+e;
+            return "Job importRoseAndOperazione failed:"+e;
         }
     }
 
@@ -122,9 +148,9 @@ public class JobLauncherController{
             if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
             // Esegui il job in modo asyncrono
             jobService.runImportOperazioniMercatoWebApiJob(siglaNazione, siglaCategoria, idMercato, tipoMercato, sessioneMercato, nickname);
-            return "Job importRoseApi started!";
+            return "Job importRoseAndOperazioneApi started!";
         } catch (Exception e) {
-            return "Job importRose failed:"+e;
+            return "Job importRoseAndOperazione failed:"+e;
         }
     }
 
@@ -140,9 +166,9 @@ public class JobLauncherController{
             if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
             // Esegui il job in modo asyncrono
             jobService.runImportTrattativeScambioWebApiJob(siglaNazione, siglaCategoria, idMercato, tipoMercato, sessioneMercato, nickname);
-            return "Job importRoseApi started!";
+            return "Job importRoseAndOperazioneApi started!";
         } catch (Exception e) {
-            return "Job importRose failed:"+e;
+            return "Job importRoseAndOperazione failed:"+e;
         }
     }
 

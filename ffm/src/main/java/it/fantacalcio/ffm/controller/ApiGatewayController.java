@@ -1,13 +1,16 @@
 package it.fantacalcio.ffm.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.domain.dto.*;
 import it.fantacalcio.ffm.domain.model.DettagliAggiuntiviTrattativaScambio;
+import it.fantacalcio.ffm.domain.model.FinanzeIniziali;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
 import it.fantacalcio.ffm.domain.model.fantaleghe.*;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
 import it.fantacalcio.ffm.utility.Constants;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +18,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/ffm/api")
 @Tag(name = "ApiGatewayController", description = "Gestione delle API di FFM")
+@RequiredArgsConstructor
 public class ApiGatewayController {
-    private ApiGatewayFacade apiGatewayFacade;
-
-    public ApiGatewayController(ApiGatewayFacade apiGatewayFacade) {
-        this.apiGatewayFacade = apiGatewayFacade;
-    }
+    private final ApiGatewayFacade apiGatewayFacade;
 
     /* SEZIONE COMUNICAZIONE API FANTALEGHE */
     @PostMapping(value = "/fantalegheLogin")
@@ -34,7 +34,11 @@ public class ApiGatewayController {
     @GetMapping(value = "/mercati")
     @ResponseBody
     @Operation(summary = "Recupera tutti i mercati chiusi fantaleghe per una determinata nazione e categoria")
-    public FantalegheMercato getMercati(@RequestParam String siglaNazione,
+    public FantalegheMercato getMercati(@Schema(description = "Sigla Nazione",
+                                                    allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                        @RequestParam String siglaNazione,
+                                        @Schema(description = "Sigla Categoria",
+                                                allowableValues = {"A", "B", "C"})
                                         @RequestParam String siglaCategoria,
                                         @RequestParam(required = false) String nickname) {
         if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
@@ -44,10 +48,16 @@ public class ApiGatewayController {
     @GetMapping(value = "/operazioniMercato")
     @ResponseBody
     @Operation(summary = "Recupera tutte le operazioni fantaleghe di un mercato per una determinata nazione e categoria")
-    public FantalegheOperazioneMercato getOperazioniMercato(@RequestParam String siglaNazione,
+    public FantalegheOperazioneMercato getOperazioniMercato(@Schema(description = "Sigla Nazione",
+                                                                        allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                                                @RequestParam String siglaNazione,
+                                                            @Schema(description = "Sigla Categoria",
+                                                                    allowableValues = {"A", "B", "C"})
                                                             @RequestParam String siglaCategoria,
                                                             @RequestParam String idMercato,
-                                                            @RequestParam String tipoMercato,
+                                                            @Schema(description = "Tipologia Mercato",
+                                                                    allowableValues = {"SVINCOLI", "SVINCOLI_ASTA", "ASTA", "BUSTE"})
+                                                                @RequestParam String tipoMercato,
                                                             @RequestParam(required = false) String nickname) {
         if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
         return apiGatewayFacade.getOperazioniMercatoByNazioneAndCategoria(siglaNazione, siglaCategoria, idMercato, tipoMercato, nickname);
@@ -56,10 +66,16 @@ public class ApiGatewayController {
     @GetMapping(value = "/trattativeScambio")
     @ResponseBody
     @Operation(summary = "Recupera tutte le trattative scambio fantaleghe di un mercato per una determinata nazione e categoria")
-    public FantalegheTrattativeScambio getTrattativeScambio(@RequestParam String siglaNazione,
+    public FantalegheTrattativeScambio getTrattativeScambio(@Schema(description = "Sigla Nazione",
+                                                                        allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                                                @RequestParam String siglaNazione,
+                                                            @Schema(description = "Sigla Categoria",
+                                                                    allowableValues = {"A", "B", "C"})
                                                             @RequestParam String siglaCategoria,
                                                             @RequestParam String idMercato,
-                                                            @RequestParam String tipoMercato,
+                                                            @Schema(description = "Tipologia Mercato",
+                                                                    allowableValues = {"SCAMBI"})
+                                                                @RequestParam String tipoMercato,
                                                             @RequestParam(required = false) String nickname) {
         if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
         return apiGatewayFacade.getTrattativeScambioByNazioneAndCategoria(siglaNazione, siglaCategoria, idMercato, tipoMercato, nickname);
@@ -68,7 +84,9 @@ public class ApiGatewayController {
     @GetMapping(value = "/teams")
     @ResponseBody
     @Operation(summary = "Recupera tutti i teams fantaleghe per una determinata nazione")
-    public List<FantalegheTeam> getTeams(@RequestParam String siglaNazione,
+    public List<FantalegheTeam> getTeams(@Schema(description = "Sigla Nazione",
+                                                     allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                             @RequestParam String siglaNazione,
                                          @RequestParam(required = false) String nickname) {
         if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
         return apiGatewayFacade.getTeamsByNazione(siglaNazione, nickname);
@@ -179,5 +197,12 @@ public class ApiGatewayController {
     @Operation(summary = "Registra l'acquisto di N gettoni per una squadra")
     public GettoneDto acquistoPacchettoGettoni(@RequestBody AcquistoGettoni acquistoGettoni) {
         return apiGatewayFacade.acquistoPacchettoGettoni(acquistoGettoni);
+    }
+
+    @PostMapping(value = "/impostaFinanzeIniziali")
+    @ResponseBody
+    @Operation(summary = "Imposta la situzione economica iniziale di una squadra (stadio, crediti, gettoni)")
+    public SituazioneEconomicaInizialeDto impostaFinanzeIniziali(@RequestBody FinanzeIniziali finanzeIniziali) {
+        return apiGatewayFacade.impostaFinanzeIniziali(finanzeIniziali);
     }
 }

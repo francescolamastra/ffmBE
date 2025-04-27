@@ -6,22 +6,17 @@ import it.fantacalcio.ffm.domain.dto.StadioDto;
 import it.fantacalcio.ffm.domain.entity.Stadio;
 import it.fantacalcio.ffm.repository.StadioRepository;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StadioService {
     private final StadioRepository stadioRepository;
     private final StadioCache stadioCache;
-
-    @Autowired
-    public StadioService(StadioRepository stadioRepository,StadioCache stadioCache){
-        this.stadioRepository = stadioRepository;
-        this.stadioCache = stadioCache;
-    }
 
     @PostConstruct
     public void init() {

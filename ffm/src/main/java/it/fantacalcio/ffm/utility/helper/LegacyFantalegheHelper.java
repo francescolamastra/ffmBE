@@ -1,6 +1,7 @@
-package it.fantacalcio.ffm.utility;
+package it.fantacalcio.ffm.utility.helper;
 
 import it.fantacalcio.ffm.config.ApiFantalegheProperties;
+import it.fantacalcio.ffm.utility.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;

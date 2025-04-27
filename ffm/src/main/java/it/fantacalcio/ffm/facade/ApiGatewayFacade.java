@@ -1,6 +1,7 @@
 package it.fantacalcio.ffm.facade;
 
 import it.fantacalcio.ffm.batch.model.TrattativaScambioBatch;
+import it.fantacalcio.ffm.builder.SituazioneEconomicaInizialeDtoBuilder;
 import it.fantacalcio.ffm.builder.SquadraDtoBuilder;
 import it.fantacalcio.ffm.converter.CompetizioneConverter;
 import it.fantacalcio.ffm.converter.StagioneConverter;
@@ -8,10 +9,7 @@ import it.fantacalcio.ffm.domain.dto.*;
 import it.fantacalcio.ffm.domain.entity.Competizione;
 import it.fantacalcio.ffm.domain.entity.Stagione;
 import it.fantacalcio.ffm.domain.entity.StagioneCompetizione;
-import it.fantacalcio.ffm.domain.model.DettagliAggiuntiviTrattativaScambio;
-import it.fantacalcio.ffm.domain.model.GiocatoreTrattativaScambio;
-import it.fantacalcio.ffm.domain.model.GiocatoreTrattativaScambioComposite;
-import it.fantacalcio.ffm.domain.model.TrattativaScambio;
+import it.fantacalcio.ffm.domain.model.*;
 import it.fantacalcio.ffm.domain.model.fantaleghe.*;
 import it.fantacalcio.ffm.service.*;
 import it.fantacalcio.ffm.utility.CollectionUtility;
@@ -63,6 +61,8 @@ public class ApiGatewayFacade {
         private final GiocatoreRosaService giocatoreRosaService;
         private final GiocatoreListoneService giocatoreListoneService;
         private final GettoneService gettoneService;
+        private final StadioService stadioService;
+        private final SituazioneEconomicaInizialeService situazioneEconomicaInizialeService;
 
         public List<GiocatoreRosaDto> getAllGiocatoreRosaByIdStagioneAndIdSquadraAndTipologiaRosa(StagioneDto idStagione, SquadraDto idSquadra, Constants.TipologiaRosaEnum tipologiaRosa){
                 return giocatoreRosaService.findAllByIdStagioneAndIdSquadraAndTipologiaRosa(idStagione, idSquadra, tipologiaRosa);
@@ -107,6 +107,10 @@ public class ApiGatewayFacade {
 
         public GiocatoreDto getGiocatoreByIdFantagazzetta(Integer idFantagazzetta) {
                 return giocatoreService.findByIdFantagazzetta(idFantagazzetta).orElseThrow();
+        }
+
+        public StadioDto getStadioByLivello(Integer livello) {
+                return stadioService.findByLivello(livello).orElseThrow();
         }
 
         public List<SquadraDto> getSquadre() {
@@ -157,6 +161,7 @@ public class ApiGatewayFacade {
 
         public StagioneDto getLastStagione() { return stagioneService.getLastStagione().orElseThrow(); }
         public Optional<StagioneDto> getStagioneByAnnoFine(Integer annoFine) { return stagioneService.getStagioneByAnnoFine(annoFine); }
+        public StagioneDto getStagioneByAnnoInizio(Integer annoInizio) { return stagioneService.getStagioneByAnnoInizio(annoInizio).orElseThrow(); }
 
         public List<CompetizioneDto> getCompetizioni() {
                 return competizioneService.findAll();
@@ -173,6 +178,10 @@ public class ApiGatewayFacade {
         }
         public StagioneDto saveStagione(StagioneDto stagioneDto) {
                 return stagioneService.save(stagioneDto);
+        }
+
+        public SituazioneEconomicaInizialeDto saveSituazioneEconomicaIniziale(SituazioneEconomicaInizialeDto situazioneEconomicaInizialeDto) {
+                return situazioneEconomicaInizialeService.save(situazioneEconomicaInizialeDto);
         }
 
         public OperazioneDto saveOperazione(OperazioneDto operazioneDto) {
@@ -527,5 +536,18 @@ public class ApiGatewayFacade {
         public GettoneDto acquistoPacchettoGettoni(AcquistoGettoni acquistoGettoni) {
                 SquadraDto squadraDto = getSquadraById(acquistoGettoni.getIdSquadra());
                 return createGettoni(squadraDto, acquistoGettoni.getGettoni(), acquistoGettoni.getDataAcquisto());
+        }
+
+        public SituazioneEconomicaInizialeDto impostaFinanzeIniziali(FinanzeIniziali finanzeIniziali) {
+                StagioneDto stagioneDto = getStagioneByAnnoInizio(finanzeIniziali.getAnnoInizioStagione());
+                SquadraDto squadraDto = getSquadraById(finanzeIniziali.getIdSquadra());
+                StadioDto stadioDto = getStadioByLivello(finanzeIniziali.getLivelloStadio());
+                return saveSituazioneEconomicaIniziale(new SituazioneEconomicaInizialeDtoBuilder()
+                        .setStagione(stagioneDto)
+                        .setSquadra(squadraDto)
+                        .setStadio(stadioDto)
+                        .setCrediti(finanzeIniziali.getCrediti())
+                        .setGettoni(finanzeIniziali.getGettoni())
+                        .build());
         }
 }

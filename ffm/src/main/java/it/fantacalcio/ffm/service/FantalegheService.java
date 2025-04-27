@@ -2,7 +2,7 @@ package it.fantacalcio.ffm.service;
 
 import it.fantacalcio.ffm.domain.model.fantaleghe.*;
 import it.fantacalcio.ffm.utility.Constants;
-import it.fantacalcio.ffm.utility.LegacyFantalegheHelper;
+import it.fantacalcio.ffm.utility.helper.LegacyFantalegheHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;

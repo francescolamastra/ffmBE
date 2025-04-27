@@ -1,8 +1,9 @@
-package it.fantacalcio.ffm.utility;
+package it.fantacalcio.ffm.utility.serialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import it.fantacalcio.ffm.utility.Constants;
 
 import java.io.IOException;
 

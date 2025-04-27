@@ -1,4 +1,4 @@
-package it.fantacalcio.ffm.utility;
+package it.fantacalcio.ffm.utility.serialize;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

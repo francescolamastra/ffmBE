@@ -71,4 +71,18 @@ public class StagioneService {
                 .filter(s -> s.getAnnoFine().equals(annoFine))
                 .findFirst();
     }
+
+    public Optional<StagioneDto> getStagioneByAnnoInizio(Integer annoInizio){
+        if (stagioneCache.isEmpty()) {
+            stagioneRepository.findByAnnoInizio(annoInizio)
+                    .map(stagione -> {
+                        StagioneDto stagioneDto = StagioneConverter.toDto(stagione);
+                        stagioneCache.addStagione(stagioneDto);
+                        return stagioneDto;
+                    });
+        }
+        return stagioneCache.getStagioni().stream()
+                .filter(s -> s.getAnnoInizio().equals(annoInizio))
+                .findFirst();
+    }
 }

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.batch.service.JobService;
 import it.fantacalcio.ffm.batch.utility.FileManager;
 import it.fantacalcio.ffm.utility.Constants;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,17 +22,12 @@ import static it.fantacalcio.ffm.utility.Constants.UPLOADS_DIR;
 @RestController
 @RequestMapping(value = "/ffm/batch")
 @Tag(name = "JobLauncherController", description = "Gestione dei batch di FFM")
+@RequiredArgsConstructor
 public class JobLauncherController{
 
     private final JobService jobService;
     private final Environment env;
     private final FileManager fileManager;
-
-    public JobLauncherController(JobService jobService, Environment env, FileManager fileManager) {
-        this.jobService = jobService;
-        this.env = env;
-        this.fileManager = fileManager;
-    }
 
     @PostMapping(value = "/importListoneInit",  consumes = "multipart/form-data")
     @Operation(summary = "Import del listone tramite excel fantagazzetta, inizializzazione del valore FVM per la stagione in base alla Tipologia Listone(default INIZIALE)")
@@ -89,8 +85,12 @@ public class JobLauncherController{
 
     @PostMapping(value = "/importRoseAndOperazioneWebApi")
     @Operation(summary = "Import delle rose tramite api fantagazzetta, in base alla sessione di Mercato(default INIZIALE) della stagione con settaggio ID Fantaleghe")
-    public String importRoseAndOperazioneWebApi(@RequestParam String siglaNazione,
-                                   @RequestParam(required = false) String sessioneMercato,
+    public String importRoseAndOperazioneWebApi(@Schema(description = "Sigla Nazione",
+                                                            allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                                    @RequestParam String siglaNazione,
+                                                @Schema(description = "Sessione acquisto",
+                                                        allowableValues = {"PREASTA", "INIZIALE", "AGOSTO", "SETTEMBRE", "FEBBRAIO", "FINALE"})
+                                                @RequestParam(required = false) String sessioneMercato,
                                    @RequestParam(required = false) String nickname) {
         try{
              if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
@@ -105,7 +105,9 @@ public class JobLauncherController{
 
     @PostMapping(value = "/importRoseWebApiJob")
     @Operation(summary = "Import delle rose tramite api fantagazzetta, in base alla tipologiaRosa")
-    public String importRoseWebApiJob(@RequestParam String siglaNazione,
+    public String importRoseWebApiJob(@Schema(description = "Sigla Nazione",
+                                                  allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                          @RequestParam String siglaNazione,
                                       @RequestParam
                                       @Schema(description = "Tipologia della rosa",
                                               allowableValues = {"PREASTA", "INIZIALE", "POST_LISTONE", "STIPENDI_SETTEMBRE", "STIPENDI_FEBBRAIO", "FINALE", "MANAGERIALE"})
@@ -124,7 +126,9 @@ public class JobLauncherController{
 
     @PostMapping(value = "/importSquadreWebApi")
     @Operation(summary = "Import delle squadre tramite api fantagazzetta per nazione")
-    public String importSquadreWebApi(@RequestParam String siglaNazione,
+    public String importSquadreWebApi(@Schema(description = "Sigla Nazione",
+                                                  allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                          @RequestParam String siglaNazione,
                                       @RequestParam(required = false) String nickname) {
         try{
             if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
@@ -138,11 +142,19 @@ public class JobLauncherController{
 
     @PostMapping(value = "/importOperazioniMercatoWebApi")
     @Operation(summary = "Import delle operazioni fantaleghe di un mercato per una determinata nazione e categoria")
-    public String importOperazioniMercatoWebApi(@RequestParam String siglaNazione,
+    public String importOperazioniMercatoWebApi(@Schema(description = "Sigla Nazione",
+                                                            allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                                    @RequestParam String siglaNazione,
+                                                @Schema(description = "Sigla Categoria",
+                                                        allowableValues = {"A", "B", "C"})
                                                 @RequestParam String siglaCategoria,
                                                 @RequestParam String idMercato,
-                                                @RequestParam String tipoMercato,
-                                                @RequestParam String sessioneMercato,
+                                                @Schema(description = "Tipologia Mercato",
+                                                        allowableValues = {"SVINCOLI", "SVINCOLI_ASTA", "ASTA", "BUSTE"})
+                                                    @RequestParam String tipoMercato,
+                                                @Schema(description = "Sessione Mercato",
+                                                        allowableValues = {"PREASTA", "INIZIALE", "AGOSTO", "SETTEMBRE","FEBBRAIO", "FINALE"})
+                                                    @RequestParam String sessioneMercato,
                                                 @RequestParam(required = false) String nickname) {
         try{
             if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;
@@ -156,11 +168,19 @@ public class JobLauncherController{
 
     @PostMapping(value = "/importTrattativeScambioWebApi")
     @Operation(summary = "Import delle trattative scambio fantaleghe di un mercato per una determinata nazione e categoria")
-    public String importTrattativeScambioWebApi(@RequestParam String siglaNazione,
+    public String importTrattativeScambioWebApi(@Schema(description = "Sigla Nazione",
+                                                            allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                                    @RequestParam String siglaNazione,
+                                                @Schema(description = "Sigla Categoria",
+                                                        allowableValues = {"A", "B", "C"})
                                                 @RequestParam String siglaCategoria,
                                                 @RequestParam String idMercato,
-                                                @RequestParam String tipoMercato,
-                                                @RequestParam String sessioneMercato,
+                                                @Schema(description = "Tipologia Mercato",
+                                                        allowableValues = {"SCAMBI"})
+                                                    @RequestParam String tipoMercato,
+                                                @Schema(description = "Sessione Mercato",
+                                                        allowableValues = {"ESTIVA", "SETTEMBRE", "OTTOBRE", "NOVEMBRE","DICEMBRE", "GENNAIO", "FEBBRAIO"})
+                                                    @RequestParam String sessioneMercato,
                                                 @RequestParam(required = false) String nickname) {
         try{
             if(nickname == null) nickname = Constants.ADMIN_A_NICKNAME;

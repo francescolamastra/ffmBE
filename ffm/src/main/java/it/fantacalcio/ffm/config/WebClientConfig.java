@@ -3,7 +3,7 @@ package it.fantacalcio.ffm.config;
 import io.netty.channel.ChannelOption;
 import it.fantacalcio.ffm.handler.CustomWebClientErrorHandler;
 import it.fantacalcio.ffm.interceptor.CustomWebClientRequestInterceptor;
-import it.fantacalcio.ffm.utility.LegacyFantalegheHelper;
+import it.fantacalcio.ffm.utility.helper.LegacyFantalegheHelper;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.context.annotation.Bean;

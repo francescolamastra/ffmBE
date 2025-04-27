@@ -21,7 +21,7 @@ public class GiocatoreListone {
     private Integer id;
 
     @Column(name = "ID_FANTAGAZZETTA", nullable = false)
-    private Integer idFantagazzetta;
+        private Integer idFantagazzetta;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ID_STAGIONE", nullable = false)

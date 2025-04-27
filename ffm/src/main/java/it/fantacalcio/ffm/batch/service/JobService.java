@@ -44,7 +44,7 @@ public class JobService {
     @Autowired
     private TaskExecutor taskExecutor;
 
-    public void runImportListoneJob(String filePath, Long skipRows, String sheetName, String tipologiaListone) {
+    public void runImportListoneJob(String filePath, Long skipRows, String sheetName, String tipologiaListone, Long annoInizioStagione) {
         taskExecutor.execute(() -> {
             try {
                 jobLauncher.run(importListoneJob, new JobParametersBuilder()
@@ -52,6 +52,7 @@ public class JobService {
                         .addLong("skipRows", skipRows)
                         .addString("sheetName", sheetName)
                         .addString("tipologiaListone", tipologiaListone)
+                        .addLong("annoInizioStagione", annoInizioStagione)
                         .toJobParameters());
             } catch (Exception e) {
                 try {

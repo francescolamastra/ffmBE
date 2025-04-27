@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface GiocatoreListoneRepository extends JpaRepository<GiocatoreListone, Integer> {
     Optional<GiocatoreListone> findByIdStagioneAndIdFantagazzettaAndTipologiaListone(Stagione idStagione, Integer idFantagazzetta, Constants.TipologiaListoneEnum tipologiaListoneEnum);
+    boolean existsByIdFantagazzettaAndIdStagioneAndTipologiaListone(Integer idFantagazzetta, Stagione stagione, Constants.TipologiaListoneEnum tipologiaListone);
 }

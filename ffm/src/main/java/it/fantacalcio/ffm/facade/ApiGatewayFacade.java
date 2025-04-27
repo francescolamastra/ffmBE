@@ -487,6 +487,10 @@ public class ApiGatewayFacade {
                 return giocatoreService.existsByIdFantagazzetta(integer);
         }
 
+        public boolean giocatoreListoneExistsByStagioneAndTipologiaListoneAndIdFantagazzetta(Integer idFantagazzetta, StagioneDto stagioneDto, Constants.TipologiaListoneEnum tipologiaListone){
+                return giocatoreListoneService.existsByStagioneAndTipologiaListoneAndIdFantagazzetta(idFantagazzetta,stagioneDto,tipologiaListone);
+        }
+
         @Transactional
         public TrattativaDto createDettagliAggiuntiviTrattativaScambio(DettagliAggiuntiviTrattativaScambio dettagliAggiuntiviTrattativaScambio) {
                 SquadraDto squadraDtoA = getSquadraById(dettagliAggiuntiviTrattativaScambio.getIdSquadraA());

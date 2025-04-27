@@ -3,7 +3,6 @@ package it.fantacalcio.ffm.builder;
 import it.fantacalcio.ffm.domain.dto.CategoriaDto;
 import it.fantacalcio.ffm.domain.dto.NazioneDto;
 import it.fantacalcio.ffm.domain.dto.SquadraDto;
-import it.fantacalcio.ffm.domain.dto.StadioDto;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +12,6 @@ public class SquadraDtoBuilder {
     private String nome;
     private CategoriaDto idCategoria;
     private NazioneDto idNazione;
-    private StadioDto idStadio;
     private LocalDateTime dataCreazione;
 
     public SquadraDtoBuilder setId(Integer id) {
@@ -41,17 +39,12 @@ public class SquadraDtoBuilder {
         return this;
     }
 
-    public SquadraDtoBuilder setIdStadio(StadioDto idStadio) {
-        this.idStadio = idStadio;
-        return this;
-    }
-
     public SquadraDtoBuilder setDataCreazione(LocalDateTime dataCreazione) {
         this.dataCreazione = dataCreazione;
         return this;
     }
 
     public SquadraDto build() {
-        return new SquadraDto(id, idFantagazzetta, idNazione, idCategoria, nome, idStadio, dataCreazione);
+        return new SquadraDto(id, idFantagazzetta, idNazione, idCategoria, nome, dataCreazione);
     }
 }

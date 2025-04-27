@@ -24,7 +24,9 @@ public class ImportListoneJpaItemWriter implements ItemWriter<GiocatoreListoneGi
             if(!apiGatewayFacade.giocatoreExistsByIdFantagazzetta(wrapper.getGiocatoreDto().idFantagazzetta())){
                 giocatoreItemWriter.write(Chunk.of(GiocatoreConverter.toEntity(wrapper.getGiocatoreDto())));
             }
-            listoneItemWriter.write(Chunk.of(GiocatoreListoneConverter.toEntity(wrapper.getGiocatoreListoneDto())));
+            if(!apiGatewayFacade.giocatoreListoneExistsByStagioneAndTipologiaListoneAndIdFantagazzetta(wrapper.getGiocatoreListoneDto().idFantagazzetta(), wrapper.getGiocatoreListoneDto().idStagione(), wrapper.getGiocatoreListoneDto().tipologiaListone())){
+                listoneItemWriter.write(Chunk.of(GiocatoreListoneConverter.toEntity(wrapper.getGiocatoreListoneDto())));
+            }
         }
     }
 }

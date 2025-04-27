@@ -16,7 +16,6 @@ public class SquadraFactory {
                 .setNome(squadraDto.getNome())
                 .setIdCategoria(CategoriaConverter.toEntity(squadraDto.getIdCategoria()))
                 .setIdNazione(NazioneConverter.toEntity(squadraDto.getIdNazione()))
-                .setIdStadio(squadraDto.getIdStadio() != null ? StadioConverter.toEntity(squadraDto.getIdStadio()) : null)
                 .build();
     }
 
@@ -27,7 +26,6 @@ public class SquadraFactory {
                 .setNome(squadra.getNome())
                 .setIdCategoria(CategoriaConverter.toDto(squadra.getIdCategoria()))
                 .setIdNazione(NazioneConverter.toDto(squadra.getIdNazione()))
-                .setIdStadio(squadra.getIdStadio() != null ? StadioConverter.toDto(squadra.getIdStadio()) : null)
                 .build();
     }
 }

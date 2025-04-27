@@ -1,10 +1,11 @@
 package it.fantacalcio.ffm.batch.config;
 
-import it.fantacalcio.ffm.batch.model.ListoneBatchRecord;
 import it.fantacalcio.ffm.batch.model.GiocatoreListoneGiocatoreComposite;
+import it.fantacalcio.ffm.batch.model.ListoneBatchRecord;
 import it.fantacalcio.ffm.batch.processor.ImportListoneItemProcessor;
 import it.fantacalcio.ffm.batch.reader.ImportListoneItemReader;
 import it.fantacalcio.ffm.batch.writer.ImportListoneJpaItemWriter;
+import it.fantacalcio.ffm.domain.dto.StagioneDto;
 import it.fantacalcio.ffm.domain.entity.Giocatore;
 import it.fantacalcio.ffm.domain.entity.GiocatoreListone;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
@@ -97,9 +98,17 @@ public class ImportListoneBatchConfig {
     @Bean
     @StepScope
     public ItemProcessor<ListoneBatchRecord, GiocatoreListoneGiocatoreComposite> itemProcessor(ApiGatewayFacade apiGatewayFacade,
-                                                                                               @Value("#{jobParameters['tipologiaListone']}") String tipologiaListone) {
+                                                                                               @Value("#{jobParameters['tipologiaListone']}") String tipologiaListone,
+                                                                                               @Value("#{jobParameters['annoInizioStagione']}") Long annoInizioStagione) {
         Constants.TipologiaListoneEnum tipologiaListoneEnum = Constants.TipologiaListoneEnum.valueOf(tipologiaListone);
-        return new ImportListoneItemProcessor(apiGatewayFacade, tipologiaListoneEnum);
+        StagioneDto stagioneDto = getStagione(apiGatewayFacade, annoInizioStagione);
+        return new ImportListoneItemProcessor(tipologiaListoneEnum, stagioneDto);
     }
 
+    private StagioneDto getStagione(ApiGatewayFacade apiGatewayFacade, Long annoInizioStagione) {
+        if (annoInizioStagione != null) {
+            return apiGatewayFacade.getStagioneByAnnoInizio(annoInizioStagione.intValue());
+        }
+        return apiGatewayFacade.getLastStagione();
+    }
 }

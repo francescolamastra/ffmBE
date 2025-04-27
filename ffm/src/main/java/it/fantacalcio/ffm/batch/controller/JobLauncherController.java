@@ -29,11 +29,12 @@ public class JobLauncherController{
     private final Environment env;
     private final FileManager fileManager;
 
-    @PostMapping(value = "/importListoneInit",  consumes = "multipart/form-data")
-    @Operation(summary = "Import del listone tramite excel fantagazzetta, inizializzazione del valore FVM per la stagione in base alla Tipologia Listone(default INIZIALE)")
+    @PostMapping(value = "/importListone",  consumes = "multipart/form-data")
+    @Operation(summary = "Import del listone tramite excel fantagazzetta, per la stagione(default stagione in corso) in base alla Tipologia Listone(default INIZIALE)")
     public String importListone(@RequestParam("file") MultipartFile file,
                                 @RequestParam(value = "skipRows", required = false) Long skipRows,
                                 @RequestParam(value = "sheetName", required = false) String sheetName,
+                                @RequestParam(value = "annoInizioStagione", required = false) Long annoInizioStagione,
                                 @Schema(description = "Tipologia Listone",
                                         allowableValues = {"INIZIALE", "STIPENDI", "FINALE"})
                                 @RequestParam(value = "tipologiaListone", required = false) String tipologiaListone) {
@@ -50,7 +51,7 @@ public class JobLauncherController{
             String filePath = fileManager.copyToInDirectory(file, UPLOADS_DIR);
 
             // Esegui il job in modo asyncrono
-            jobService.runImportListoneJob(filePath, skipRows, sheetName, tipologiaListone);
+            jobService.runImportListoneJob(filePath, skipRows, sheetName, tipologiaListone, annoInizioStagione);
             return "Job importListone started";
         } catch (FileAlreadyExistsException e) {
             return "Job importListone failed: " + e.getMessage();

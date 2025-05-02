@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.fantacalcio.ffm.domain.dto.*;
 import it.fantacalcio.ffm.domain.model.DettagliAggiuntiviTrattativaScambio;
+import it.fantacalcio.ffm.domain.model.DettagliAmpliamentoStadio;
 import it.fantacalcio.ffm.domain.model.FinanzeIniziali;
 import it.fantacalcio.ffm.domain.model.TrattativaScambio;
 import it.fantacalcio.ffm.domain.model.fantaleghe.*;
@@ -183,6 +184,13 @@ public class ApiGatewayController {
     @Operation(summary = "Aggiunge i dettagli (Bonus, Fido, Gettoni) per una specifica trattativa scambio")
     public TrattativaDto createDettagliAggiuntiviTrattativaScambio(@RequestBody DettagliAggiuntiviTrattativaScambio dettagliAggiuntiviTrattativaScambio) {
         return apiGatewayFacade.createDettagliAggiuntiviTrattativaScambio(dettagliAggiuntiviTrattativaScambio);
+    }
+
+    @PostMapping(value = "/ampliamentoStadio")
+    @ResponseBody
+    @Operation(summary = "Inserisce i dettagli di ampliamento/demolizione livello stadio per la stagione in corso")
+    public AmpliamentoStadioDto createAmpliamentoStadio(@RequestBody DettagliAmpliamentoStadio dettagliAmpliamentoStadio) {
+        return apiGatewayFacade.createAmpliamentoStadio(dettagliAmpliamentoStadio);
     }
 
     @PostMapping(value = "/inizializzaCompetizioni")

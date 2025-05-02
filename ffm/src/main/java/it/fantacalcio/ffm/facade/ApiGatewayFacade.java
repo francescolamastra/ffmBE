@@ -63,6 +63,7 @@ public class ApiGatewayFacade {
         private final GettoneService gettoneService;
         private final StadioService stadioService;
         private final SituazioneEconomicaInizialeService situazioneEconomicaInizialeService;
+        private final AmpliamentoStadioService ampliamentoStadioService;
 
         public List<GiocatoreRosaDto> getAllGiocatoreRosaByIdStagioneAndIdSquadraAndTipologiaRosa(StagioneDto idStagione, SquadraDto idSquadra, Constants.TipologiaRosaEnum tipologiaRosa){
                 return giocatoreRosaService.findAllByIdStagioneAndIdSquadraAndTipologiaRosa(idStagione, idSquadra, tipologiaRosa);
@@ -78,6 +79,10 @@ public class ApiGatewayFacade {
 
         public GiocatoreListoneDto getGiocatoreListoneByIdStagioneAndIdFantagazzettaAndTipologiaListone(StagioneDto idStagione, Integer idFantagazzetta, Constants.TipologiaListoneEnum tipologiaListoneEnum){
                 return giocatoreListoneService.findByIdStagioneAndIdFantagazzettaAndTipologiaListone(idStagione, idFantagazzetta, tipologiaListoneEnum).orElseThrow();
+        }
+
+        public SituazioneEconomicaInizialeDto getSituazioneEconomicaInizialeBySquadraAndStagione(StagioneDto stagioneDto, SquadraDto squadraDto){
+                return situazioneEconomicaInizialeService.getSituazioneEconomicaInizialeBySquadraAndStagione(stagioneDto, squadraDto);
         }
 
         public List<TokenCredenzialiProjectionDto> fantalegheLogin(CredenzialiDto credenzialiDto) {
@@ -182,6 +187,10 @@ public class ApiGatewayFacade {
         }
         public StagioneDto saveStagione(StagioneDto stagioneDto) {
                 return stagioneService.save(stagioneDto);
+        }
+
+        public AmpliamentoStadioDto saveAmpliamentoStadio(AmpliamentoStadioDto ampliamentoStadioDto) {
+                return ampliamentoStadioService.save(ampliamentoStadioDto);
         }
 
         public SituazioneEconomicaInizialeDto saveSituazioneEconomicaIniziale(SituazioneEconomicaInizialeDto situazioneEconomicaInizialeDto) {
@@ -557,5 +566,59 @@ public class ApiGatewayFacade {
                         .setCrediti(finanzeIniziali.getCrediti())
                         .setGettoni(finanzeIniziali.getGettoni())
                         .build());
+        }
+
+        public AmpliamentoStadioDto createAmpliamentoStadio(DettagliAmpliamentoStadio dettagliAmpliamentoStadio) {
+                SquadraDto squadraDto = getSquadraById(dettagliAmpliamentoStadio.getIdSquadra());
+                StagioneDto stagioneDto = getLastStagione();
+                StadioDto stadioDtoNew = getStadioByLivello(dettagliAmpliamentoStadio.getLivelloStadio());
+                SituazioneEconomicaInizialeDto situazioneEconomicaInizialeDto = getSituazioneEconomicaInizialeBySquadraAndStagione(stagioneDto, squadraDto);
+                StadioDto stadioDtoOld = situazioneEconomicaInizialeDto.getStadio();
+                validateAmpliamentoStadio(stadioDtoNew, stadioDtoOld);
+                Integer costo = calcolaCostoAmpliamento(stadioDtoNew, stadioDtoOld);
+                return  buildAmpliamentoStadioDto(squadraDto, stagioneDto, stadioDtoNew, costo);
+        }
+
+        private Integer calcolaCostoAmpliamento(StadioDto stadioDtoNew, StadioDto stadioDtoOld) {
+                if (stadioDtoOld == null) {
+                        return stadioDtoNew.getLivello() * 60;
+                }
+                int differenzaLivello = stadioDtoNew.getLivello() - stadioDtoOld.getLivello();
+
+                if (differenzaLivello <= 0) {
+                        return 0; // Nessun costo se il livello non aumenta
+                }
+                if (differenzaLivello == 1) {
+                        return stadioDtoNew.getLivello() > 4 ? 80 : 60;
+                }
+                if (differenzaLivello == 2) {
+                        if (stadioDtoNew.getLivello() < 5) {
+                                return differenzaLivello * 60;
+                        } else if (stadioDtoNew.getLivello() == 5) {
+                                return 140;
+                        } else {
+                                return differenzaLivello * 80;
+                        }
+                }
+                throw new IllegalArgumentException("Differenza di livello non valida: " + differenzaLivello);
+        }
+
+        private void validateAmpliamentoStadio(StadioDto stadioNew, StadioDto stadioDtoOld) {
+                if (stadioDtoOld == null) {
+                        if (stadioNew.getLivello() > 2) {
+                                throw new IllegalStateException("Dal livello 0 è possibile aumentare lo stadio al livello 2 massimo.");
+                        }
+                }else if (stadioNew.getLivello() - stadioDtoOld.getLivello() > 2) {
+                        throw new IllegalStateException("È possibile aumentare di soli 2 livelli alla volta.");
+                }
+        }
+
+        private AmpliamentoStadioDto buildAmpliamentoStadioDto(SquadraDto squadraDto, StagioneDto stagioneDto, StadioDto stadioDtoNew, Integer costo) {
+                AmpliamentoStadioDto ampliamentoStadioDto = new AmpliamentoStadioDto();
+                ampliamentoStadioDto.setStadio(stadioDtoNew);
+                ampliamentoStadioDto.setSquadra(squadraDto);
+                ampliamentoStadioDto.setStagione(stagioneDto);
+                ampliamentoStadioDto.setCosto(costo);
+                return ampliamentoStadioDto;
         }
 }

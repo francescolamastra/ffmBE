@@ -10,6 +10,7 @@ public class SquadraBuilder {
     private Integer id;
     private Integer idFantagazzetta;
     private String nome;
+    private String sigla;
     private Categoria idCategoria;
     private Nazione idNazione;
     private LocalDateTime dataCreazione;
@@ -29,6 +30,11 @@ public class SquadraBuilder {
         return this;
     }
 
+    public SquadraBuilder setSigla(String sigla) {
+        this.sigla = sigla;
+        return this;
+    }
+
     public SquadraBuilder setIdCategoria(Categoria idCategoria) {
         this.idCategoria = idCategoria;
         return this;
@@ -45,6 +51,6 @@ public class SquadraBuilder {
     }
 
     public Squadra build() {
-        return new Squadra(id,idFantagazzetta ,idNazione, idCategoria, nome, dataCreazione);
+        return new Squadra(id,idFantagazzetta ,idNazione, idCategoria, nome, sigla, dataCreazione);
     }
 }

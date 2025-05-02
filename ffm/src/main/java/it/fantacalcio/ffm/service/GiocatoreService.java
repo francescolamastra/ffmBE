@@ -24,6 +24,10 @@ public class GiocatoreService {
         return giocatoreRepository.findByIdFantagazzetta(idFantagazzetta).map(GiocatoreConverter::toDto);
     }
 
+    public Optional<GiocatoreDto> findByNome(String nome){
+        return giocatoreRepository.findByNome(nome).map(GiocatoreConverter::toDto);
+    }
+
     public List<GiocatoreDto> findAll(){
         return giocatoreRepository.findAll().stream().map(GiocatoreConverter::toDto).toList();
     }

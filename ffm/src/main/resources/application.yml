@@ -40,6 +40,9 @@ springdoc:
     path: /swagger-ui/index.html
 
 ffm:
+  drive:
+    euro-nord:
+      url-cat-a: 'https://docs.google.com/spreadsheets/d/1Bb9GfXisOTYDnT7JCBGYXKAa3BLUthS-YpViTJSHrZw/export?format=csv'
   batch:
     excel-giocatori:
       skip-rows: 2

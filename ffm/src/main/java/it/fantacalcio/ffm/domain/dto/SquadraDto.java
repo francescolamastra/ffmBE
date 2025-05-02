@@ -17,5 +17,6 @@ public class SquadraDto implements Serializable {
     NazioneDto idNazione;
     CategoriaDto idCategoria;
     String nome;
+    String sigla;
     LocalDateTime dataCreazione;
 }

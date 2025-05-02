@@ -10,6 +10,7 @@ public class SquadraDtoBuilder {
     private Integer id;
     private Integer idFantagazzetta;
     private String nome;
+    private String sigla;
     private CategoriaDto idCategoria;
     private NazioneDto idNazione;
     private LocalDateTime dataCreazione;
@@ -29,6 +30,11 @@ public class SquadraDtoBuilder {
         return this;
     }
 
+    public SquadraDtoBuilder setSigla(String sigla) {
+        this.sigla = sigla;
+        return this;
+    }
+
     public SquadraDtoBuilder setIdCategoria(CategoriaDto idCategoria) {
         this.idCategoria = idCategoria;
         return this;
@@ -45,6 +51,6 @@ public class SquadraDtoBuilder {
     }
 
     public SquadraDto build() {
-        return new SquadraDto(id, idFantagazzetta, idNazione, idCategoria, nome, dataCreazione);
+        return new SquadraDto(id, idFantagazzetta, idNazione, idCategoria, nome, sigla, dataCreazione);
     }
 }

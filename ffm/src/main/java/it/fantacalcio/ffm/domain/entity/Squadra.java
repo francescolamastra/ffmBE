@@ -34,6 +34,9 @@ public class Squadra {
     @Column(name = "NOME", nullable = false, length = 30)
     private String nome;
 
+    @Column(name = "SIGLA", length = 5)
+    private String sigla;
+
     @Column(name = "DATA_CREAZIONE", nullable = false, updatable = false)
     private LocalDateTime dataCreazione;
 

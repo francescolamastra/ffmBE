@@ -130,7 +130,7 @@ public class ImportRoseWebApiItemProcessor implements ItemProcessor<FantalegheTe
                                     giocatoreRosaAttuale.getIdGiocatore().idFantagazzetta()
                             )
                     );
-            if (isPresente) {
+            if (!isPresente) {
                 giocatoriDaSvincolare.add(giocatoreRosaIniziale);
             }
         });

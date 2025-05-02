@@ -224,4 +224,28 @@ public class JobLauncherController{
             return "Job importRisultatiCompetizione failed:"+e;
         }
     }
+
+    @PostMapping(value = "/importDriveCsvJob")
+    @Operation(summary = "Import del drive csv")
+    public String importDriveCsvJob(@RequestParam
+                                    @Schema(description = "Tipologia sheet",
+                                          allowableValues = {"SQUADRA", "LISTONE"})
+                                    String tipologiaSheet,
+                                    @RequestParam
+                                    @Schema(description = "Tipologia Rosa",
+                                            allowableValues = {"PREASTA", "INIZIALE", "POST_LISTONE"})
+                                    String tipologiaRosa,
+                                    @RequestParam String idFile,
+                                    @RequestParam String idSheet,
+                                    @RequestParam(required = false, defaultValue = "0") Long idSquadra,
+                                    @RequestParam(required = false, defaultValue = "0") Long linesToSkip,
+                                    @RequestParam(required = false, defaultValue = "0") Long linesToRead) {
+        try{
+            // Esegui il job in modo asyncrono
+            jobService.runImportDriveCsvJob(idFile, tipologiaSheet, tipologiaRosa, idSheet, idSquadra, linesToSkip, linesToRead);
+            return "Job importRoseAndOperazioneApi started!";
+        } catch (Exception e) {
+            return "Job importRoseAndOperazione failed:"+e;
+        }
+    }
 }

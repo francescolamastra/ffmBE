@@ -42,6 +42,9 @@ public class JobService {
     private Job importRoseWebApiJob;
 
     @Autowired
+    private Job importDriveCsvJob;
+
+    @Autowired
     private TaskExecutor taskExecutor;
 
     public void runImportListoneJob(String filePath, Long skipRows, String sheetName, String tipologiaListone, Long annoInizioStagione) {
@@ -205,4 +208,28 @@ public class JobService {
             }
         });
     }
+
+    public void runImportDriveCsvJob(String idFile, String tipologiaSheet, String tipologiaRosa, String idSheet, Long idSquadra, long linesToSkip, long linesToRead) {
+        taskExecutor.execute(() -> {
+            try {
+                jobLauncher.run(importDriveCsvJob, new JobParametersBuilder()
+                                .addString("idFile", idFile)
+                                .addString("tipologiaSheet", tipologiaSheet)
+                                .addString("tipologiaRosa", tipologiaRosa)
+                                .addString("idSheet", idSheet)
+                                .addLong("idSquadra", idSquadra)
+                                .addLong("linesToSkip", linesToSkip)
+                                .addLong("linesToRead", linesToRead)
+                        .toJobParameters());
+            } catch (Exception e) {
+                try {
+                    throw e;
+                } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException | JobRestartException |
+                         JobInstanceAlreadyCompleteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
 }

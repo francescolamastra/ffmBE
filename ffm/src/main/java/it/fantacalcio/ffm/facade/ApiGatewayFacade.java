@@ -109,6 +109,10 @@ public class ApiGatewayFacade {
                 return giocatoreService.findByIdFantagazzetta(idFantagazzetta).orElseThrow();
         }
 
+        public Optional<GiocatoreDto> getGiocatoreByNome(String nome) {
+                return giocatoreService.findByNome(nome);
+        }
+
         public StadioDto getStadioByLivello(Integer livello) {
                 return stadioService.findByLivello(livello).orElseThrow();
         }

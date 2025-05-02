@@ -233,4 +233,9 @@ public class Constants {
             throw new IllegalArgumentException("Valore non valido per TipologiaRosaEnum: " + sigla);
         }
     }
+
+    public enum TipoSheet {
+        SQUADRA,
+        LISTONE;
+    }
 }

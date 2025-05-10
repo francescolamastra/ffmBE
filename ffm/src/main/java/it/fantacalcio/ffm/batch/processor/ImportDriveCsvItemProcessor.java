@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static it.fantacalcio.ffm.utility.Constants.TipoOperazioneEnum.ACQUISTO;
 import static it.fantacalcio.ffm.utility.Constants.TipoOperazioneEnum.SVINCOLO;
 
 @RequiredArgsConstructor
@@ -45,10 +46,28 @@ public class ImportDriveCsvItemProcessor implements ItemProcessor<DriveCsvRow, O
 
     private GiocatoreRosaOperazioneComposite processByTipologiaRosa(DriveCsvRow item) {
         return switch (tipologiaRosaEnum) {
+            case PREASTA -> processPreasta(item);
             case INIZIALE -> processIniziale(item);
             case POST_LISTONE -> processPostListone(item);
             default -> throw new IllegalArgumentException("Tipologia Rosa non supportata: " + tipologiaRosaEnum);
         };
+    }
+
+    private GiocatoreRosaOperazioneComposite processPreasta(DriveCsvRow item) {
+
+        Optional<GiocatoreDto> giocatoreDto = apiGatewayFacade.getGiocatoreByNome(item.getColumn2());
+        if(giocatoreDto.isPresent() && !apiGatewayFacade.existsGiocatoreRosaByStagioneAndSquadraAndTipologiaRosaAndGiocatore(stagioneDto, squadraDto, Constants.TipologiaRosaEnum.PREASTA, giocatoreDto.get())) {
+            List<GiocatoreRosaDto> listGiocatoriRosaAttuale = new ArrayList<>();
+            List<OperazioneDto> operazioneDtoList = new ArrayList<>();
+            TipoOperazioneDto tipoOperazioneDto = apiGatewayFacade.getTipoOperazioneBySigla(ACQUISTO.getSigla());
+            int costo = Integer.valueOf(item.getColumn4());
+            listGiocatoriRosaAttuale.add(createGiocatoreRosaDto(giocatoreDto.get(), costo, Constants.ANNI_CONTRATTO_DEFAULT));
+            operazioneDtoList.add(createOperazioneDtoAcquisto(giocatoreDto.get(), tipoOperazioneDto, Constants.SessioneMercatoOpAcquistoEnum.PREASTA, Constants.SegnoEnum.DEBITO, costo, Constants.ANNI_CONTRATTO_DEFAULT));
+            return new GiocatoreRosaOperazioneComposite(listGiocatoriRosaAttuale, operazioneDtoList);
+        }else{
+            return null;
+        }
+
     }
 
     private GiocatoreRosaOperazioneComposite processIniziale(DriveCsvRow item) {
@@ -86,7 +105,7 @@ public class ImportDriveCsvItemProcessor implements ItemProcessor<DriveCsvRow, O
             if(item.getColumn5().equalsIgnoreCase("Svincolato")){
                 TipoOperazioneDto tipoOperazioneDto = apiGatewayFacade.getTipoOperazioneBySigla(SVINCOLO.getSigla());
                 GiocatoreRosaDto giocatoreRosaDto = giocatoriRosaIniziale.stream().filter(giocatoreRosaIniziale -> giocatoreRosaIniziale.getIdGiocatore().nome().equalsIgnoreCase(item.getColumn2())).findFirst().get();
-                operazioneDtoList.add(createOperazioneDto(giocatoreRosaDto.getIdGiocatore(), tipoOperazioneDto,Constants.SessioneMercatoOpAcquistoEnum.INIZIALE, Constants.SegnoEnum.CREDITO, Integer.parseInt(item.getColumn4()), Constants.PERCENTUALE_SVINCOLO_100, true));
+                operazioneDtoList.add(createOperazioneDtoSvincolo(giocatoreRosaDto.getIdGiocatore(), tipoOperazioneDto,Constants.SessioneMercatoOpAcquistoEnum.INIZIALE, Constants.SegnoEnum.CREDITO, Integer.parseInt(item.getColumn4()), Constants.PERCENTUALE_SVINCOLO_100, true));
             }else {
                 listGiocatoriRosaAttuale.add(createGiocatoreRosaDto(giocatoreDto.get(), Integer.valueOf(item.getColumn4()), 0));
             }
@@ -108,9 +127,9 @@ public class ImportDriveCsvItemProcessor implements ItemProcessor<DriveCsvRow, O
         return giocatoreRosaDto;
     }
 
-    private OperazioneDto createOperazioneDto(GiocatoreDto giocatoreDto,
-                                              TipoOperazioneDto tipoOperazioneDto,
-                                              Constants.SessioneMercatoOpAcquistoEnum sessioneMercato, Constants.SegnoEnum segnoOperazione, int valoreTransazione, int percentualeSvincolo, boolean prelazionabile) {
+    private OperazioneDto createOperazioneDtoSvincolo(GiocatoreDto giocatoreDto,
+                                                      TipoOperazioneDto tipoOperazioneDto,
+                                                      Constants.SessioneMercatoOpAcquistoEnum sessioneMercato, Constants.SegnoEnum segnoOperazione, int valoreTransazione, int percentualeSvincolo, boolean prelazionabile) {
         OperazioneDto operazioneDto = new OperazioneDto();
         operazioneDto.setIdSquadra(squadraDto);
         operazioneDto.setIdGiocatore(giocatoreDto);
@@ -129,6 +148,28 @@ public class ImportDriveCsvItemProcessor implements ItemProcessor<DriveCsvRow, O
         );
         operazioneDto.setTransazione(transazioneOperazioneDto);
         operazioneDto.setSvincolo(svincoloDto);
+        return operazioneDto;
+    }
+
+    private OperazioneDto createOperazioneDtoAcquisto(GiocatoreDto giocatoreDto,
+                                                      TipoOperazioneDto tipoOperazioneDto,
+                                                      Constants.SessioneMercatoOpAcquistoEnum sessioneMercato, Constants.SegnoEnum segnoOperazione, int valoreTransazione, int anniContratto) {
+        OperazioneDto operazioneDto = new OperazioneDto();
+        operazioneDto.setIdSquadra(squadraDto);
+        operazioneDto.setIdGiocatore(giocatoreDto);
+        operazioneDto.setIdStagione(stagioneDto);
+        operazioneDto.setIdTipoOperazione(tipoOperazioneDto);
+        operazioneDto.setDataCreazione(LocalDateTime.now());
+        operazioneDto.setSessioneMercato(sessioneMercato);
+
+        TransazioneOperazioneDto transazioneOperazioneDto = new TransazioneOperazioneDto(
+                null, operazioneDto, valoreTransazione, segnoOperazione.getSigla());
+
+        AcquistoDto acquistoDto = new AcquistoDto(null,
+                operazioneDto,
+                anniContratto);
+        operazioneDto.setTransazione(transazioneOperazioneDto);
+        operazioneDto.setAcquisto(acquistoDto);
         return operazioneDto;
     }
 }

@@ -17,4 +17,5 @@ public interface GiocatoreRosaRepository extends JpaRepository<GiocatoreRosa, In
     List<GiocatoreRosa> findAllByIdStagioneAndIdSquadraAndTipologiaRosa(Stagione idStagione, Squadra idSquadra, Constants.TipologiaRosaEnum tipologiaRosa);
     boolean existsByIdStagioneAndIdSquadraAndTipologiaRosa(Stagione idStagione, Squadra idSquadra, Constants.TipologiaRosaEnum tipologiaRosa);
     Optional<GiocatoreRosa> findByIdStagioneAndTipologiaRosa(Stagione stagione, Constants.TipologiaRosaEnum tipologiaRosa);
+    boolean existsByIdStagioneAndIdSquadraAndTipologiaRosaAndIdGiocatore(Stagione stagione, Squadra squadra, Constants.TipologiaRosaEnum tipologiaRosaEnum, Giocatore giocatore);
 }

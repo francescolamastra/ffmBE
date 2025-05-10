@@ -34,7 +34,7 @@ public class JobLauncherController{
     public String importListone(@RequestParam("file") MultipartFile file,
                                 @RequestParam(value = "skipRows", required = false) Long skipRows,
                                 @RequestParam(value = "sheetName", required = false) String sheetName,
-                                @RequestParam(value = "annoInizioStagione", required = false) Long annoInizioStagione,
+                                @RequestParam(value = "annoInizioStagione") Long annoInizioStagione,
                                 @Schema(description = "Tipologia Listone",
                                         allowableValues = {"INIZIALE", "STIPENDI", "FINALE"})
                                 @RequestParam(value = "tipologiaListone", required = false) String tipologiaListone) {

@@ -4,14 +4,18 @@ import it.fantacalcio.ffm.domain.model.fantaleghe.*;
 import it.fantacalcio.ffm.utility.Constants;
 import it.fantacalcio.ffm.utility.helper.LegacyFantalegheHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +25,12 @@ public class FantalegheService {
 
     public FantalegheLoginResponse login(FantalegheLoginRequest loginRequest) {
 
-        HttpHeaders headers = legacyFantalegheHelper.getBaseFantalegheHeaders();
+        HttpHeaders headers = prepareHeaders();
+        headers.setCacheControl(CacheControl.noCache());
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN, MediaType.ALL));
+        //headers.setOrigin("https://leghe.fantacalcio.it");
+        headers.set("User-Agent","PostmanRuntime/7.43.4");
+        headers.set("Postman-Token", UUID.randomUUID().toString());
 
         return webClient.post()
             .uri(uriBuilder -> uriBuilder
@@ -36,7 +45,7 @@ public class FantalegheService {
 
     public FantalegheMercato getMercatiCategoria(String siglaCategoria, String tokenJwt) {
 
-        HttpHeaders headers = legacyFantalegheHelper.getBaseFantalegheHeaders();
+        HttpHeaders headers = prepareHeaders();
         headers.setBearerAuth(tokenJwt);
 
         return webClient.get()
@@ -52,7 +61,7 @@ public class FantalegheService {
 
     public List<FantalegheTeam> getTeams(String tokenJwt) {
 
-        HttpHeaders headers = legacyFantalegheHelper.getBaseFantalegheHeaders();
+        HttpHeaders headers = prepareHeaders();
         headers.setBearerAuth(tokenJwt);
 
         return webClient.get()
@@ -67,7 +76,7 @@ public class FantalegheService {
     }
 
     public FantalegheOperazioneMercato getOperazioniMercato(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String tokenJwt) {
-        HttpHeaders headers = legacyFantalegheHelper.getBaseFantalegheHeaders();
+        HttpHeaders headers = prepareHeaders();
         headers.setBearerAuth(tokenJwt);
         List<FantalegheOperazioneMercato.OperazioneMercato> listOperazioni = new ArrayList<>();
         String lastId = null;
@@ -98,7 +107,7 @@ public class FantalegheService {
     }
 
     public FantalegheTrattativeScambio getTrattativeScambio(String siglaCategoria, String idMercato, Constants.TipologiaMercatoFantalegheEnum tipoMercato, String tokenJwt) {
-        HttpHeaders headers = legacyFantalegheHelper.getBaseFantalegheHeaders();
+        HttpHeaders headers = prepareHeaders();
         headers.setBearerAuth(tokenJwt);
         List<FantalegheTrattativeScambio.Scambio> listScambi = new ArrayList<>();
         String lastId = null;
@@ -127,4 +136,9 @@ public class FantalegheService {
         trattativeScambio.setListaScambi(listScambi);
         return trattativeScambio;
     }
+
+    private HttpHeaders prepareHeaders() {
+        return new HttpHeaders(legacyFantalegheHelper.getBaseFantalegheHeaders());
+    }
+
 }

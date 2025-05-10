@@ -9,13 +9,14 @@ import it.fantacalcio.ffm.domain.entity.UtenteSquadra;
 import it.fantacalcio.ffm.repository.SquadraRepository;
 import it.fantacalcio.ffm.repository.UtenteRepository;
 import it.fantacalcio.ffm.repository.UtenteSquadraRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class SquadraService {
 
     private final SquadraRepository squadraRepository;
@@ -23,13 +24,6 @@ public class SquadraService {
     private final UtenteRepository utenteRepository;
     private final UtenteSquadraRepository utenteSquadraRepository;
 
-    @Autowired
-    public SquadraService(SquadraRepository squadraRepository, SquadraCache squadraCache, UtenteRepository utenteRepository, UtenteSquadraRepository utenteSquadraRepository){
-        this.squadraRepository = squadraRepository;
-        this.squadraCache = squadraCache;
-        this.utenteRepository = utenteRepository;
-        this.utenteSquadraRepository = utenteSquadraRepository;
-    }
     public SquadraDto save(SquadraDto squadraDto, Integer utenteId){
         Utente utente = utenteRepository.findById(utenteId).orElseThrow();
         Squadra squadraInserita = squadraRepository.save(SquadraConverter.toEntity(squadraDto));

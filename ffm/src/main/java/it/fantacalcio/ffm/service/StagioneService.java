@@ -6,6 +6,7 @@ import it.fantacalcio.ffm.domain.dto.StagioneDto;
 import it.fantacalcio.ffm.domain.entity.Stagione;
 import it.fantacalcio.ffm.repository.StagioneRepository;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -13,20 +14,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StagioneService {
 
     private final StagioneRepository stagioneRepository;
     private final StagioneCache stagioneCache;
 
-    public StagioneService(StagioneRepository stagioneRepository, StagioneCache stagioneCache){
-        this.stagioneRepository = stagioneRepository;
-        this.stagioneCache = stagioneCache;
-    }
-
     @PostConstruct
     public void init() {
-        List<StagioneDto> stagioneDtoList = findAll();
-        stagioneCache.setStagioni(stagioneDtoList);
+        findAll();
     }
 
     public StagioneDto save(StagioneDto stagioneDto){

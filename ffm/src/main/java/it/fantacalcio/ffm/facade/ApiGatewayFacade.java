@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -87,22 +88,31 @@ public class ApiGatewayFacade {
 
         public List<TokenCredenzialiProjectionDto> fantalegheLogin(CredenzialiDto credenzialiDto) {
                 List<TokenCredenzialiProjectionDto> tokenCredenzialiProjectionDtoList = tokenCredenzialiService.getAllTokenCredenzialiInfo(credenzialiDto.getIdUtente());
-                if(tokenCredenzialiProjectionDtoList.isEmpty() || tokenCredenzialiProjectionDtoList.stream().anyMatch(token -> !token.getIsValid())) {
+
+                if (tokenCredenzialiProjectionDtoList.isEmpty() || tokenCredenzialiProjectionDtoList.stream().anyMatch(token -> !token.getIsValid())) {
                         FantalegheLoginResponse fantalegheLoginResponse = fantalegheService.login(new FantalegheLoginRequest(credenzialiDto.getUserName(), credenzialiDto.getPassword()));
-                        tokenCredenzialiProjectionDtoList.clear();
-                        fantalegheLoginResponse.getData().getLeghe()
-                                .forEach(lega -> {
-                                        try {
-                                                NazioneDto nazioneDto = nazioneFromNomeLega(lega.getNome());
-                                                TokenCredenzialiDto tokenCredenzialiDto = new TokenCredenzialiDto(null, lega.getJwt(), credenzialiDto.getIdUtente(), nazioneDto, true, LocalDateTime.now());
-                                                tokenCredenzialiProjectionDtoList.add(tokenCredenzialiService.save(tokenCredenzialiDto));
-                                        } catch (Exception e) {
-                                                // Log dell'errore e continuazione del ciclo
-                                                logger.error("Errore durante l'elaborazione della lega {}: {}", lega.getNome(), e.getMessage());
-                                        }
-                                });
+                        return salvaTokenCredenziali(fantalegheLoginResponse, credenzialiDto);
                 }
+
                 return tokenCredenzialiProjectionDtoList;
+        }
+
+        private List<TokenCredenzialiProjectionDto> salvaTokenCredenziali(FantalegheLoginResponse fantalegheLoginResponse, CredenzialiDto credenzialiDto) {
+                List<TokenCredenzialiProjectionDto> tokenCredenzialiProjectionDtoListNew = new ArrayList<>();
+
+                fantalegheLoginResponse.getData().getLeghe().forEach(lega -> {
+                        try {
+                                NazioneDto nazioneDto = nazioneFromNomeLega(lega.getNome());
+                                TokenCredenzialiDto tokenCredenzialiDto = new TokenCredenzialiDto(
+                                        null, lega.getJwt(), credenzialiDto.getIdUtente(), nazioneDto, true, LocalDateTime.now()
+                                );
+                                tokenCredenzialiProjectionDtoListNew.add(tokenCredenzialiService.save(tokenCredenzialiDto));
+                        } catch (Exception e) {
+                                logger.error("Errore durante l'elaborazione della lega {}: {}", lega.getNome(), e.getMessage());
+                        }
+                });
+
+                return tokenCredenzialiProjectionDtoListNew;
         }
 
         /* METODI DI DOMINIO */
@@ -620,5 +630,9 @@ public class ApiGatewayFacade {
                 ampliamentoStadioDto.setStagione(stagioneDto);
                 ampliamentoStadioDto.setCosto(costo);
                 return ampliamentoStadioDto;
+        }
+
+        public boolean existsGiocatoreRosaByStagioneAndSquadraAndTipologiaRosaAndGiocatore(StagioneDto stagioneDto, SquadraDto squadraDto, Constants.TipologiaRosaEnum tipologiaRosaEnum, GiocatoreDto giocatoreDto) {
+                return giocatoreRosaService.existsByStagioneAndSquadraAndTipologiaRosaAndGiocatore(stagioneDto, squadraDto, tipologiaRosaEnum, giocatoreDto);
         }
 }

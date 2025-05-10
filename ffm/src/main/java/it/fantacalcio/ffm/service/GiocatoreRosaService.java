@@ -1,7 +1,9 @@
 package it.fantacalcio.ffm.service;
 
+import it.fantacalcio.ffm.converter.GiocatoreConverter;
 import it.fantacalcio.ffm.converter.SquadraConverter;
 import it.fantacalcio.ffm.converter.StagioneConverter;
+import it.fantacalcio.ffm.domain.dto.GiocatoreDto;
 import it.fantacalcio.ffm.domain.dto.GiocatoreRosaDto;
 import it.fantacalcio.ffm.domain.dto.SquadraDto;
 import it.fantacalcio.ffm.domain.dto.StagioneDto;
@@ -36,5 +38,9 @@ public class GiocatoreRosaService {
 
     public Optional<GiocatoreRosaDto> findByIdStagioneAndTipologiaRosa(StagioneDto idStagione, Constants.TipologiaRosaEnum tipologiaRosa){
         return giocatoreRosaRepository.findByIdStagioneAndTipologiaRosa(StagioneConverter.toEntity(idStagione), tipologiaRosa).map(GiocatoreRosaMapper.INSTANCE::toDto);
+    }
+
+    public boolean existsByStagioneAndSquadraAndTipologiaRosaAndGiocatore(StagioneDto stagioneDto, SquadraDto squadraDto, Constants.TipologiaRosaEnum tipologiaRosaEnum, GiocatoreDto giocatoreDto) {
+        return giocatoreRosaRepository.existsByIdStagioneAndIdSquadraAndTipologiaRosaAndIdGiocatore(StagioneConverter.toEntity(stagioneDto), SquadraConverter.toEntity(squadraDto), tipologiaRosaEnum, GiocatoreConverter.toEntity(giocatoreDto));
     }
 }

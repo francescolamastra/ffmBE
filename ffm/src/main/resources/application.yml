@@ -7,7 +7,7 @@ spring:
     password: admin
     url: jdbc:mysql://192.168.1.248:3306/ffm
   jpa:
-#    show-sql: true
+    show-sql: true
     hibernate:
       ddl-auto: validate
   batch:
@@ -24,11 +24,11 @@ spring:
 #      mode: always
 #      data-locations: classpath:clear-batch-tables.sql
 
-#logging:
-#  level:
-#    org:
-#      hibernate: INFO
-#      SQL: DEBUG
+logging:
+  level:
+    org:
+      hibernate: INFO
+      SQL: INFO
 #      cache: DEBUG
 #      stat: DEBUG
 #      springframework:
@@ -83,3 +83,7 @@ ffm:
       # da aggiungere dinamicamente all'url in base a categoria/codice mercato esempio: /A/MK_20250117134307
       # da aggiungere dinamicamente all'url in base a categoria/codice mercato?lastId=codiceLastIdPaginaPrecedente esempio: ?lastId=MTcxNDU4NS1BLU1LXzIwMjUwMTE3MTM0MzA3JGNsb3NlZC02ODIyMzk2LTIwMjUwMjAxMTEwMC01NDg2JGNsb3NlZC0yMDI1MDIwMTExMDA
 
+reactor:
+  netty:
+    http:
+      client: INFO

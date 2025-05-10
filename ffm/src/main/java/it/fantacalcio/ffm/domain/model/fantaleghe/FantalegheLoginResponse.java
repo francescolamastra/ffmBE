@@ -1,17 +1,25 @@
 package it.fantacalcio.ffm.domain.model.fantaleghe;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FantalegheLoginResponse {
     Data data;
-    @Value
+    @lombok.Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Data {
         List<Leghe> leghe;
     }
-    @Value
+    @lombok.Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Leghe {
         String alias;
         int id;

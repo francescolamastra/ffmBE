@@ -25,7 +25,6 @@ public class ImportDriveCsvItemProcessor implements ItemProcessor<DriveCsvRow, O
     private final StagioneDto stagioneDto;
     private final SquadraDto squadraDto;
     private final Constants.TipologiaRosaEnum tipologiaRosaEnum;
-    private final List<GiocatoreRosaDto> giocatoriRosaIniziale;
 
     @Override
     public Object process(DriveCsvRow item) {
@@ -104,8 +103,7 @@ public class ImportDriveCsvItemProcessor implements ItemProcessor<DriveCsvRow, O
         if (giocatoreDto.isPresent()) {
             if(item.getColumn5().equalsIgnoreCase("Svincolato")){
                 TipoOperazioneDto tipoOperazioneDto = apiGatewayFacade.getTipoOperazioneBySigla(SVINCOLO.getSigla());
-                GiocatoreRosaDto giocatoreRosaDto = giocatoriRosaIniziale.stream().filter(giocatoreRosaIniziale -> giocatoreRosaIniziale.getIdGiocatore().nome().equalsIgnoreCase(item.getColumn2())).findFirst().get();
-                operazioneDtoList.add(createOperazioneDtoSvincolo(giocatoreRosaDto.getIdGiocatore(), tipoOperazioneDto,Constants.SessioneMercatoOpAcquistoEnum.INIZIALE, Constants.SegnoEnum.CREDITO, Integer.parseInt(item.getColumn4()), Constants.PERCENTUALE_SVINCOLO_100, true));
+                operazioneDtoList.add(createOperazioneDtoSvincolo(giocatoreDto.get(), tipoOperazioneDto,Constants.SessioneMercatoOpAcquistoEnum.INIZIALE, Constants.SegnoEnum.CREDITO, Integer.parseInt(item.getColumn4()), Constants.PERCENTUALE_SVINCOLO_100, true));
             }else {
                 listGiocatoriRosaAttuale.add(createGiocatoreRosaDto(giocatoreDto.get(), Integer.valueOf(item.getColumn4()), 0));
             }

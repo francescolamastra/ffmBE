@@ -7,7 +7,6 @@ import it.fantacalcio.ffm.batch.model.GiocatoreRosaOperazioneComposite;
 import it.fantacalcio.ffm.batch.processor.ImportDriveCsvItemProcessor;
 import it.fantacalcio.ffm.batch.utility.DriveHelper;
 import it.fantacalcio.ffm.batch.writer.ImportDriveCsvItemWriter;
-import it.fantacalcio.ffm.domain.dto.GiocatoreRosaDto;
 import it.fantacalcio.ffm.domain.dto.SquadraDto;
 import it.fantacalcio.ffm.domain.dto.StagioneDto;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
@@ -24,7 +23,6 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -35,17 +33,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.UrlResource;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
 public class GoogleSheetBatchConfig {
 
     @Bean
     public Job importDriveCsvJob(JobRepository jobRepository,
-                                Step importDriveCsvStep,
-                                JobExecutionDecider importDecider,
-                                JobExecutionListener jobExecutionListener) {
+                                 Step importDriveCsvStep,
+                                 JobExecutionDecider importDecider,
+                                 JobExecutionListener jobExecutionListener) {
         return new JobBuilder("importDriveCsvJob", jobRepository)
                 .listener(jobExecutionListener)
                 .incrementer(new RunIdIncrementer())
@@ -58,10 +53,10 @@ public class GoogleSheetBatchConfig {
 
     @Bean
     public Step importDriveCsvStep(JobRepository jobRepository,
-                                  PlatformTransactionManager transactionManager,
-                                  ItemReader<DriveCsvRow> driveCsvReader,
-                                  ItemProcessor<DriveCsvRow, Object> driveCsvProcessor,
-                                  ItemWriter<Object> driveCsvItemWriter) {
+                                   PlatformTransactionManager transactionManager,
+                                   ItemReader<DriveCsvRow> driveCsvReader,
+                                   ItemProcessor<DriveCsvRow, Object> driveCsvProcessor,
+                                   ItemWriter<Object> driveCsvItemWriter) {
         return new StepBuilder("importDriveCsvStep", jobRepository)
                 .<DriveCsvRow, Object>chunk(10, transactionManager)
                 .reader(driveCsvReader)
@@ -87,12 +82,7 @@ public class GoogleSheetBatchConfig {
         Constants.TipologiaRosaEnum tipologiaRosaEnum = Constants.TipologiaRosaEnum.valueOf(tipologiaRosa);
         StagioneDto stagioneDto = apiGatewayFacade.getLastStagione();
         SquadraDto squadraDto = idSquadra > 0 ? apiGatewayFacade.getSquadraById(idSquadra.intValue()) : null;
-        List<GiocatoreRosaDto> giocatoriRosaIniziale = new ArrayList<>();
-        if (tipologiaRosaEnum.equals(Constants.TipologiaRosaEnum.POST_LISTONE)) {
-            giocatoriRosaIniziale = apiGatewayFacade.getAllGiocatoreRosaByIdStagioneAndIdSquadraAndTipologiaRosa(
-                    stagioneDto, squadraDto, Constants.TipologiaRosaEnum.INIZIALE);
-        }
-        return new ImportDriveCsvItemProcessor(apiGatewayFacade, tipoSheet, stagioneDto, squadraDto, tipologiaRosaEnum, giocatoriRosaIniziale);
+        return new ImportDriveCsvItemProcessor(apiGatewayFacade, tipoSheet, stagioneDto, squadraDto, tipologiaRosaEnum);
     }
 
     @Bean
@@ -100,17 +90,32 @@ public class GoogleSheetBatchConfig {
     public FlatFileItemReader<DriveCsvRow> driveCsvReader(@Value("#{jobParameters['idSheet']}") String idSheet,
                                                           @Value("#{jobParameters['idFile']}") String idFile,
                                                           @Value("#{jobParameters['tipologiaSheet']}") String tipologiaSheet,
+                                                          @Value("#{jobParameters['tipologiaRosa']}") String tipologiaRosa,
                                                           @Value("#{jobParameters['linesToSkip']}") Long linesToSkip,
                                                           @Value("#{jobParameters['linesToRead']}") Long linesToRead) throws Exception {
         Constants.TipoSheet tipoSheet = Constants.TipoSheet.valueOf(tipologiaSheet);
-        SheetConfig sheetConfig = DriveHelper.getSheetConfig(tipoSheet);
-        FlatFileItemReader<DriveCsvRow> reader = new FlatFileItemReader<>();
-        reader.setResource(new UrlResource("https://docs.google.com/spreadsheets/d/"+idFile+"/export?format=csv&gid="+idSheet));
-        reader.setLinesToSkip(linesToSkip.intValue());
-        if(linesToRead > 0){
-            reader.setMaxItemCount(linesToRead.intValue());
-        }
+        Constants.TipologiaRosaEnum tipologiaRosaEnum = Constants.TipologiaRosaEnum.valueOf(tipologiaRosa);
+        SheetConfig sheetConfig = DriveHelper.getInstance(tipoSheet, tipologiaRosaEnum);
 
+        FlatFileItemReader<DriveCsvRow> reader = createFlatFileItemReader(idFile, idSheet);
+        configureReader(reader, sheetConfig, linesToSkip, linesToRead);
+
+        return reader;
+    }
+
+    private FlatFileItemReader<DriveCsvRow> createFlatFileItemReader(String idFile, String idSheet) throws Exception {
+        FlatFileItemReader<DriveCsvRow> reader = new FlatFileItemReader<>();
+        reader.setResource(new UrlResource("https://docs.google.com/spreadsheets/d/" + idFile + "/export?format=csv&gid=" + idSheet));
+        return reader;
+    }
+
+    private void configureReader(FlatFileItemReader<DriveCsvRow> reader, SheetConfig sheetConfig, Long linesToSkip, Long linesToRead) {
+        reader.setLinesToSkip(linesToSkip > 0 ? linesToSkip.intValue() : sheetConfig.linesToSkip());
+        reader.setMaxItemCount(linesToRead > 0 ? linesToRead.intValue() : sheetConfig.linesToRead());
+        reader.setLineMapper(createLineMapper(sheetConfig));
+    }
+
+    private DefaultLineMapper<DriveCsvRow> createLineMapper(SheetConfig sheetConfig) {
         DefaultLineMapper<DriveCsvRow> lineMapper = new DefaultLineMapper<>();
         DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
         tokenizer.setNames(sheetConfig.getColumns());
@@ -120,7 +125,6 @@ public class GoogleSheetBatchConfig {
         fieldSetMapper.setTargetType(DriveCsvRow.class);
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
-        reader.setLineMapper(lineMapper);
-        return reader;
+        return lineMapper;
     }
 }

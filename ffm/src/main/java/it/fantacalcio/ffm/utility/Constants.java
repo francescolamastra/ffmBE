@@ -103,13 +103,14 @@ public class Constants {
     @Getter
     @RequiredArgsConstructor
     public enum SessioneMercatoTrattiveScambioEnum {
-        ESTIVA("EST"),
+        AGOSTO("AGO"),
         SETTEMBRE("SET"),
         OTTOBRE("OTT"),
         NOVEMBRE("NOV"),
         DICEMBRE("DIC"),
         GENNAIO("GEN"),
-        FEBBRAIO("FEB");
+        FEBBRAIO("FEB"),
+        ESTIVA("EST");
 
         private final String sigla;
         public static SessioneMercatoTrattiveScambioEnum fromSigla(String sigla) {

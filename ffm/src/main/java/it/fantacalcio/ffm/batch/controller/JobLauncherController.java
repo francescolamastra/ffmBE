@@ -180,7 +180,7 @@ public class JobLauncherController{
                                                         allowableValues = {"SCAMBI"})
                                                     @RequestParam String tipoMercato,
                                                 @Schema(description = "Sessione Mercato",
-                                                        allowableValues = {"ESTIVA", "SETTEMBRE", "OTTOBRE", "NOVEMBRE","DICEMBRE", "GENNAIO", "FEBBRAIO"})
+                                                        allowableValues = {"AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE","DICEMBRE", "GENNAIO", "FEBBRAIO", "ESTIVA"})
                                                     @RequestParam String sessioneMercato,
                                                 @RequestParam(required = false) String nickname) {
         try{
@@ -226,7 +226,7 @@ public class JobLauncherController{
     }
 
     @PostMapping(value = "/importDriveCsvJob")
-    @Operation(summary = "Import del drive csv")
+    @Operation(summary = "Import dal drive csv")
     public String importDriveCsvJob(@RequestParam
                                     @Schema(description = "Tipologia sheet",
                                           allowableValues = {"SQUADRA", "LISTONE"})

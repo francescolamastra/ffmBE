@@ -7,6 +7,7 @@ import it.fantacalcio.ffm.batch.model.GiocatoreRosaOperazioneComposite;
 import it.fantacalcio.ffm.batch.processor.ImportDriveCsvItemProcessor;
 import it.fantacalcio.ffm.batch.utility.DriveHelper;
 import it.fantacalcio.ffm.batch.writer.ImportDriveCsvItemWriter;
+import it.fantacalcio.ffm.domain.dto.NazioneDto;
 import it.fantacalcio.ffm.domain.dto.SquadraDto;
 import it.fantacalcio.ffm.domain.dto.StagioneDto;
 import it.fantacalcio.ffm.facade.ApiGatewayFacade;
@@ -68,8 +69,9 @@ public class GoogleSheetBatchConfig {
 
     @Bean
     public ItemWriter<Object> driveCsvItemWriter(ItemWriter<GiocatoreRosaOperazioneComposite> importGiocatoreRosaJpaItemWriter,
-                                                 ItemWriter<GiocatoreListoneGiocatoreComposite> importListoneJpaItemWriter) {
-        return new ImportDriveCsvItemWriter(importGiocatoreRosaJpaItemWriter, importListoneJpaItemWriter);
+                                                 ItemWriter<GiocatoreListoneGiocatoreComposite> importListoneJpaItemWriter,
+                                                 ApiGatewayFacade apiGatewayFacade) {
+        return new ImportDriveCsvItemWriter(importGiocatoreRosaJpaItemWriter, importListoneJpaItemWriter, apiGatewayFacade);
     }
 
     @Bean
@@ -77,12 +79,14 @@ public class GoogleSheetBatchConfig {
     public ItemProcessor<DriveCsvRow, Object> driveCsvProcessor(ApiGatewayFacade apiGatewayFacade,
                                                                 @Value("#{jobParameters['tipologiaSheet']}") String tipologiaSheet,
                                                                 @Value("#{jobParameters['tipologiaRosa']}") String tipologiaRosa,
-                                                                @Value("#{jobParameters['idSquadra']}") Long idSquadra) {
+                                                                @Value("#{jobParameters['idSquadra']}") Long idSquadra,
+                                                                @Value("#{jobParameters['siglaNazione']}") String siglaNazione) {
         Constants.TipoSheet tipoSheet = Constants.TipoSheet.valueOf(tipologiaSheet);
         Constants.TipologiaRosaEnum tipologiaRosaEnum = Constants.TipologiaRosaEnum.valueOf(tipologiaRosa);
         StagioneDto stagioneDto = apiGatewayFacade.getLastStagione();
         SquadraDto squadraDto = idSquadra > 0 ? apiGatewayFacade.getSquadraById(idSquadra.intValue()) : null;
-        return new ImportDriveCsvItemProcessor(apiGatewayFacade, tipoSheet, stagioneDto, squadraDto, tipologiaRosaEnum);
+        NazioneDto nazioneDto = apiGatewayFacade.getNazioneBySigla(siglaNazione);
+        return new ImportDriveCsvItemProcessor(apiGatewayFacade, tipoSheet, stagioneDto, squadraDto, tipologiaRosaEnum, nazioneDto);
     }
 
     @Bean

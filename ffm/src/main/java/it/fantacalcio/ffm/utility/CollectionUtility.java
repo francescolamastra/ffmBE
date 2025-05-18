@@ -9,4 +9,11 @@ public class CollectionUtility {
     public static <T> void safeForEach(Collection<T> collection, java.util.function.Consumer<? super T> action) {
         Optional.ofNullable(collection).ifPresent(col -> col.forEach(action));
     }
+
+    public static boolean containsIgnoreCase(String str, String searchStr) {
+        if (str == null || searchStr == null) {
+            return false;
+        }
+        return str.toLowerCase().contains(searchStr.toLowerCase());
+    }
 }

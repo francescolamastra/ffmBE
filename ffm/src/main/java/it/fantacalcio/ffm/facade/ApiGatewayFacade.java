@@ -142,6 +142,8 @@ public class ApiGatewayFacade {
 
         public SquadraDto getSquadraById(Integer id) { return squadraService.findById(id).orElseThrow(); }
 
+        public SquadraDto getSquadraBySiglaAndNazione(String sigla, NazioneDto nazioneDto) { return squadraService.findBySiglaAndNazione(sigla, nazioneDto).orElseThrow(); }
+
         public List<StagioneDto> getStagioni() {
                 return stagioneService.findAll();
         }

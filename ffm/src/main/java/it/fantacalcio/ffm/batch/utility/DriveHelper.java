@@ -8,6 +8,7 @@ public class DriveHelper {
         return switch (tipoSheet) {
             case SQUADRA -> getSquadraSheetConfig(tipologiaRosaEnum);
             case LISTONE -> new ListoneSheetConfig();
+            case SCAMBI -> new ScambiSheetConfig();
         };
     }
 

@@ -209,10 +209,11 @@ public class JobService {
         });
     }
 
-    public void runImportDriveCsvJob(String idFile, String tipologiaSheet, String tipologiaRosa, String idSheet, Long idSquadra, long linesToSkip, long linesToRead) {
+    public void runImportDriveCsvJob(String siglaNazione, String idFile, String tipologiaSheet, String tipologiaRosa, String idSheet, Long idSquadra, long linesToSkip, long linesToRead) {
         taskExecutor.execute(() -> {
             try {
                 jobLauncher.run(importDriveCsvJob, new JobParametersBuilder()
+                                .addString("siglaNazione", siglaNazione)
                                 .addString("idFile", idFile)
                                 .addString("tipologiaSheet", tipologiaSheet)
                                 .addString("tipologiaRosa", tipologiaRosa)

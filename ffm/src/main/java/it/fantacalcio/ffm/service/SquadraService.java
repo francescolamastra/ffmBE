@@ -2,10 +2,12 @@ package it.fantacalcio.ffm.service;
 
 import it.fantacalcio.ffm.cache.SquadraCache;
 import it.fantacalcio.ffm.converter.SquadraConverter;
+import it.fantacalcio.ffm.domain.dto.NazioneDto;
 import it.fantacalcio.ffm.domain.dto.SquadraDto;
 import it.fantacalcio.ffm.domain.entity.Squadra;
 import it.fantacalcio.ffm.domain.entity.Utente;
 import it.fantacalcio.ffm.domain.entity.UtenteSquadra;
+import it.fantacalcio.ffm.mapper.NazioneMapper;
 import it.fantacalcio.ffm.repository.SquadraRepository;
 import it.fantacalcio.ffm.repository.UtenteRepository;
 import it.fantacalcio.ffm.repository.UtenteSquadraRepository;
@@ -55,6 +57,10 @@ public class SquadraService {
         return squadraRepository.findByIdFantagazzetta(idFantagazzetta).map(SquadraConverter::toDto);
     }
 
+    public Optional<SquadraDto> findBySiglaAndIdNazione(String sigla, NazioneDto nazioneDto){
+        return squadraRepository.findBySiglaAndIdNazione(sigla, NazioneMapper.INSTANCE.toEntity(nazioneDto)).map(SquadraConverter::toDto);
+    }
+
     public SquadraDto findByNomeOrSave(SquadraDto squadraDto) {
         return squadraCache.getSquadraList().stream()
                 .filter(c -> c.getNome().equalsIgnoreCase(squadraDto.getNome()))
@@ -76,5 +82,13 @@ public class SquadraService {
                     Optional<SquadraDto> optionalSquadraFromDB = findByIdFantagazzetta(squadraDto.getIdFantagazzetta());
                     return optionalSquadraFromDB.map(squadraCache::addSquadra).orElse(null);
                 });
+    }
+
+    public Optional<SquadraDto> findBySiglaAndNazione(String sigla, NazioneDto nazioneDto) {
+        return squadraCache.getSquadraList().stream()
+                .filter(c -> c.getSigla().equalsIgnoreCase(sigla) &&
+                        c.getIdNazione().getSigla().equalsIgnoreCase(nazioneDto.getSigla()))
+                .findFirst()
+                .or(() -> findBySiglaAndIdNazione(sigla, nazioneDto));
     }
 }

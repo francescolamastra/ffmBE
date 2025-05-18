@@ -29,4 +29,11 @@ public class DriveCsvRow {
     private String column19;
     private String column20;
     private String column21;
+    private String column22;
+    private String column23;
+    private String column24;
+    private String column25;
+    private String column26;
+    private String column27;
+    private String column28;
 }

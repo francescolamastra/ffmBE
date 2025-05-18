@@ -180,7 +180,7 @@ public class JobLauncherController{
                                                         allowableValues = {"SCAMBI"})
                                                     @RequestParam String tipoMercato,
                                                 @Schema(description = "Sessione Mercato",
-                                                        allowableValues = {"ESTIVA", "SETTEMBRE", "OTTOBRE", "NOVEMBRE","DICEMBRE", "GENNAIO", "FEBBRAIO"})
+                                                        allowableValues = {"AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE","DICEMBRE", "GENNAIO", "FEBBRAIO","ESTIVA"})
                                                     @RequestParam String sessioneMercato,
                                                 @RequestParam(required = false) String nickname) {
         try{
@@ -227,9 +227,12 @@ public class JobLauncherController{
 
     @PostMapping(value = "/importDriveCsvJob")
     @Operation(summary = "Import del drive csv")
-    public String importDriveCsvJob(@RequestParam
+    public String importDriveCsvJob(@Schema(description = "Sigla Nazione",
+                                                allowableValues = {"ING", "FRA", "ITA", "GER", "SPA", "EN", "EC", "EE", "ES", "BEN", "EXU", "EXJ", "ROU", "SCA"})
+                                        @RequestParam String siglaNazione,
+                                    @RequestParam
                                     @Schema(description = "Tipologia sheet",
-                                          allowableValues = {"SQUADRA", "LISTONE"})
+                                          allowableValues = {"SQUADRA", "LISTONE", "SCAMBI"})
                                     String tipologiaSheet,
                                     @RequestParam
                                     @Schema(description = "Tipologia Rosa",
@@ -242,7 +245,7 @@ public class JobLauncherController{
                                     @RequestParam(required = false, defaultValue = "0") Long linesToRead) {
         try{
             // Esegui il job in modo asyncrono
-            jobService.runImportDriveCsvJob(idFile, tipologiaSheet, tipologiaRosa, idSheet, idSquadra, linesToSkip, linesToRead);
+            jobService.runImportDriveCsvJob(siglaNazione, idFile, tipologiaSheet, tipologiaRosa, idSheet, idSquadra, linesToSkip, linesToRead);
             return "Job importRoseAndOperazioneApi started!";
         } catch (Exception e) {
             return "Job importRoseAndOperazione failed:"+e;

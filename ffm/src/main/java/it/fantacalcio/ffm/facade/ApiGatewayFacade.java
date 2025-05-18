@@ -310,6 +310,9 @@ public class ApiGatewayFacade {
         public TrattativaDto createTrattativaScambio(TrattativaScambio trattativaScambio) {
                 SquadraDto squadraDtoA = getSquadraById(trattativaScambio.getIdSquadraA());
                 SquadraDto squadraDtoB = getSquadraById(trattativaScambio.getIdSquadraB());
+                if(trattativaScambio.getListGiocatoriCedutiSquadraA().isEmpty() && trattativaScambio.getListGiocatoriCedutiSquadraB().isEmpty()){
+                      throw new IllegalStateException("Entrambe le liste giocatori sono vuote");
+                }
                 TrattativaDto trattativaDto = createTrattativa(trattativaScambio.getClausole(), trattativaScambio.getDataTrattativa(), trattativaScambio.getSessioneMercatoTrattiveScambioEnum());
 
                 creaTransazioneTrattativa(trattativaDto, trattativaScambio.getCreditiPagatiSquadraA(), trattativaScambio.getCreditiPagatiSquadraB(), squadraDtoA, squadraDtoB, trattativaScambio.getGettoniSquadraA(), trattativaScambio.getGettoniSquadraB());
@@ -326,10 +329,10 @@ public class ApiGatewayFacade {
         }
 
         private void createBonusTrattativa(Integer creditiBonusSquadraA, Integer creditiBonusSquadraB, TrattativaDto trattativaDto, SquadraDto squadraDtoA, SquadraDto squadraDtoB) {
-                if (creditiBonusSquadraA != null) {
+                if (creditiBonusSquadraA != null && creditiBonusSquadraA > 0) {
                         createAndSaveBonus(creditiBonusSquadraA, trattativaDto, squadraDtoA, squadraDtoB, Constants.SegnoEnum.DEBITO.getSigla(), Constants.SegnoEnum.CREDITO.getSigla());
                 }
-                if (creditiBonusSquadraB != null) {
+                if (creditiBonusSquadraB != null && creditiBonusSquadraB > 0) {
                         createAndSaveBonus(creditiBonusSquadraB, trattativaDto, squadraDtoA, squadraDtoB, Constants.SegnoEnum.CREDITO.getSigla(), Constants.SegnoEnum.DEBITO.getSigla());
                 }
         }
@@ -417,6 +420,9 @@ public class ApiGatewayFacade {
         public void createTrattativaScambioBatch(TrattativaScambioBatch trattativaScambio) {
                 SquadraDto squadraDtoA = trattativaScambio.getSquadraDtoA();
                 SquadraDto squadraDtoB = trattativaScambio.getSquadraDtoB();
+                if(trattativaScambio.getListGiocatoriScambiati().isEmpty()){
+                        throw new IllegalStateException("La lista giocatori scambiati è vuota");
+                }
                 TrattativaDto trattativaDto = createTrattativa(null, LocalDateTime.now(), trattativaScambio.getSessioneMercatoTrattiveScambioEnum());
 
                 creaTransazioneTrattativa(trattativaDto, trattativaScambio.getMapSquadraCreditiPagati().get(Constants.SquadraOwnerEnum.SQUADRA_A), trattativaScambio.getMapSquadraCreditiPagati().get(Constants.SquadraOwnerEnum.SQUADRA_B), squadraDtoA, squadraDtoB, 0, 0);

@@ -26,7 +26,15 @@ public class ImportDriveCsvItemWriter implements ItemWriter<Object> {
             }else if (firstItem instanceof TrattativaScambio) {
                 chunk.getItems().stream()
                         .map(TrattativaScambio.class::cast)
-                        .forEach(apiGatewayFacade::createTrattativaScambio);
+                        .forEach(trattativaScambio -> {
+                            try {
+                                apiGatewayFacade.createTrattativaScambio(trattativaScambio);
+                            } catch (Exception e) {
+                                // Log dell'errore per il record corrente
+                                System.err.println("Errore durante l'elaborazione di TrattativaScambio: " + trattativaScambio);
+                                e.printStackTrace();
+                            }
+                        });
             } else {
                 throw new IllegalArgumentException("Tipo di oggetto non supportato: " + firstItem.getClass().getName());
             }

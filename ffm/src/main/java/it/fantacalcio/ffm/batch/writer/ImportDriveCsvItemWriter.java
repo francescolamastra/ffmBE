@@ -24,12 +24,9 @@ public class ImportDriveCsvItemWriter implements ItemWriter<Object> {
             } else if (firstItem instanceof GiocatoreListoneGiocatoreComposite) {
                 importListoneJpaItemWriter.write((Chunk<? extends GiocatoreListoneGiocatoreComposite>) chunk);
             }else if (firstItem instanceof TrattativaScambio) {
-                /*chunk.getItems().stream()
-                        .map(TrattativaScambio.class::cast)
-                        .forEach(apiGatewayFacade::createTrattativaScambio);*/
                 chunk.getItems().stream()
                         .map(TrattativaScambio.class::cast)
-                        .forEach(System.out::println);
+                        .forEach(apiGatewayFacade::createTrattativaScambio);
             } else {
                 throw new IllegalArgumentException("Tipo di oggetto non supportato: " + firstItem.getClass().getName());
             }
